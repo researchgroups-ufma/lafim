@@ -128,3 +128,26 @@ collections:
       - { label: "Resumo",         name: "excerpt",     widget: "text" }
       - { label: "Conteúdo",       name: "body",        widget: "markdown" }
       - { label: "Imagem de capa", name: "cover_image", widget: "image",   required: false }
+      
+  # ── Infraestrutura ──────────────────────────────────────────────────────────
+  - name: "equipment-info"
+    label: "Infraestrutura — Informações da Página"
+    files:
+      - name: "equipment-info"
+        label: "Texto Introdutório"
+        file: "content/equipment/index.md"
+        fields:
+          - { label: "Introdução da página", name: "intro", widget: "text" }
+
+  - name: "equipment"
+    label: "Infraestrutura — Equipamentos"
+    folder: "content/equipment"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Nome do equipamento",    name: "title",        widget: "string" }
+      - { label: "Descrição breve",        name: "summary",      widget: "text" }
+      - { label: "Descrição completa",     name: "description",  widget: "markdown", required: false }
+      - { label: "Foto",                   name: "photo",        widget: "image",    required: false }
+      - { label: "Fabricante",             name: "manufacturer", widget: "string",   required: false }
+      - { label: "Modelo",                 name: "model",        widget: "string",   required: false }
