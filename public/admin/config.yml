@@ -1,27 +1,28 @@
 ﻿# =============================================================================
 # config.yml — Configuração do Decap CMS
 #
-# Este arquivo define quais coleções e campos aparecem no painel /admin.
-# Para adicionar um novo campo a uma coleção, adicione uma entrada em fields.
-# Para criar uma nova coleção, copie o bloco de uma existente e adapte.
+# A autenticação usa Cloudflare Functions como proxy OAuth para o GitHub.
+# As funções ficam em functions/auth.js e functions/callback.js.
 #
-# TODO (Fase 3): configurar autenticação completa para Cloudflare Pages.
-# Referência: https://decapcms.org/docs/cloudflare-pages/
+# Variáveis necessárias no Cloudflare Pages (Settings > Environment variables):
+#   GITHUB_CLIENT_ID
+#   GITHUB_CLIENT_SECRET
 # =============================================================================
 
 backend:
-  name: github                          # autenticação via GitHub OAuth
-  repo: researchgroups-ufma/lafim       # repositório do projeto
-  branch: main                          # branch de produção
+  name: github
+  repo: researchgroups-ufma/lafim
+  branch: lafim-design          # branch que o CMS vai commitar
+  base_url: https://lafim.pages.dev  # URL base para o proxy OAuth
+  auth_endpoint: /auth          # rota da Cloudflare Function de autenticação
 
-media_folder: public/uploads            # onde as imagens são salvas no repositório
-public_folder: /uploads                 # caminho público das imagens no site
-locale: pt                              # idioma do painel editorial
+media_folder: public/uploads
+public_folder: /uploads
+locale: pt
 
 collections:
 
   # ── Apresentação ────────────────────────────────────────────────────────────
-  # Arquivo único — não cria múltiplas entradas, apenas edita o index.md
   - name: "about"
     label: "Apresentação"
     files:
@@ -33,37 +34,41 @@ collections:
           - { label: "Subtítulo",      name: "subtitle",    widget: "string",   required: false }
           - { label: "Missão",         name: "mission",     widget: "text" }
           - { label: "Histórico",      name: "body",        widget: "markdown" }
-          - { label: "Imagem do Hero", name: "hero_image",  widget: "image",    required: false }
+          - label: "Imagens do Hero (carrossel)"
+            name: "hero_images"
+            widget: "list"
+            required: false
+            field: { label: "Imagem", name: "image", widget: "image" }
 
   # ── Membros ─────────────────────────────────────────────────────────────────
-  # Coleção com múltiplas entradas — cada membro é um arquivo .md separado
   - name: "members"
     label: "Membros"
     folder: "content/members"
-    create: true                        # permite criar novos membros pelo painel
-    slug: "{{slug}}"                    # nome do arquivo gerado a partir do título
+    create: true
+    slug: "{{slug}}"
     fields:
-      - { label: "Nome completo",   name: "title",       widget: "string" }
+      - { label: "Nome completo",      name: "title",         widget: "string" }
       - label: "Função"
         name: "role"
         widget: "select"
         options: ["Coordenador", "Pesquisador Sênior", "Pós-Doutorando", "Doutorando", "Mestrando", "Iniciação Científica", "Egresso", "Colaborador Externo"]
-      - { label: "Afiliação",       name: "affiliation", widget: "string" }
-      - { label: "Bio",             name: "bio",         widget: "text" }
-      - { label: "Foto",            name: "photo",       widget: "image",   required: false }
-      - { label: "E-mail",          name: "email",       widget: "string",  required: false }
-      - { label: "Lattes",          name: "lattes",      widget: "string",  required: false }
-      - { label: "ORCID",           name: "orcid",       widget: "string",  required: false }
-      - { label: "Google Scholar",  name: "scholar",     widget: "string",  required: false }
-      - { label: "arXiv",           name: "arxiv",       widget: "string",  required: false }
-      - { label: "Linha de pesquisa", name: "research_area", widget: "string", required: false }
+      - { label: "Afiliação",          name: "affiliation",   widget: "string" }
+      - { label: "Bio",                name: "bio",           widget: "text" }
+      - { label: "Foto",               name: "photo",         widget: "image",   required: false }
+      - { label: "E-mail",             name: "email",         widget: "string",  required: false }
+      - { label: "Lattes",             name: "lattes",        widget: "string",  required: false }
+      - { label: "ORCID",              name: "orcid",         widget: "string",  required: false }
+      - { label: "Google Scholar",     name: "scholar",       widget: "string",  required: false }
+      - { label: "arXiv",              name: "arxiv",         widget: "string",  required: false }
+      - { label: "Linha de pesquisa",  name: "research_area", widget: "string",  required: false }
       - label: "Bolsa"
         name: "scholarship"
         widget: "select"
         required: false
         options: ["CAPES", "CNPq", "FAPEMA", "Sem bolsa"]
-      - { label: "Ano de início",              name: "year_start", widget: "string", required: false }
+      - { label: "Ano de início",               name: "year_start", widget: "string", required: false }
       - { label: "Ano de conclusão (egressos)", name: "year_end",   widget: "string", required: false }
+      - { label: "Instituição atual (egressos)", name: "current_institution", widget: "string", required: false }
 
   # ── Linhas de Pesquisa ──────────────────────────────────────────────────────
   - name: "research"
@@ -72,37 +77,47 @@ collections:
     create: true
     slug: "{{slug}}"
     fields:
-      - { label: "Nome",             name: "title",   widget: "string" }
-      - { label: "Resumo curto",     name: "summary", widget: "text" }
-      - { label: "Descrição completa", name: "body",  widget: "markdown" }
-      - { label: "Imagem",           name: "image",   widget: "image",    required: false }
+      - { label: "Nome",               name: "title",   widget: "string" }
+      - { label: "Resumo curto",       name: "summary", widget: "text" }
+      - { label: "Descrição completa", name: "body",    widget: "markdown" }
+      - { label: "Imagem",             name: "image",   widget: "image",    required: false }
 
   # ── Publicações ─────────────────────────────────────────────────────────────
   - name: "publications"
     label: "Publicações"
     folder: "content/publications"
     create: true
-    slug: "{{year}}-{{slug}}"           # ex: 2024-titulo-do-artigo.md
+    slug: "{{year}}-{{slug}}"
     fields:
-      - { label: "Título",          name: "title",         widget: "string" }
-      - { label: "Autores",         name: "authors",       widget: "string" }
-      - { label: "Ano",             name: "year",          widget: "number" }
-      - { label: "Periódico",       name: "journal",       widget: "string",  required: false }
-      - { label: "DOI",             name: "doi",           widget: "string",  required: false }
-      - { label: "arXiv ID",        name: "arxiv",         widget: "string",  required: false }
+      - { label: "Título",             name: "title",         widget: "string" }
+      - { label: "Autores",            name: "authors",       widget: "string" }
+      - { label: "Ano",                name: "year",          widget: "number" }
+      - { label: "Periódico",          name: "journal",       widget: "string",  required: false }
+      - { label: "DOI",                name: "doi",           widget: "string",  required: false }
+      - { label: "arXiv ID",           name: "arxiv",         widget: "string",  required: false }
       - label: "Tipo"
         name: "type"
         widget: "select"
         options: ["Artigo", "Preprint", "Tese", "Dissertação", "Livro", "Capítulo"]
-      - { label: "Linha de pesquisa", name: "research_area", widget: "string",  required: false }
-      - { label: "Em destaque",     name: "featured",      widget: "boolean", default: false }
+      - { label: "Linha de pesquisa",  name: "research_area", widget: "string",  required: false }
+      - label: "Tags para filtro"
+        name: "tags"
+        widget: "select"
+        required: false
+        multiple: true
+        options:
+          - { label: "Mat. Condensada",    value: "mat" }
+          - { label: "Supercondutividade", value: "supercond" }
+          - { label: "Nanomateriais",      value: "nano" }
+          - { label: "Computacional",      value: "comp" }
+      - { label: "Em destaque",        name: "featured",      widget: "boolean", default: false }
 
   # ── Notícias ────────────────────────────────────────────────────────────────
   - name: "news"
     label: "Notícias"
     folder: "content/news"
     create: true
-    slug: "{{year}}-{{month}}-{{slug}}" # ex: 2024-03-titulo-da-noticia.md
+    slug: "{{year}}-{{month}}-{{slug}}"
     fields:
       - { label: "Título",         name: "title",       widget: "string" }
       - { label: "Data",           name: "date",        widget: "datetime" }
