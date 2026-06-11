@@ -24,7 +24,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { TextEffect } from "@/components/motion-primitives/text-effect";
-import { motion } from "framer-motion";
+import HeroLogo from "@/components/HeroLogo";
 
 type HeroProps = {
   images: string[];
@@ -37,13 +37,6 @@ export default function Hero({ images, subtitle }: HeroProps) {
 
   // Controla a opacidade durante a transição de fade entre imagens
   const [opacity, setOpacity] = useState(1);
-
-  // Sinaliza que o componente hidratou — necessário para animação da logo na primeira carga
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Ativa o carrossel automático apenas se houver mais de uma imagem
   useEffect(() => {
@@ -132,20 +125,10 @@ export default function Hero({ images, subtitle }: HeroProps) {
         }}
       >
 
-        {/* Logo SVG do LaFiM */}
-         <motion.img
-           src="/logo/new_lafim.svg"
-           alt="LaFiM — Laboratório de Física dos Materiais"
-           initial={mounted ? { opacity: 0, y: 20 } : { opacity: 0, y: 0 }}
-           animate={{ opacity: 1, y: 0 }}
-           transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-           style={{
-            height: "auto",
-            width: "min(1800px, 110vw)",
-            marginBottom: "1rem",
-            filter: "brightness(0) invert(1)"
-           }}
-           />
+        {/* Logo SVG do LaFiM — animado (montagem da DAC) */}
+        <div style={{ marginBottom: "1rem" }}>
+          <HeroLogo />
+        </div>
 
         {/* Linha horizontal separadora — estilo Unearthly Materials */}
         <div
