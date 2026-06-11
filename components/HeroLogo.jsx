@@ -7,12 +7,12 @@ import gsap from "gsap";
  *
  * Sequência de entrada (no mount):
  *   1. gaxeta surge crescendo no próprio eixo (a base onde fica a amostra)
- *   2. os dois diamantes são "desenhados" (contorno traçando) enquanto
- *      deslizam fechando sobre a gaxeta
- *   3. o preenchimento (fill) revela; micro-pulso de compressão no contato
+ *   2. os dois diamantes deslizam fechando sobre a gaxeta com fade in
+ *      (apenas opacity/y — sem stroke temporário)
+ *   3. overshoot dos diamantes + pulso de pressão na gaxeta no contato
  *   4. o texto (wordmark + subtítulo) entra por último
  *
- * No hover: gesto curto de "respiração" — os diamantes recuam e voltam.
+ * No hover: separação parcial dos diamantes com retorno elástico.
  *
  * O SVG foi embutido inline (paths do seu new_lafim.svg) para que o GSAP
  * acesse cada grupo via ref/seletor com escopo. Fundo neutro só para
@@ -47,78 +47,69 @@ export default function HeroLogo() {
       // ---- prefers-reduced-motion: estado final imediato ----
       if (reduce) {
         gsap.set([gasket, ...diamonds, ...text], { opacity: 1, scale: 1, y: 0 });
-        gsap.set(diamonds, { strokeDashoffset: 0, fillOpacity: 1 });
         return;
       }
 
-      // Preparar o efeito de "desenho" do contorno dos diamantes.
-      // Como os paths são preenchidos (fill), damos um stroke temporário,
-      // medimos o comprimento de cada path e usamos dash/dashoffset.
-      diamonds.forEach((el) => {
-        const len = el.getTotalLength();
-        gsap.set(el, {
-          stroke: "#F5F5F0",
-          strokeWidth: 0.6,
-          fill: "#F5F5F0",
-          fillOpacity: 0,
-          strokeDasharray: len,
-          strokeDashoffset: len,
-        });
-      });
-
-      // estados iniciais
+      // estados iniciais — apenas opacity, y e scale (sem stroke)
       gsap.set(gasket, { opacity: 0, scaleY: 0.2 });
-      gsap.set(dTop, { opacity: 1, y: -14 });
-      gsap.set(dBottom, { opacity: 1, y: 14 });
+      gsap.set(dTop, { opacity: 0, y: -18 });
+      gsap.set(dBottom, { opacity: 0, y: 18 });
       gsap.set(text, { opacity: 0, y: 6 });
 
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
       // 1) gaxeta cresce
-      tl.to(gasket, { opacity: 1, scaleY: 1, duration: 0.5, ease: "power2.out" })
+      tl.to(gasket, { opacity: 1, scaleY: 1, duration: 0.45, ease: "power2.out" })
 
-        // 2) diamantes: contorno traça + deslizam fechando
+        // 2) diamantes deslizam fechando com fade in — SEM stroke, apenas y e opacity
         .to(
           diamonds,
-          { strokeDashoffset: 0, y: 0, duration: 0.9, ease: "power2.inOut" },
+          { opacity: 1, y: 0, duration: 0.8, ease: "power2.inOut" },
           "-=0.15"
         )
 
-        // 3) fill preenche e o stroke some
+        // 3) overshoot — diamantes passam levemente do ponto de encontro e recuam
+        .to(dTop, { y: 3, duration: 0.12, ease: "power1.in" }, "-=0.05")
+        .to(dBottom, { y: -3, duration: 0.12, ease: "power1.in" }, "<")
+        .to(dTop, { y: 0, duration: 0.35, ease: "elastic.out(1.2, 0.4)" })
+        .to(dBottom, { y: 0, duration: 0.35, ease: "elastic.out(1.2, 0.4)" }, "<")
+
+        // 4) brilho/pressão na gaxeta no momento do contato (pulso de scaleX + opacity)
         .to(
-          diamonds,
-          { fillOpacity: 1, strokeWidth: 0, duration: 0.4 },
-          "-=0.25"
+          gasket,
+          { scaleX: 1.15, opacity: 0.6, duration: 0.08, ease: "power1.in" },
+          "-=0.38"
+        )
+        .to(
+          gasket,
+          { scaleX: 1, opacity: 1, duration: 0.4, ease: "elastic.out(1, 0.4)" }
         )
 
-        // micro-pulso de compressão na gaxeta no momento do contato
-        .to(gasket, { scaleX: 1.12, duration: 0.1, ease: "power1.inOut" }, "-=0.3")
-        .to(gasket, { scaleX: 1, duration: 0.3, ease: "elastic.out(1, 0.5)" })
+        // 5) texto entra por último
+        .to(text, { opacity: 1, y: 0, duration: 0.5, stagger: 0.08 }, "-=0.2");
 
-        // 4) texto entra
-        .to(text, { opacity: 1, y: 0, duration: 0.5, stagger: 0.08 }, "-=0.25");
+      // ---- hover: separação parcial com retorno ----
+      const dac = root.current.querySelector(".dac-logo");
 
-      // ---- hover: respiração curta da célula ----
-      const el = root.current.querySelector(".dac-logo");
       const onEnter = () => {
-        gsap.fromTo(
-          [dTop, dBottom],
-          { y: (i) => (i === 0 ? -10 : 10) },
-          {
-            y: 0,
-            duration: 0.6,
-            ease: "elastic.out(1, 0.45)",
-            overwrite: "auto",
-          }
-        );
-        gsap.fromTo(
-          gasket,
-          { scaleX: 0.92 },
-          { scaleX: 1, duration: 0.6, ease: "elastic.out(1, 0.45)", overwrite: "auto" }
-        );
+        gsap.to(dTop, { y: -8, duration: 0.4, ease: "power2.out", overwrite: "auto" });
+        gsap.to(dBottom, { y: 8, duration: 0.4, ease: "power2.out", overwrite: "auto" });
+        gsap.to(gasket, { scaleX: 0.85, duration: 0.3, ease: "power2.out", overwrite: "auto" });
       };
-      el.addEventListener("mouseenter", onEnter);
-      return () => el.removeEventListener("mouseenter", onEnter);
+
+      const onLeave = () => {
+        gsap.to(dTop, { y: 0, duration: 0.6, ease: "elastic.out(1, 0.5)", overwrite: "auto" });
+        gsap.to(dBottom, { y: 0, duration: 0.6, ease: "elastic.out(1, 0.5)", overwrite: "auto" });
+        gsap.to(gasket, { scaleX: 1, duration: 0.5, ease: "elastic.out(1, 0.45)", overwrite: "auto" });
+      };
+
+      dac.addEventListener("mouseenter", onEnter);
+      dac.addEventListener("mouseleave", onLeave);
+
+      return () => {
+        dac.removeEventListener("mouseenter", onEnter);
+        dac.removeEventListener("mouseleave", onLeave);
+      };
     },
     { scope: root }
   );
