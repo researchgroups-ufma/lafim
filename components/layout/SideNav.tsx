@@ -1,10 +1,11 @@
-﻿/**
+/**
  * SideNav — Menu de navegação lateral fixo no lado direito
  *
- * Animações implementadas com Framer Motion:
- *   1. Dropdown do subitem — AnimatePresence + motion.div deslizando para baixo
- *   2. Indicador de link ativo — ponto âmbar com layoutId que se move entre links
- *   3. Hover scale — texto aumenta levemente ao passar o mouse (scale 1.0 → 1.05)
+ * Animações implementadas com GSAP:
+ *   1. Stagger na entrada dos links (cascata de cima para baixo)
+ *   2. Hover com timeline coordenada — texto desliza + underline âmbar cresce
+ *   3. Indicador de link ativo — ponto âmbar com entrada animada (back.out)
+ *   4. Reveal do dropdown — AnimatePresence + GSAP (height/opacity)
  *
  * Para adicionar subitens a outro link:
  *   Adicione uma nova entrada no objeto SUB_ITEMS.
@@ -12,9 +13,11 @@
 
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { gsap } from "gsap";
 import { navLinks } from "@/lib/config";
 
 // Subitens de cada link principal
@@ -26,6 +29,42 @@ const SUB_ITEMS: Record<string, { label: string; href: string }[]> = {
 
 export default function SideNav() {
   const pathname = usePathname();
+
+  // Refs para as animações GSAP
+  const linksRef = useRef<(HTMLDivElement | null)[]>([]);
+  const textsRef = useRef<(HTMLSpanElement | null)[]>([]);
+  const underlinesRef = useRef<(HTMLSpanElement | null)[]>([]);
+  const subItemsRef = useRef<Record<string, HTMLDivElement | null>>({});
+
+  // 1. Stagger na entrada dos links ao montar
+  useEffect(() => {
+    gsap.from(linksRef.current, {
+      opacity: 0,
+      x: 20,
+      duration: 0.4,
+      stagger: 0.08,
+      ease: "power2.out",
+    });
+  }, []);
+
+  // 2. Hover com timeline coordenada
+  const handleEnter = (i: number) => {
+    const textEl = textsRef.current[i];
+    const underlineEl = underlinesRef.current[i];
+    if (!textEl || !underlineEl) return;
+    const tl = gsap.timeline();
+    tl.to(textEl, { x: -4, duration: 0.2, ease: "power2.out" })
+      .to(underlineEl, { scaleX: 1, duration: 0.25, ease: "power2.out" }, 0);
+  };
+
+  const handleLeave = (i: number) => {
+    const textEl = textsRef.current[i];
+    const underlineEl = underlinesRef.current[i];
+    if (!textEl || !underlineEl) return;
+    const tl = gsap.timeline();
+    tl.to(textEl, { x: 0, duration: 0.2, ease: "power2.in" })
+      .to(underlineEl, { scaleX: 0, duration: 0.2, ease: "power2.in" }, 0);
+  };
 
   return (
     <nav
@@ -58,15 +97,16 @@ export default function SideNav() {
               }}
             />
 
-            {/* Link principal com hover scale e indicador âmbar animado */}
-            <motion.div
-              whileHover={{ scale: 1.05 }}          /* escala leve no hover    */
-              transition={{ type: "spring", stiffness: 400, damping: 25 }}
-              style={{ transformOrigin: "right center" }} /* escala a partir da direita */
+            {/* Link principal com hover GSAP e indicador âmbar animado */}
+            <div
+              ref={(el) => { linksRef.current[index] = el; }}
+              style={{ transformOrigin: "right center" }}
             >
               <Link
                 href={link.href}
                 aria-current={isActive ? "page" : undefined}
+                onMouseEnter={() => handleEnter(index)}
+                onMouseLeave={() => handleLeave(index)}
                 style={{
                   position: "relative",
                   display: "flex",
@@ -84,10 +124,19 @@ export default function SideNav() {
                   whiteSpace: "nowrap",
                 }}
               >
-                {/* Indicador âmbar — usa layoutId para animar entre links */}
+                {/* Indicador âmbar — entrada animada com GSAP */}
                 {isActive && (
-                  <motion.span
-                    layoutId="active-indicator"
+                  <span
+                    ref={(el) => {
+                      if (el) {
+                        gsap.from(el, {
+                          scale: 0,
+                          opacity: 0,
+                          duration: 0.3,
+                          ease: "back.out(1.7)",
+                        });
+                      }
+                    }}
                     style={{
                       display: "block",
                       width: "6px",
@@ -96,34 +145,67 @@ export default function SideNav() {
                       backgroundColor: "var(--color-primary)",
                       flexShrink: 0,
                     }}
-                    transition={{
-                      type: "spring",
-                      bounce: 0.2,
-                      duration: 0.4,
-                    }}
                   />
                 )}
-                {link.label}
+                <span ref={(el) => { textsRef.current[index] = el; }}>
+                  {link.label}
+                </span>
+                {/* Underline âmbar — cresce no hover */}
+                <span
+                  ref={(el) => { underlinesRef.current[index] = el; }}
+                  style={{
+                    position: "absolute",
+                    bottom: 0,
+                    right: 0,
+                    width: "100%",
+                    height: "1px",
+                    backgroundColor: "var(--color-primary)",
+                    transformOrigin: "right center",
+                    transform: "scaleX(0)",
+                  }}
+                />
               </Link>
-            </motion.div>
+            </div>
 
-            {/* Subitens — dropdown animado com AnimatePresence */}
+            {/* Subitens — dropdown com AnimatePresence + reveal GSAP */}
             <AnimatePresence>
               {showSubItems && subItems.map((sub) => {
                 const subActive = pathname === sub.href;
                 return (
                   <motion.div
                     key={sub.href}
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
                     exit={{ opacity: 0, height: 0 }}
                     transition={{ duration: 0.2, ease: "easeInOut" }}
                     style={{ overflow: "hidden" }}
+                    onAnimationStart={(definition) => {
+                      // Reveal GSAP apenas na entrada (animate), não na saída
+                      if (
+                        typeof definition === "object" &&
+                        definition !== null &&
+                        "opacity" in definition &&
+                        (definition as { opacity?: number }).opacity === 1
+                      ) {
+                        const subItemEl = subItemsRef.current[sub.href];
+                        if (subItemEl) {
+                          gsap.fromTo(
+                            subItemEl,
+                            { height: 0, opacity: 0 },
+                            {
+                              height: "auto",
+                              opacity: 1,
+                              duration: 0.25,
+                              ease: "power2.out",
+                              overwrite: "auto",
+                            }
+                          );
+                        }
+                      }
+                    }}
                   >
-                    <motion.div
-                      whileHover={{ scale: 1.05 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                      style={{ transformOrigin: "right center" }}
+                    <div
+                      ref={(el) => { subItemsRef.current[sub.href] = el; }}
                     >
                       <Link
                         href={sub.href}
@@ -142,10 +224,19 @@ export default function SideNav() {
                           whiteSpace: "nowrap",
                         }}
                       >
-                        {/* Indicador do subitem ativo */}
+                        {/* Indicador do subitem ativo — entrada GSAP */}
                         {subActive && (
-                          <motion.span
-                            layoutId="active-indicator"
+                          <span
+                            ref={(el) => {
+                              if (el) {
+                                gsap.from(el, {
+                                  scale: 0,
+                                  opacity: 0,
+                                  duration: 0.3,
+                                  ease: "back.out(1.7)",
+                                });
+                              }
+                            }}
                             style={{
                               display: "block",
                               width: "4px",
@@ -154,16 +245,11 @@ export default function SideNav() {
                               backgroundColor: "var(--color-primary)",
                               flexShrink: 0,
                             }}
-                            transition={{
-                              type: "spring",
-                              bounce: 0.2,
-                              duration: 0.4,
-                            }}
                           />
                         )}
                         {sub.label}
                       </Link>
-                    </motion.div>
+                    </div>
                   </motion.div>
                 );
               })}
