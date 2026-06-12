@@ -18,11 +18,11 @@
 /* =============================================================================
    1. GOOGLE FONTS
    Deve vir antes do @import "tailwindcss" — regra do CSS.
-   - Google Sans Flex: fonte display para títulos (variável, peso 100–900)
-   - IBM Plex Sans: fonte de corpo para textos e UI
+   - Inter: família única (títulos + corpo), stand-in prático para a
+     "Camera Plain Variable" do DESIGN.md. Pesos 400 (corpo/UI) e 600 (títulos).
 ============================================================================= */
 
-@import url("https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@100..900&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
 
 
 /* =============================================================================
@@ -41,28 +41,28 @@
 ============================================================================= */
 
 :root {
-  /* Fundos — três níveis de profundidade visual */
-  --color-bg:            #080808;  /* fundo principal — preto quase absoluto  */
-  --color-bg-elevated:   #111111;  /* cards e seções alternadas               */
-  --color-bg-subtle:     #1a1a1a;  /* bordas internas e separadores           */
+  /* Fundos — superfícies em tons de creme pergaminho */
+  --color-bg:            #f7f4ed;  /* fundo principal — creme pergaminho      */
+  --color-bg-elevated:   #fcfbf8;  /* cards e seções — leve realce off-white  */
+  --color-bg-subtle:     #eceae4;  /* preenchimentos de hover sutis           */
 
-  /* Cor primária — Âmbar dourado */
-  --color-primary:       #E8A020;  /* cor principal de destaque               */
-  --color-primary-hover: #F5B830;  /* versão mais clara para hover            */
-  --color-primary-muted: #C8881A;  /* versão mais escura para estado ativo    */
+  /* Cor primária — Charcoal (paleta warm-neutral, sem accent saturado) */
+  --color-primary:       #1c1c1c;  /* destaque / CTA — charcoal               */
+  --color-primary-hover: #000000;  /* versão mais escura para hover           */
+  --color-primary-muted: rgba(28,28,28,0.4); /* bordas interativas            */
 
-  /* Texto — hierarquia em três níveis de contraste */
-  --color-text:          #F5F5F0;  /* texto principal — branco quente         */
-  --color-text-muted:    #A0A09A;  /* descrições, metadados, labels           */
-  --color-text-subtle:   #606060;  /* legendas e informações secundárias      */
+  /* Texto — hierarquia em charcoal sobre creme */
+  --color-text:          #1c1c1c;  /* texto principal — charcoal              */
+  --color-text-muted:    #5f5f5d;  /* descrições, metadados, labels           */
+  --color-text-subtle:   rgba(28,28,28,0.4); /* legendas e secundário         */
 
   /* Bordas */
-  --color-border:        #222222;  /* divisores sutis entre seções            */
-  --color-border-strong: #333333;  /* bordas de cards e containers            */
+  --color-border:        #eceae4;  /* divisores sutis entre seções            */
+  --color-border-strong: #e0ddd3;  /* bordas de cards e containers            */
 
-  /* Tipografia */
-  --font-display: "Google Sans Flex", "Google Sans", sans-serif; /* títulos  */
-  --font-body:    "IBM Plex Sans", system-ui, sans-serif;        /* corpo/UI */
+  /* Tipografia — família única (DESIGN.md: Camera Plain Variable → Inter) */
+  --font-display: "Camera Plain Variable", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-body:    "Camera Plain Variable", "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
 
@@ -166,7 +166,7 @@ img { max-width: 100%; display: block; }
   letter-spacing: 0.03em;
 }
 
-.badge-primary { background-color: var(--color-primary); color: #000; }
+.badge-primary { background-color: var(--color-primary); color: var(--color-bg-elevated); }
 
 .badge-muted {
   background-color: var(--color-bg-subtle);
@@ -197,7 +197,7 @@ img { max-width: 100%; display: block; }
 
 .pill-link:hover {
   background: var(--color-primary);
-  color: #000;
+  color: var(--color-bg-elevated);
   border-color: var(--color-primary);
 }
 
@@ -234,4 +234,98 @@ img { max-width: 100%; display: block; }
 /* ── Member card hover ───────────────────────────────────────────────────── */
 .member-card-hover:hover {
   background-color: var(--color-bg-subtle) !important;
+}
+
+
+/* =============================================================================
+   6. HOMEPAGE (abaixo do Hero) — estilo portado de lafim_2.html
+
+   Classes com prefixo .hp- para NÃO colidir com utilitários genéricos
+   (.card, .section-title, etc.) usados em outras páginas. Usadas apenas em
+   ResearchSection, PageCards e CoordinatorSection.
+============================================================================= */
+
+/* ── Eyebrow (rótulo de seção com traço) ──────────────────────────────────── */
+.hp-eyebrow {
+  font-size: 13px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--color-text-muted);
+  display: flex; align-items: center; gap: 12px; margin-bottom: 22px;
+}
+.hp-eyebrow::before { content: ""; width: 28px; height: 1px; background: var(--color-primary-muted); }
+
+/* ── Títulos e texto de seção ─────────────────────────────────────────────── */
+.hp-h2 {
+  font-family: var(--font-display);
+  font-size: clamp(34px, 4.4vw, 48px); font-weight: 600; line-height: 1.02;
+  letter-spacing: -1.2px; margin-bottom: 28px; max-width: 18ch; color: var(--color-text);
+}
+.hp-lead { font-size: 18px; line-height: 1.4; color: rgba(28,28,28,0.82); max-width: 62ch; margin-bottom: 20px; }
+.hp-body { font-size: 16px; line-height: 1.55; color: var(--color-text-muted); max-width: 62ch; }
+
+/* ── Linhas de pesquisa (lista numerada) ──────────────────────────────────── */
+.hp-topics { margin-top: 64px; }
+.hp-topic {
+  display: grid; grid-template-columns: auto 1fr; gap: 32px; align-items: start;
+  padding: 32px 0; border-top: 1px solid var(--color-border);
+  transition: padding-left .4s cubic-bezier(.6,0,.2,1);
+}
+.hp-topics .hp-topic:last-child { border-bottom: 1px solid var(--color-border); }
+.hp-topic:hover { padding-left: 14px; }
+.hp-tnum { font-size: 14px; font-weight: 500; color: var(--color-primary-muted); padding-top: 6px; min-width: 34px; }
+.hp-topic h3 { font-family: var(--font-display); font-size: 24px; font-weight: 600; letter-spacing: -0.6px; line-height: 1.1; margin-bottom: 8px; color: var(--color-text); }
+.hp-topic p { font-size: 15.5px; line-height: 1.55; color: var(--color-text-muted); max-width: 64ch; }
+
+/* ── Cards (Membros / Publicações) ────────────────────────────────────────── */
+.hp-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 900px; margin: 0 auto; }
+.hp-card {
+  position: relative; background: var(--color-bg); border: 1px solid var(--color-border);
+  border-radius: 16px; padding: 44px 40px; overflow: hidden; display: flex; flex-direction: column;
+  transition: transform .4s cubic-bezier(.2,.8,.2,1), border-color .4s, box-shadow .4s;
+}
+.hp-card::after {
+  content: ""; position: absolute; left: 0; top: 0; height: 3px; width: 0; background: var(--color-primary);
+  transition: width .45s cubic-bezier(.6,0,.2,1);
+}
+.hp-card:hover { transform: translateY(-6px); border-color: var(--color-primary-muted); box-shadow: rgba(0,0,0,0.1) 0px 4px 12px; }
+.hp-card:hover::after { width: 100%; }
+.hp-card__ico {
+  width: 46px; height: 46px; border-radius: 9999px; border: 1px solid var(--color-border);
+  display: flex; align-items: center; justify-content: center; margin-bottom: 24px; color: var(--color-text);
+  transition: background .4s, color .4s, border-color .4s;
+}
+.hp-card:hover .hp-card__ico { background: var(--color-primary); color: var(--color-bg-elevated); border-color: var(--color-primary); }
+.hp-card h3 { font-family: var(--font-display); font-size: 26px; font-weight: 600; letter-spacing: -0.8px; margin-bottom: 10px; color: var(--color-text); }
+.hp-card p { font-size: 15px; line-height: 1.5; color: var(--color-text-muted); margin-bottom: 32px; flex: 1; }
+.hp-card__cta { font-size: 15px; font-weight: 500; color: var(--color-text); display: inline-flex; align-items: center; gap: 8px; }
+.hp-card__cta .hp-arw { transition: transform .35s cubic-bezier(.6,0,.2,1); display: inline-block; }
+.hp-card:hover .hp-card__cta .hp-arw { transform: translateX(6px); }
+
+/* ── Coordenador ──────────────────────────────────────────────────────────── */
+.hp-coord__grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 64px; align-items: center; }
+.hp-coord__name { font-family: var(--font-display); font-size: 32px; font-weight: 600; letter-spacing: -0.9px; line-height: 1.1; margin-bottom: 6px; color: var(--color-text); }
+.hp-coord__role { font-size: 14px; font-weight: 500; color: var(--color-text-muted); margin-bottom: 24px; }
+.hp-coord__text p { font-size: 16px; line-height: 1.55; color: rgba(28,28,28,0.82); margin-bottom: 16px; }
+.hp-coord__text p.hp-sec { color: var(--color-text-muted); font-size: 15px; }
+.hp-coord__links { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+.hp-coord__photo {
+  position: relative; aspect-ratio: 4/5; border: 1px solid var(--color-border); border-radius: 12px;
+  background: rgba(28,28,28,0.03); overflow: hidden; display: flex; align-items: center; justify-content: center;
+}
+.hp-coord__photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hp-coord__photo .hp-ph { font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: var(--color-primary-muted); text-align: center; line-height: 2; }
+
+/* ── Botões (estilo lafim_2) ──────────────────────────────────────────────── */
+.hp-btn { font-size: 15px; font-weight: 400; line-height: 1.5; padding: 9px 18px; border-radius: 6px; cursor: pointer; display: inline-block; transition: opacity .25s, background .25s, color .25s; }
+.hp-btn--dark { background: var(--color-primary); color: var(--color-bg-elevated); box-shadow: rgba(255,255,255,0.2) 0px 0.5px 0px 0px inset, rgba(0,0,0,0.2) 0px 0px 0px 0.5px inset, rgba(0,0,0,0.05) 0px 1px 2px 0px; }
+.hp-btn--dark:hover { opacity: .82; }
+.hp-btn--ghost { background: transparent; color: var(--color-text); border: 1px solid var(--color-primary-muted); }
+.hp-btn--ghost:hover { background: rgba(28,28,28,0.04); }
+
+/* ── Responsivo ───────────────────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .hp-coord__grid { grid-template-columns: 1fr; gap: 36px; }
+  .hp-coord__photo { max-width: 380px; }
+  .hp-cards { grid-template-columns: 1fr; }
+  .hp-topic { grid-template-columns: 1fr; gap: 8px; }
+  .hp-tnum { padding-top: 0; }
 }

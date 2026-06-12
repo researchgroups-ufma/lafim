@@ -43,20 +43,20 @@ export const footerLinks = [
 
 export const designTokens = {
   colors: {
-    bg:           "#080808",
-    bgElevated:   "#111111",
-    bgSubtle:     "#1a1a1a",
-    primary:      "#E8A020",
-    primaryHover: "#F5B830",
-    primaryMuted: "#C8881A",
-    text:         "#F5F5F0",
-    textMuted:    "#A0A09A",
-    textSubtle:   "#606060",
-    border:       "#222222",
-    borderStrong: "#333333",
+    bg:           "#f7f4ed",
+    bgElevated:   "#fcfbf8",
+    bgSubtle:     "#eceae4",
+    primary:      "#1c1c1c",
+    primaryHover: "#000000",
+    primaryMuted: "rgba(28,28,28,0.4)",
+    text:         "#1c1c1c",
+    textMuted:    "#5f5f5d",
+    textSubtle:   "rgba(28,28,28,0.4)",
+    border:       "#eceae4",
+    borderStrong: "#e0ddd3",
   },
   fonts: {
-    display: "'Google Sans Flex', 'Google Sans', sans-serif",
-    body:    "'IBM Plex Sans', system-ui, sans-serif",
+    display: "'Camera Plain Variable', 'Inter', ui-sans-serif, system-ui, sans-serif",
+    body:    "'Camera Plain Variable', 'Inter', ui-sans-serif, system-ui, sans-serif",
   },
 };

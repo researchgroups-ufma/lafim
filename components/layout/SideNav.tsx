@@ -13,7 +13,7 @@
 
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -29,6 +29,32 @@ const SUB_ITEMS: Record<string, { label: string; href: string }[]> = {
 
 export default function SideNav() {
   const pathname = usePathname();
+
+  // Indica se o menu (centralizado na vertical) está sobreposto ao Hero escuro.
+  // Quando true → texto branco; quando false (seções creme) → texto charcoal.
+  // Inicializa como true na home para evitar flash escuro antes do observer.
+  const [overDark, setOverDark] = useState(pathname === "/");
+
+  // Observa o Hero com uma "linha" no centro vertical da viewport (rootMargin
+  // -50%/-50%). Enquanto o Hero cruza essa linha, o menu está sobre fundo escuro.
+  useEffect(() => {
+    const hero = document.getElementById("hero");
+    if (!hero) {
+      setOverDark(false); // páginas sem Hero (fundo creme) → texto escuro
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => setOverDark(entry.isIntersecting),
+      { rootMargin: "-50% 0px -50% 0px", threshold: 0 }
+    );
+    io.observe(hero);
+    return () => io.disconnect();
+  }, [pathname]);
+
+  // Cores derivadas do contexto (escuro sobre o Hero / claro sobre o creme)
+  const fg = overDark ? "#ffffff" : "var(--color-text)";
+  const accent = overDark ? "#ffffff" : "var(--color-primary)";
+  const sepColor = overDark ? "rgba(245, 245, 240, 0.2)" : "rgba(28, 28, 28, 0.15)";
 
   // Refs para as animações GSAP
   const linksRef = useRef<(HTMLDivElement | null)[]>([]);
@@ -93,7 +119,8 @@ export default function SideNav() {
               style={{
                 width: "100%",
                 height: "1px",
-                backgroundColor: "rgba(245, 245, 240, 0.2)",
+                backgroundColor: sepColor,
+                transition: "background-color 0.15s ease",
               }}
             />
 
@@ -117,9 +144,7 @@ export default function SideNav() {
                   fontSize: "0.875rem",
                   fontWeight: isActive ? 500 : 400,
                   letterSpacing: "0.04em",
-                  color: isActive
-                    ? "var(--color-primary)"
-                    : "var(--color-text)",
+                  color: fg,
                   transition: "color 0.15s ease",
                   whiteSpace: "nowrap",
                 }}
@@ -142,7 +167,7 @@ export default function SideNav() {
                       width: "6px",
                       height: "6px",
                       borderRadius: "50%",
-                      backgroundColor: "var(--color-primary)",
+                      backgroundColor: accent,
                       flexShrink: 0,
                     }}
                   />
@@ -159,7 +184,7 @@ export default function SideNav() {
                     right: 0,
                     width: "100%",
                     height: "1px",
-                    backgroundColor: "var(--color-primary)",
+                    backgroundColor: accent,
                     transformOrigin: "right center",
                     transform: "scaleX(0)",
                   }}

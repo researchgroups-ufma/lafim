@@ -1,18 +1,17 @@
-﻿import { InView } from "@/components/motion-primitives/in-view";
+import { InView } from "@/components/motion-primitives/in-view";
 
 /**
- * CoordinatorSection — Seção "Sobre o Coordenador" da homepage
+ * CoordinatorSection — Seção "Sobre o Coordenador" da homepage (estilo lafim_2.html)
  *
  * Estrutura:
- *   - Texto à esquerda com bio do coordenador
- *   - Foto à direita (ou placeholder se não houver foto)
+ *   - Eyebrow "Sobre o Coordenador"
+ *   - Grid: texto à esquerda (nome, papel, bio, links) e foto 4:5 à direita
  *
  * Os dados vêm do membro com role "Coordenador" em content/members/
- * A página.tsx passa o coordenador como prop após filtrar a coleção.
  *
  * Props:
  *   name     — nome completo do coordenador
- *   bio      — biografia/texto descritivo
+ *   bio      — biografia/texto descritivo (parágrafos separados por \n\n)
  *   photo    — caminho da foto (opcional)
  *   lattes   — URL do Lattes (opcional)
  *   email    — e-mail institucional (opcional)
@@ -29,6 +28,8 @@ type CoordinatorSectionProps = {
 export default function CoordinatorSection({
   name, bio, photo, lattes, email,
 }: CoordinatorSectionProps) {
+  const paragraphs = bio ? bio.split("\n\n") : [];
+
   return (
     <section
       id="coordinator"
@@ -37,11 +38,8 @@ export default function CoordinatorSection({
     >
       <div className="container-site">
 
-        {/* Cabeçalho */}
-        <h2 className="section-title">Sobre o Coordenador</h2>
-        <span className="title-accent" />
+        <p className="hp-eyebrow">Sobre o Coordenador</p>
 
-        {/* Layout: texto à esquerda, foto à direita */}
         <InView
           variants={{
             hidden: { opacity: 0, y: 32 },
@@ -50,117 +48,50 @@ export default function CoordinatorSection({
           viewOptions={{ margin: "0px 0px -80px 0px" }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 200px",
-            gap: "3rem",
-            alignItems: "start",
-          }}
-        >
+          <div className="hp-coord__grid">
 
-          {/* ── Texto ──────────────────────────────────────────────────────── */}
-          <div>
-            {/* Bio — cada parágrafo separado por \n\n no frontmatter */}
-            {bio && bio.split("\n\n").map((paragraph, index) => (
-              <p
-                key={index}
-                style={{
-                  fontSize: "0.97rem",
-                  lineHeight: 1.85,
-                  color: "var(--color-text-muted)",
-                  fontWeight: 300,
-                  marginBottom: "1.1rem",
-                }}
-              >
-                {paragraph}
-              </p>
-            ))}
+            {/* ── Texto ──────────────────────────────────────────────────── */}
+            <div className="hp-coord__text">
+              <h2 className="hp-coord__name">{name}</h2>
+              <p className="hp-coord__role">Coordenador do LaFiM · Departamento de Física</p>
 
-            {/* Links acadêmicos */}
-            <div style={{ display: "flex", gap: "1.5rem", marginTop: "1.5rem", flexWrap: "wrap" }}>
-              {lattes && (
-                <a
-                  href={lattes}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    fontSize: "0.85rem",
-                    color: "var(--color-primary)",
-                    fontWeight: 500,
-                  }}
+              {/* Bio — último parágrafo em tom secundário (.hp-sec) */}
+              {paragraphs.map((paragraph, index) => (
+                <p
+                  key={index}
+                  className={index === paragraphs.length - 1 && paragraphs.length > 1 ? "hp-sec" : undefined}
                 >
-                  Currículo Lattes ↗
-                </a>
-              )}
-              {email && (
-                <a
-                  href={`mailto:${email}`}
-                  style={{
-                    fontSize: "0.85rem",
-                    color: "var(--color-primary)",
-                    fontWeight: 500,
-                  }}
-                >
-                  {email}
-                </a>
+                  {paragraph}
+                </p>
+              ))}
+
+              {/* Links acadêmicos */}
+              <div className="hp-coord__links">
+                {lattes && (
+                  <a className="hp-btn hp-btn--dark" href={lattes} target="_blank" rel="noopener noreferrer">
+                    Currículo Lattes
+                  </a>
+                )}
+                {email && (
+                  <a className="hp-btn hp-btn--ghost" href={`mailto:${email}`}>
+                    {email}
+                  </a>
+                )}
+              </div>
+            </div>
+
+            {/* ── Foto ───────────────────────────────────────────────────── */}
+            <div className="hp-coord__photo">
+              {photo ? (
+                <img src={photo} alt={`Foto de ${name}`} />
+              ) : (
+                <span className="hp-ph">Foto do<br />coordenador<br />4 : 5</span>
               )}
             </div>
+
           </div>
-
-          {/* ── Foto ───────────────────────────────────────────────────────── */}
-          <figure style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-            {photo ? (
-              <img
-                src={photo}
-                alt={`Foto de ${name}`}
-                style={{
-                  width: "100%",
-                  aspectRatio: "0.8",
-                  objectFit: "cover",
-                  border: "1px solid var(--color-border-strong)",
-                }}
-              />
-            ) : (
-              /* Placeholder quando não há foto disponível */
-              <div
-                style={{
-                  width: "100%",
-                  aspectRatio: "0.8",
-                  backgroundColor: "var(--color-bg-elevated)",
-                  border: "1px solid var(--color-border-strong)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <span
-                  style={{
-                    color: "var(--color-primary)",
-                    fontFamily: "var(--font-display)",
-                    fontSize: "2.5rem",
-                    fontWeight: 600,
-                  }}
-                >
-                  {name.charAt(0)} {/* inicial do nome como placeholder */}
-                </span>
-              </div>
-            )}
-            <figcaption
-              style={{
-                fontSize: "0.75rem",
-                color: "var(--color-text-subtle)",
-                textAlign: "center",
-                marginTop: "0.5rem",
-                fontStyle: "italic",
-              }}
-            >
-              {name} · UFMA
-            </figcaption>
-          </figure>
-
-        </div>
         </InView>
+
       </div>
     </section>
   );

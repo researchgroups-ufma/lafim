@@ -91,7 +91,7 @@ export default function PublicationsFilter({ publications }: PublicationsFilterP
                 ? "var(--color-primary)"    /* ativo — fundo âmbar            */
                 : "var(--color-bg-elevated)", /* inativo — fundo elevado      */
               color: activeFilter === filter.value
-                ? "#000"                     /* texto preto sobre âmbar       */
+                ? "var(--color-bg-elevated)" /* texto claro sobre charcoal    */
                 : "var(--color-text-muted)",
               cursor: "pointer",
               fontFamily: "var(--font-body)",

@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LaFiM — Laboratório de Física dos Materiais</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#f7f4ed;
+  --charcoal:#1c1c1c;
+  --offwhite:#fcfbf8;
+  --muted:#5f5f5d;
+  --c82:rgba(28,28,28,0.82);
+  --c40:rgba(28,28,28,0.4);
+  --c04:rgba(28,28,28,0.04);
+  --c03:rgba(28,28,28,0.03);
+  --border:#eceae4;
+  --font:'Inter', ui-sans-serif, system-ui, sans-serif;
+  --inset:rgba(255,255,255,0.2) 0px 0.5px 0px 0px inset, rgba(0,0,0,0.2) 0px 0px 0px 0.5px inset, rgba(0,0,0,0.05) 0px 1px 2px 0px;
+  --focus:rgba(0,0,0,0.1) 0px 4px 12px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--cream);
+  color:var(--charcoal);
+  font-family:var(--font);
+  font-size:16px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+::selection{background:var(--charcoal);color:var(--cream);}
+a{color:inherit;text-decoration:none;}
+
+/* ============ VERTICAL TEXT NAV (right, no background) ============ */
+.sidenav{
+  position:fixed;
+  top:0;right:0;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  z-index:90;
+  padding:0 24px;
+  pointer-events:none;
+}
+.sidenav a{
+  pointer-events:auto;
+  writing-mode:vertical-rl;
+  text-orientation:mixed;
+  font-size:13px;
+  font-weight:500;
+  letter-spacing:1px;
+  color:#cfcfcf;
+  mix-blend-mode:difference;
+  padding:18px 6px;
+  position:relative;
+  transition:transform .35s cubic-bezier(.6,0,.2,1), letter-spacing .35s cubic-bezier(.6,0,.2,1), color .35s;
+}
+.sidenav a:hover{color:#ffffff;transform:translateX(-4px);letter-spacing:2.5px;}
+.sidenav a:focus-visible{outline:none;color:#fff;transform:translateX(-4px);}
+.sidenav .navsep{
+  pointer-events:none;
+  width:1px;height:22px;
+  background:#9a9a9a;
+  mix-blend-mode:difference;
+  opacity:.7;
+}
+.sidenav a.active::after{
+  content:"";position:absolute;left:-2px;top:50%;
+  transform:translateY(-50%);
+  width:5px;height:5px;border-radius:9999px;
+  background:#fff;mix-blend-mode:difference;
+}
+
+/* mobile nav */
+.nav-toggle{
+  display:none;position:fixed;top:16px;right:16px;z-index:200;
+  width:42px;height:42px;background:var(--charcoal);color:var(--offwhite);
+  border:none;border-radius:6px;box-shadow:var(--inset);cursor:pointer;
+  align-items:center;justify-content:center;flex-direction:column;gap:4px;
+}
+.nav-toggle span{display:block;width:16px;height:1.5px;background:var(--offwhite);transition:transform .3s, opacity .3s;}
+.nav-toggle.open span:nth-child(1){transform:translateY(5.5px) rotate(45deg);}
+.nav-toggle.open span:nth-child(2){opacity:0;}
+.nav-toggle.open span:nth-child(3){transform:translateY(-5.5px) rotate(-45deg);}
+.mobile-menu{
+  display:none;position:fixed;inset:0;background:var(--cream);z-index:150;
+  flex-direction:column;align-items:center;justify-content:center;gap:18px;
+  opacity:0;pointer-events:none;transition:opacity .35s;
+}
+.mobile-menu.open{opacity:1;pointer-events:auto;}
+.mobile-menu a{font-size:28px;font-weight:600;letter-spacing:-0.6px;color:var(--charcoal);}
+
+/* ============ HERO ============ */
+.hero{
+  position:relative;height:100vh;min-height:600px;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  background:var(--charcoal);
+}
+#gradient{position:absolute;inset:0;width:100%;height:100%;display:block;}
+.hero__veil{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 40%, transparent 38%, rgba(18,18,20,0.5) 100%);
+}
+.hero__center{position:relative;z-index:2;text-align:center;padding:0 24px;max-width:760px;}
+.hero__logo{
+  width:min(420px,72vw);margin:0 auto 26px;
+  animation:fadeUp 1.2s cubic-bezier(.2,.8,.2,1) both;
+  filter:drop-shadow(0 6px 30px rgba(0,0,0,0.35));
+}
+.hero__logo svg{width:100%;height:auto;display:block;}
+.hero__sub{
+  font-size:18px;font-weight:400;line-height:1.38;
+  color:rgba(255,255,255,0.86);letter-spacing:0.2px;
+  animation:fadeUp 1.2s .2s cubic-bezier(.2,.8,.2,1) both;
+}
+.hero__tag{
+  display:inline-block;margin-top:22px;
+  font-size:13px;font-weight:500;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(255,255,255,0.6);
+  animation:fadeUp 1.2s .35s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+.hero__scroll{
+  position:absolute;bottom:30px;left:50%;transform:translateX(-50%);z-index:2;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);
+}
+.hero__scroll .line{width:1px;height:34px;background:rgba(255,255,255,0.5);animation:drop 2s infinite cubic-bezier(.6,0,.2,1);}
+@keyframes drop{0%{transform:scaleY(0);transform-origin:top;}50%{transform:scaleY(1);transform-origin:top;}51%{transform-origin:bottom;}100%{transform:scaleY(0);transform-origin:bottom;}}
+
+/* ============ SECTIONS ============ */
+.section{max-width:1120px;margin:0 auto;padding:128px 64px;}
+.eyebrow{
+  font-size:13px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);display:flex;align-items:center;gap:12px;margin-bottom:22px;
+}
+.eyebrow::before{content:"";width:28px;height:1px;background:var(--c40);}
+.section h2{
+  font-size:clamp(34px,4.4vw,48px);font-weight:600;line-height:1.02;
+  letter-spacing:-1.2px;margin-bottom:28px;max-width:18ch;
+}
+.lead{font-size:18px;line-height:1.4;color:var(--c82);max-width:62ch;margin-bottom:20px;}
+.body-text{font-size:16px;line-height:1.55;color:var(--muted);max-width:62ch;}
+
+/* research topics */
+.topics{margin-top:64px;}
+.topic{
+  display:grid;grid-template-columns:auto 1fr;gap:32px;align-items:start;
+  padding:32px 0;border-top:1px solid var(--border);
+  transition:padding-left .4s cubic-bezier(.6,0,.2,1);
+}
+.topics .topic:last-child{border-bottom:1px solid var(--border);}
+.topic:hover{padding-left:14px;}
+.topic .tnum{font-size:14px;font-weight:500;color:var(--c40);padding-top:6px;min-width:34px;}
+.topic h3{font-size:24px;font-weight:600;letter-spacing:-0.6px;line-height:1.1;margin-bottom:8px;}
+.topic p{font-size:15.5px;line-height:1.55;color:var(--muted);max-width:64ch;}
+
+/* ============ CARDS ============ */
+.cards-wrap{padding:0 64px 128px;}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:900px;margin:0 auto;}
+.card{
+  position:relative;background:var(--cream);border:1px solid var(--border);
+  border-radius:16px;padding:44px 40px;overflow:hidden;display:flex;flex-direction:column;
+  transition:transform .4s cubic-bezier(.2,.8,.2,1), border-color .4s, box-shadow .4s;
+}
+.card::after{
+  content:"";position:absolute;left:0;top:0;height:3px;width:0;background:var(--charcoal);
+  transition:width .45s cubic-bezier(.6,0,.2,1);
+}
+.card:hover{transform:translateY(-6px);border-color:var(--c40);box-shadow:var(--focus);}
+.card:hover::after{width:100%;}
+.card .card__ico{
+  width:46px;height:46px;border-radius:9999px;border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;margin-bottom:24px;color:var(--charcoal);
+  transition:background .4s, color .4s, border-color .4s;
+}
+.card:hover .card__ico{background:var(--charcoal);color:var(--offwhite);border-color:var(--charcoal);}
+.card h3{font-size:26px;font-weight:600;letter-spacing:-0.8px;margin-bottom:10px;}
+.card p{font-size:15px;line-height:1.5;color:var(--muted);margin-bottom:32px;flex:1;}
+.card .card__cta{font-size:15px;font-weight:500;color:var(--charcoal);display:inline-flex;align-items:center;gap:8px;}
+.card .card__cta .arw{transition:transform .35s cubic-bezier(.6,0,.2,1);display:inline-block;}
+.card:hover .card__cta .arw{transform:translateX(6px);}
+.card:focus-visible{outline:none;box-shadow:var(--focus);border-color:var(--c40);}
+
+/* ============ COORDINATOR ============ */
+.coord{border-top:1px solid var(--border);}
+.coord__grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:64px;align-items:center;}
+.coord__name{font-size:32px;font-weight:600;letter-spacing:-0.9px;line-height:1.1;margin-bottom:6px;}
+.coord__role{font-size:14px;font-weight:500;color:var(--muted);margin-bottom:24px;}
+.coord__text p{font-size:16px;line-height:1.55;color:var(--c82);margin-bottom:16px;}
+.coord__text p.sec{color:var(--muted);font-size:15px;}
+.coord__links{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px;}
+.coord__photo{
+  position:relative;aspect-ratio:4/5;border:1px solid var(--border);border-radius:12px;
+  background:var(--c03);overflow:hidden;display:flex;align-items:center;justify-content:center;
+}
+.coord__photo img{width:100%;height:100%;object-fit:cover;display:block;}
+.coord__photo .ph{font-size:13px;letter-spacing:1px;text-transform:uppercase;color:var(--c40);text-align:center;line-height:2;}
+
+/* buttons */
+.btn{font-size:15px;font-weight:400;line-height:1.5;padding:9px 18px;border-radius:6px;cursor:pointer;display:inline-block;transition:opacity .25s, background .25s, color .25s;}
+.btn--dark{background:var(--charcoal);color:var(--offwhite);box-shadow:var(--inset);}
+.btn--dark:hover{opacity:.82;}
+.btn--ghost{background:transparent;color:var(--charcoal);border:1px solid var(--c40);}
+.btn--ghost:hover{background:var(--c04);}
+
+/* ============ FOOTER ============ */
+footer{background:linear-gradient(180deg,var(--cream) 0%, #efebe1 100%);border-top:1px solid var(--border);padding:80px 64px 40px;}
+.footer__inner{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;}
+.footer__brand{width:160px;}
+.footer__brand svg{width:100%;height:auto;display:block;}
+.footer__brand svg path{fill:var(--charcoal);}
+.footer__brand p{font-size:13px;color:var(--muted);margin-top:14px;line-height:1.5;}
+.footer__col h4{font-size:13px;font-weight:600;letter-spacing:0.4px;text-transform:uppercase;margin-bottom:16px;}
+.footer__col a,.footer__col p{display:block;font-size:14px;color:var(--muted);margin-bottom:8px;transition:color .25s;}
+.footer__col a:hover{color:var(--charcoal);text-decoration:underline;}
+.footer__base{max-width:1120px;margin:56px auto 0;padding-top:24px;border-top:1px solid var(--border);font-size:13px;color:var(--c40);}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .9s cubic-bezier(.2,.8,.2,1), transform .9s cubic-bezier(.2,.8,.2,1);}
+.reveal.in{opacity:1;transform:none;}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important;}
+  html{scroll-behavior:auto;}
+  .reveal{opacity:1;transform:none;}
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width:1024px){
+  .section{padding:96px 48px;}
+  .cards-wrap{padding:0 48px 96px;}
+  footer{padding:64px 48px 40px;}
+  .coord__grid{gap:48px;}
+}
+@media (max-width:860px){
+  .sidenav{display:none;}
+  .nav-toggle{display:flex;}
+  .mobile-menu{display:flex;}
+  .coord__grid{grid-template-columns:1fr;gap:36px;}
+  .coord__photo{max-width:380px;}
+  .cards{grid-template-columns:1fr;}
+  .section{padding:80px 28px;}
+  .cards-wrap{padding:0 28px 80px;}
+  .footer__inner{grid-template-columns:1fr;gap:36px;}
+  footer{padding:56px 28px 36px;}
+  .topic{grid-template-columns:1fr;gap:8px;}
+  .topic .tnum{padding-top:0;}
+}
+</style>
+</head>
+<body>
+
+<button class="nav-toggle" id="navToggle" aria-label="Abrir menu"><span></span><span></span><span></span></button>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#inicio">Início</a>
+  <a href="#pesquisa">Pesquisa</a>
+  <a href="membros.html">Membros</a>
+  <a href="publicacoes.html">Publicações</a>
+  <a href="#coordenador">Coordenador</a>
+  <a href="#contato">Contato</a>
+</div>
+
+<nav class="sidenav" aria-label="Navegação principal">
+  <a href="#inicio" data-target="inicio">Início</a>
+  <span class="navsep"></span>
+  <a href="#pesquisa" data-target="pesquisa">Pesquisa</a>
+  <span class="navsep"></span>
+  <a href="membros.html">Membros</a>
+  <span class="navsep"></span>
+  <a href="publicacoes.html">Publicações</a>
+  <span class="navsep"></span>
+  <a href="#coordenador" data-target="coordenador">Coordenador</a>
+  <span class="navsep"></span>
+  <a href="#contato" data-target="contato">Contato</a>
+</nav>
+
+<main>
+
+  <header class="hero" id="inicio">
+    <canvas id="gradient" aria-hidden="true"></canvas>
+    <div class="hero__veil"></div>
+    <div class="hero__center">
+      <div class="hero__logo" id="heroLogo" aria-label="LaFiM"></div>
+      <p class="hero__sub">Investigamos como a estrutura dos materiais define suas propriedades — da escala atômica às aplicações.</p>
+      <span class="hero__tag">Laboratório de Física dos Materiais</span>
+    </div>
+    <div class="hero__scroll">Explorar<span class="line"></span></div>
+  </header>
+
+  <section class="section reveal" id="pesquisa">
+    <p class="eyebrow">Pesquisa</p>
+    <h2>Da estrutura atômica à função do material.</h2>
+    <p class="lead">O LaFiM estuda a relação entre estrutura, composição e propriedades físicas dos materiais, combinando caracterização experimental e modelagem teórica. Partimos da escala atômica — onde simetria e defeitos governam o sólido — e chegamos às aplicações em energia, sensores e dispositivos funcionais.</p>
+    <p class="body-text">O grupo mantém colaborações nacionais e internacionais, com infraestrutura própria de síntese e caracterização, formando pesquisadores em iniciação científica, mestrado e doutorado.</p>
+
+    <div class="topics">
+      <div class="topic">
+        <span class="tnum">01</span>
+        <div>
+          <h3>Caracterização estrutural</h3>
+          <p>Difração de raios X, refinamento Rietveld e espectroscopia vibracional aplicados à identificação de fases, simetrias e transições estruturais.</p>
+        </div>
+      </div>
+      <div class="topic">
+        <span class="tnum">02</span>
+        <div>
+          <h3>Propriedades elétricas e dielétricas</h3>
+          <p>Espectroscopia de impedância e medidas dielétricas para o estudo de condução iônica, relaxações e materiais para dispositivos de energia.</p>
+        </div>
+      </div>
+      <div class="topic">
+        <span class="tnum">03</span>
+        <div>
+          <h3>Síntese de novos materiais</h3>
+          <p>Rotas de estado sólido e química úmida para cerâmicas funcionais, óxidos complexos e materiais nanoestruturados.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cards-wrap reveal">
+    <div class="cards">
+      <a class="card" href="membros.html">
+        <span class="card__ico" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </span>
+        <h3>Membros</h3>
+        <p>Conheça os pesquisadores, estudantes de pós-graduação e alunos de iniciação científica que formam o grupo.</p>
+        <span class="card__cta">Ver equipe <span class="arw">→</span></span>
+      </a>
+      <a class="card" href="publicacoes.html">
+        <span class="card__ico" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </span>
+        <h3>Publicações</h3>
+        <p>Artigos, capítulos e trabalhos em eventos produzidos pelo laboratório ao longo dos anos.</p>
+        <span class="card__cta">Ver publicações <span class="arw">→</span></span>
+      </a>
+    </div>
+  </div>
+
+  <section class="section coord reveal" id="coordenador">
+    <p class="eyebrow">Sobre o Coordenador</p>
+    <div class="coord__grid">
+      <div class="coord__text">
+        <h2 class="coord__name">Prof. Dr. Nome do Coordenador</h2>
+        <p class="coord__role">Coordenador do LaFiM · Departamento de Física</p>
+        <p>Doutor em Física, com atuação nas áreas de matéria condensada e ciência dos materiais. Coordena o LaFiM desde sua fundação, orientando projetos em caracterização estrutural, propriedades elétricas de sólidos e desenvolvimento de novos materiais funcionais.</p>
+        <p class="sec">Bolsista de produtividade e autor de dezenas de artigos em periódicos internacionais. Substitua este texto pela biografia oficial do coordenador.</p>
+        <div class="coord__links">
+          <a class="btn btn--dark" href="#">Currículo Lattes</a>
+          <a class="btn btn--ghost" href="#">ORCID</a>
+        </div>
+      </div>
+      <div class="coord__photo">
+        <!-- Substituir pelo retrato: <img src="coordenador.jpg" alt="Foto do coordenador"> -->
+        <div class="ph">Foto do<br>coordenador<br>4 : 5</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer id="contato">
+  <div class="footer__inner">
+    <div>
+      <div class="footer__brand" id="footerLogo"></div>
+      <p>Laboratório de Física dos Materiais</p>
+    </div>
+    <div class="footer__col">
+      <h4>Navegação</h4>
+      <a href="#pesquisa">Pesquisa</a>
+      <a href="membros.html">Membros</a>
+      <a href="publicacoes.html">Publicações</a>
+      <a href="#coordenador">Coordenador</a>
+    </div>
+    <div class="footer__col">
+      <h4>Contato</h4>
+      <p>lafim@universidade.br</p>
+      <p>Departamento de Física</p>
+      <p>Campus Universitário</p>
+    </div>
+  </div>
+  <div class="footer__base">© 2026 LaFiM — Laboratório de Física dos Materiais. Todos os direitos reservados.</div>
+</footer>
+
+<template id="logoTpl">
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet" role="img" aria-label="LaFiM">
+<g transform="translate(0,1080) scale(0.1,-0.1)" fill="#F5F5F0" stroke="none">
+<path d="M4474 8171 c-46 -8 -44 41 -44 -1185 l0 -1161 -593 593 c-325 325 -596 592 -602 592 -13 0 -95 -82 -95 -95 0 -5 259 -269 575 -585 316 -316 575 -578 575 -582 0 -5 -510 -8 -1133 -8 l-1134 0 -11 -22 c-8 -16 -10 -174 -9 -531 l2 -507 705 -705 705 -705 521 0 c391 0 523 3 532 12 9 9 12 278 12 1147 l0 1136 568 -568 c312 -312 571 -567 577 -567 13 0 95 82 95 95 0 5 -262 272 -582 592 -321 321 -578 583 -573 584 6 1 528 2 1161 2 959 2 1154 4 1167 16 15 12 17 61 17 525 l0 511 -709 708 -708 709 -500 2 c-275 0 -508 -1 -519 -3z m926 -45 c0 -9 -495 -366 -507 -366 -11 0 -370 359 -365 365 6 6 872 7 872 1z m419 -340 c300 -300 313 -315 290 -325 -13 -5 -94 -22 -179 -36 -85 -15 -164 -29 -175 -32 -11 -2 -78 -15 -150 -28 -71 -14 -148 -29 -170 -35 -22 -5 -51 -10 -64 -10 -21 0 -23 3 -17 33 4 17 11 55 16 82 9 51 39 205 85 445 15 74 29 154 32 178 3 23 8 42 12 42 3 0 148 -141 320 -314z m-1058 -542 c-56 -258 -106 -487 -111 -509 -9 -38 -18 -80 -75 -350 -44 -206 -86 -389 -90 -394 -3 -2 -5 470 -5 1050 l0 1054 191 -191 191 -191 -101 -469z m685 829 c-3 -10 -13 -56 -21 -103 -9 -47 -37 -191 -61 -320 -25 -129 -48 -250 -51 -267 -3 -18 -10 -33 -16 -33 -14 0 -367 352 -367 366 0 6 25 28 55 50 31 21 102 73 158 114 56 41 122 89 145 105 23 17 66 47 95 67 58 42 71 46 63 21z m-163 -805 c-5 -7 -29 -49 -53 -93 -46 -87 -292 -532 -480 -870 -64 -115 -133 -241 -154 -278 -53 -98 -76 -134 -76 -120 0 11 61 297 125 588 14 61 75 344 136 630 61 286 113 527 116 535 2 9 73 -56 200 -182 150 -150 194 -200 186 -210z m867 145 c0 -8 -25 -139 -101 -533 -21 -113 -39 -213 -39 -223 0 -9 -1 -17 -3 -17 -5 0 -622 620 -625 629 -3 8 77 26 298 67 337 61 415 76 419 80 8 7 51 4 51 -3z m369 -327 c196 -196 309 -316 302 -321 -7 -3 -82 -19 -169 -35 -86 -16 -170 -31 -187 -35 -16 -3 -86 -17 -155 -30 -69 -13 -153 -29 -187 -36 -35 -7 -65 -10 -69 -7 -3 3 11 91 31 195 20 103 52 268 71 367 18 98 34 187 34 197 0 11 3 19 8 19 4 0 148 -141 321 -314z m-549 -491 c0 -5 -62 -44 -137 -85 -151 -83 -249 -137 -388 -216 -27 -15 -77 -42 -110 -60 -33 -18 -224 -123 -424 -233 -200 -111 -368 -201 -373 -201 -4 0 -8 4 -8 8 0 5 60 116 133 248 74 131 148 266 166 299 18 33 137 248 264 478 l231 418 323 -323 c178 -178 323 -327 323 -333z m890 -372 l0 -438 -185 185 c-102 102 -185 189 -185 195 0 6 24 42 53 80 28 39 108 148 176 243 68 94 127 172 132 172 5 0 9 -189 9 -437z m-226 -282 c103 -104 184 -190 180 -193 -8 -4 -2045 -3 -2084 1 -26 3 9 18 70 30 30 6 84 17 120 25 192 41 228 48 260 56 19 5 71 16 115 25 44 10 107 23 140 30 33 7 94 20 135 29 41 9 248 54 460 100 212 47 392 85 400 85 8 1 100 -84 204 -188z m-2483 -257 c-18 -8 -52 -19 -75 -23 -22 -5 -126 -27 -230 -50 -104 -23 -198 -43 -210 -45 -11 -3 -41 -9 -66 -15 -81 -18 -173 -38 -255 -56 -169 -36 -263 -56 -370 -80 -38 -9 -104 -23 -145 -31 -41 -9 -104 -23 -140 -30 -36 -8 -93 -20 -128 -26 l-63 -11 -183 179 c-100 98 -185 185 -189 192 -5 9 206 12 1041 11 931 -1 1043 -2 1013 -15z m-1902 -218 l183 -183 -45 -59 c-57 -76 -197 -268 -267 -366 -30 -43 -58 -78 -62 -78 -5 0 -8 196 -8 435 0 239 3 435 8 435 4 0 90 -83 191 -184z m2141 178 c0 -3 -8 -18 -18 -32 -11 -15 -37 -61 -59 -102 -48 -88 -23 -45 -350 -635 -143 -258 -280 -506 -304 -551 -24 -44 -51 -91 -59 -102 -15 -22 -23 -14 -337 300 -178 177 -323 324 -323 327 0 9 24 23 175 106 28 15 55 30 60 35 6 4 48 28 95 53 47 25 166 90 265 144 99 55 308 170 465 257 157 86 303 167 325 181 39 23 65 31 65 19z m-14 -185 c-9 -41 -23 -105 -31 -144 -9 -38 -25 -113 -36 -165 -11 -52 -28 -133 -39 -180 -11 -47 -58 -265 -105 -485 -47 -220 -90 -420 -96 -445 -6 -25 -20 -92 -33 -149 -12 -58 -27 -106 -32 -108 -5 -2 -94 82 -198 186 l-188 189 37 69 c21 37 90 163 155 278 64 116 134 242 155 280 167 309 418 755 422 752 2 -3 -3 -38 -11 -78z m56 -1054 c-1 -575 -6 -1045 -10 -1045 -8 0 -372 363 -372 371 0 2 7 36 15 74 9 39 20 92 25 118 5 27 19 88 30 135 18 83 168 776 251 1162 51 241 48 230 57 230 4 0 6 -470 4 -1045z m-1576 388 c-4 -21 -32 -168 -62 -328 -31 -159 -60 -318 -66 -353 -6 -34 -15 -61 -19 -60 -13 4 -619 611 -619 619 0 9 25 18 66 24 16 3 85 16 154 29 131 25 448 84 489 91 13 2 26 7 29 10 3 3 12 5 20 5 11 0 13 -8 8 -37z m369 -303 c197 -197 306 -313 300 -319 -6 -5 -23 -12 -40 -15 -28 -4 -278 -50 -335 -61 -14 -3 -36 -7 -50 -10 -14 -3 -72 -15 -130 -25 -58 -11 -114 -22 -125 -24 -77 -18 -85 -18 -85 -5 0 8 17 104 39 214 21 110 53 280 72 378 18 97 35 177 39 177 3 0 144 -139 315 -310z m335 -369 c0 -5 -13 -78 -29 -163 -67 -345 -101 -525 -107 -566 -4 -23 -10 -41 -15 -40 -13 5 -619 611 -619 620 0 10 51 23 190 47 63 12 126 23 140 26 14 3 97 19 185 35 88 17 176 34 195 39 48 12 60 13 60 2z m237 -203 c101 -101 183 -187 183 -193 -1 -5 -58 -50 -127 -100 -183 -130 -188 -133 -287 -207 -50 -37 -94 -64 -98 -60 -3 4 0 36 8 72 13 61 51 262 105 548 13 67 25 122 28 122 3 0 88 -82 188 -182z m410 -410 c101 -101 183 -186 183 -189 0 -3 -196 -6 -435 -6 -315 0 -435 3 -435 12 0 6 35 35 77 65 42 30 93 66 113 80 19 14 70 51 113 83 96 71 190 137 197 137 3 0 87 -82 187 -182z"/>
+<path d="M11600 5129 c-32 -13 -78 -56 -96 -91 -17 -32 -18 -115 -3 -155 29 -77 130 -125 217 -103 62 15 101 45 123 94 45 99 6 212 -88 252 -37 16 -116 17 -153 3z"/>
+<path d="M7130 4195 l0 -875 585 0 585 0 0 135 0 135 -440 0 -440 0 0 740 0 740 -145 0 -145 0 0 -875z"/>
+<path d="M10020 4195 l0 -875 145 0 145 0 0 360 0 360 400 0 400 0 0 135 0 135 -400 0 -400 0 0 250 0 250 445 0 445 0 0 130 0 130 -590 0 -590 0 0 -875z"/>
+<path d="M12260 4195 l0 -875 140 0 140 0 2 602 3 602 269 -602 269 -602 136 0 136 0 265 594 265 593 3 -593 2 -594 145 0 145 0 0 875 0 875 -176 -2 -176 -3 -298 -670 c-164 -368 -302 -676 -307 -683 -5 -8 -117 233 -312 673 l-304 685 -174 0 -173 0 0 -875z"/>
+<path d="M8862 4610 c-183 -48 -309 -173 -356 -352 -7 -29 -12 -56 -9 -60 2 -5 60 -8 128 -8 l123 0 11 33 c35 99 115 155 234 164 173 13 289 -72 312 -229 l6 -48 -238 0 c-262 0 -327 -9 -416 -58 -71 -38 -134 -103 -165 -170 -24 -51 -27 -69 -27 -167 0 -100 3 -116 29 -172 32 -70 116 -157 184 -192 67 -34 150 -51 250 -51 162 0 278 43 357 133 l42 48 5 -46 c11 -93 57 -115 238 -115 l131 0 -3 123 -3 122 -62 3 -63 3 0 317 c0 346 -5 387 -58 486 -34 65 -123 153 -189 189 -122 66 -314 85 -461 47z m444 -792 c-18 -167 -131 -267 -311 -276 -100 -5 -155 9 -205 54 -64 58 -72 163 -18 221 51 56 83 63 322 63 l219 0 -7 -62z"/>
+<path d="M11540 3965 l0 -645 140 0 140 0 -2 643 -3 642 -137 3 -138 3 0 -646z"/>
+</g>
+</svg>
+</template>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  const tpl = document.getElementById('logoTpl').content.firstElementChild;
+  document.getElementById('heroLogo').appendChild(tpl.cloneNode(true));
+  document.getElementById('footerLogo').appendChild(tpl.cloneNode(true));
+})();
+
+const toggle = document.getElementById('navToggle');
+const mm = document.getElementById('mobileMenu');
+toggle.addEventListener('click', () => { toggle.classList.toggle('open'); mm.classList.toggle('open'); });
+mm.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { toggle.classList.remove('open'); mm.classList.remove('open'); }));
+
+const io = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} }), {threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+(function(){
+  const links = [...document.querySelectorAll('.sidenav a[data-target]')];
+  const map = {};
+  links.forEach(l => { const s = document.getElementById(l.dataset.target); if(s) map[l.dataset.target]=l; });
+  const so = new IntersectionObserver(es => {
+    es.forEach(e => { const l = map[e.target.id]; if(!l) return;
+      if(e.isIntersecting){ links.forEach(x=>x.classList.remove('active')); l.classList.add('active'); }
+    });
+  }, {threshold:0.4});
+  ['inicio','pesquisa','coordenador','contato'].forEach(id => { const el=document.getElementById(id); if(el) so.observe(el); });
+})();
+
+/* ============ THREE.JS — ANIMATED COLOR GRADIENT ============ */
+(function(){
+  const canvas = document.getElementById('gradient');
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  const scene = new THREE.Scene();
+  const camera = new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+  const uniforms = {
+    u_time:{ value:0 },
+    u_res:{ value:new THREE.Vector2(1,1) },
+    u_mouse:{ value:new THREE.Vector2(0.5,0.5) }
+  };
+  const frag = `
+    precision highp float;
+    uniform float u_time; uniform vec2 u_res; uniform vec2 u_mouse;
+    vec2 hash(vec2 p){ p=vec2(dot(p,vec2(127.1,311.7)),dot(p,vec2(269.5,183.3))); return -1.0+2.0*fract(sin(p)*43758.5453123); }
+    float noise(vec2 p){ vec2 i=floor(p),f=fract(p); vec2 u=f*f*(3.0-2.0*f);
+      return mix(mix(dot(hash(i+vec2(0.0,0.0)),f-vec2(0.0,0.0)),dot(hash(i+vec2(1.0,0.0)),f-vec2(1.0,0.0)),u.x),
+                 mix(dot(hash(i+vec2(0.0,1.0)),f-vec2(0.0,1.0)),dot(hash(i+vec2(1.0,1.0)),f-vec2(1.0,1.0)),u.x),u.y); }
+    float fbm(vec2 p){ float v=0.0,a=0.5; for(int i=0;i<5;i++){ v+=a*noise(p); p*=2.0; a*=0.5; } return v; }
+    void main(){
+      vec2 uv=gl_FragCoord.xy/u_res.xy; vec2 p=uv; p.x*=u_res.x/u_res.y;
+      float t=u_time*0.06;
+      vec2 q=vec2(fbm(p*1.4+vec2(t,t*0.7)),fbm(p*1.4+vec2(t*0.8+3.1,t*0.5-1.2)));
+      float n=fbm(p*1.6+q*1.8+vec2(t*0.5,-t*0.4)); n=n*0.5+0.5;
+      vec3 cCharcoal=vec3(0.110,0.102,0.118);
+      vec3 cPlum=vec3(0.337,0.220,0.290);
+      vec3 cTerra=vec3(0.760,0.420,0.310);
+      vec3 cAmber=vec3(0.880,0.660,0.380);
+      vec3 cRose=vec3(0.640,0.470,0.520);
+      vec3 cSlate=vec3(0.290,0.340,0.450);
+      vec3 col=cCharcoal;
+      col=mix(col,cPlum, smoothstep(0.25,0.50,n));
+      col=mix(col,cRose, smoothstep(0.40,0.62,n));
+      col=mix(col,cTerra,smoothstep(0.55,0.75,n));
+      col=mix(col,cAmber,smoothstep(0.70,0.90,n));
+      col=mix(col,cSlate,smoothstep(0.55,0.85,q.x)*0.35);
+      vec2 m=u_mouse; m.x*=u_res.x/u_res.y;
+      float d=distance(p,m); col+=cAmber*0.18*exp(-d*2.2);
+      float vig=smoothstep(1.15,0.25,distance(uv,vec2(0.5))); col*=mix(0.62,1.0,vig);
+      col*=0.92;
+      float g=fract(sin(dot(gl_FragCoord.xy,vec2(12.9898,78.233)))*43758.5453); col+=(g-0.5)*0.015;
+      gl_FragColor=vec4(col,1.0);
+    }`;
+  const mat = new THREE.ShaderMaterial({ uniforms,
+    vertexShader:`void main(){ gl_Position=vec4(position,1.0); }`,
+    fragmentShader:frag });
+  scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2), mat));
+  function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; renderer.setSize(w,h,false); uniforms.u_res.value.set(w,h); }
+  window.addEventListener('resize', resize); resize();
+  let mx=0.5,my=0.5,tmx=0.5,tmy=0.5;
+  window.addEventListener('mousemove', e=>{ tmx=e.clientX/window.innerWidth; tmy=1.0-e.clientY/window.innerHeight; });
+  const clock = new THREE.Clock();
+  function animate(){
+    requestAnimationFrame(animate);
+    uniforms.u_time.value = prefersReduced ? 8.0 : clock.getElapsedTime();
+    mx+=(tmx-mx)*0.05; my+=(tmy-my)*0.05; uniforms.u_mouse.value.set(mx,my);
+    renderer.render(scene,camera);
+  }
+  animate();
+})();
+</script>
+</body>
+</html>

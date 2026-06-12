@@ -1,28 +1,25 @@
-﻿/**
+/**
  * Hero — Seção principal fullscreen do site LaFiM
  *
  * Comportamento:
  *   - Ocupa 100% da altura da tela (100svh)
- *   - Exibe imagem de fundo com overlay escuro para legibilidade
- *   - 1 imagem: exibe estática, sem carrossel
- *   - 2+ imagens: ativa carrossel automático com transição de fade suave
+ *   - Exibe um vídeo de fundo em loop, mudo e com autoplay
+ *   - Overlay escuro sobre o vídeo para legibilidade
  *   - Logo SVG do LaFiM posicionada no canto inferior esquerdo
  *   - Linha horizontal separando logo do subtítulo
  *   - Subtítulo abaixo da linha
  *
  * Props:
- *   images   — array de caminhos das imagens (obrigatório, mínimo 1)
+ *   images   — mantido por compatibilidade com page.tsx (não utilizado)
  *   subtitle — texto exibido abaixo da linha separadora (opcional)
  *
  * Usado em: app/(site)/page.tsx
  *
- * ATENÇÃO: precisa de "use client" para useState e useEffect do carrossel.
+ * ATENÇÃO: precisa de "use client" pois renderiza HeroLogo (GSAP) e TextEffect.
  */
 
 "use client";
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
 import { TextEffect } from "@/components/motion-primitives/text-effect";
 import HeroLogo from "@/components/HeroLogo";
 
@@ -31,35 +28,10 @@ type HeroProps = {
   subtitle?: string;
 };
 
-export default function Hero({ images, subtitle }: HeroProps) {
-  // Índice da imagem atualmente visível no carrossel
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  // Controla a opacidade durante a transição de fade entre imagens
-  const [opacity, setOpacity] = useState(1);
-
-  // Ativa o carrossel automático apenas se houver mais de uma imagem
-  useEffect(() => {
-    if (images.length <= 1) return; // sem carrossel para uma única imagem
-
-    const interval = setInterval(() => {
-      // Inicia o fade out da imagem atual
-      setOpacity(0);
-
-      // Após o fade out (600ms), troca a imagem e faz fade in
-      setTimeout(() => {
-        setCurrentIndex((prev) => (prev + 1) % images.length);
-        setOpacity(1);
-      }, 600);
-
-    }, 5000); // troca de imagem a cada 5 segundos
-
-    // Limpa o intervalo quando o componente é desmontado
-    return () => clearInterval(interval);
-  }, [images.length]);
-
+export default function Hero({ subtitle }: HeroProps) {
   return (
     <section
+      id="hero"
       style={{
         position: "relative",
         width: "100%",
@@ -71,26 +43,25 @@ export default function Hero({ images, subtitle }: HeroProps) {
       }}
     >
 
-      {/* ── Imagem de fundo ─────────────────────────────────────────────────
-          Transition controla o fade suave entre imagens do carrossel.
-          O opacity muda via useState quando o carrossel avança.           */}
-      <div
+      {/* ── Vídeo de fundo ──────────────────────────────────────────────────
+          Ocupa todo o hero, tocando em loop, mudo e automaticamente.
+          poster é exibido enquanto o vídeo carrega.                        */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        poster="/images/hero-poster.jpg"
         style={{
           position: "absolute",
           inset: 0,
-          opacity: opacity,
-          transition: "opacity 0.6s ease-in-out", /* duração do fade         */
+          width: "100%",
+          height: "100%",
+          objectFit: "cover", /* cobre sem distorcer */
         }}
       >
-        <Image
-          src={images[currentIndex]}
-          alt={`Imagem do laboratório${images.length > 1 ? ` ${currentIndex + 1} de ${images.length}` : ""}`}
-          fill                          /* preenche o container pai           */
-          priority                      /* carrega antes das outras imagens   */
-          style={{ objectFit: "cover" }} /* cobre sem distorcer               */
-          sizes="100vw"
-        />
-      </div>
+        <source src="/videos/video-hero.mp4" type="video/mp4" />
+      </video>
 
       {/* ── Overlay escuro ──────────────────────────────────────────────────
           Gradiente da esquerda (mais escuro) para a direita (transparente).
@@ -156,38 +127,7 @@ export default function Hero({ images, subtitle }: HeroProps) {
           >
             {subtitle}
            </TextEffect>
-      
-        )}
 
-        {/* Indicadores do carrossel — só aparecem com 2+ imagens */}
-        {images.length > 1 && (
-          <div
-            style={{
-              display: "flex",
-              gap: "0.5rem",
-              marginTop: "1.5rem",
-            }}
-          >
-            {images.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentIndex(index)} /* clique manual no indicador */
-                style={{
-                  width: index === currentIndex ? "1.5rem" : "0.4rem",
-                  height: "0.4rem",
-                  borderRadius: "999px",
-                  backgroundColor: index === currentIndex
-                    ? "var(--color-primary)"   /* ativo — âmbar               */
-                    : "rgba(245,245,240,0.3)", /* inativo — branco sutil      */
-                  border: "none",
-                  cursor: "pointer",
-                  padding: 0,
-                  transition: "all 0.3s ease", /* anima a mudança de largura  */
-                }}
-                aria-label={`Ir para imagem ${index + 1}`}
-              />
-            ))}
-          </div>
         )}
 
       </div>
