@@ -201,6 +201,20 @@ img { max-width: 100%; display: block; }
   border-color: var(--color-primary);
 }
 
+/* ── Ícone de link de membro (Email, LinkedIn, Lattes, ORCID, Scholar, arXiv)
+   Herda cor neutra e troca para âmbar no hover                              */
+.member-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  transition: color 0.15s ease;
+}
+
+.member-link:hover {
+  color: var(--color-primary);
+}
+
 /* ── Page header — cabeçalho escuro de páginas internas ─────────────────────
    Usado no topo das páginas Membros e Publicações                           */
 .page-header {

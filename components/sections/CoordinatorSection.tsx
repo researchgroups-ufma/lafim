@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { InView } from "@/components/motion-primitives/in-view";
+import MemberLinks from "@/components/ui/MemberLinks";
 
 /**
  * CoordinatorSection — Seção "Sobre o Coordenador" da homepage (estilo lafim_2.html)
@@ -14,20 +15,28 @@ import { InView } from "@/components/motion-primitives/in-view";
  *   name     — nome completo do coordenador
  *   bio      — biografia/texto descritivo (parágrafos separados por \n\n)
  *   photo    — caminho da foto (opcional)
- *   lattes   — URL do Lattes (opcional)
  *   email    — e-mail institucional (opcional)
+ *   linkedin — URL do LinkedIn (opcional)
+ *   lattes   — URL do Lattes (opcional)
+ *   orcid    — URL do ORCID (opcional)
+ *   scholar  — URL do Google Scholar (opcional)
+ *   arxiv    — URL do arXiv (opcional)
  */
 
 type CoordinatorSectionProps = {
   name: string;
   bio?: string;
   photo?: string;
-  lattes?: string;
   email?: string;
+  linkedin?: string;
+  lattes?: string;
+  orcid?: string;
+  scholar?: string;
+  arxiv?: string;
 };
 
 export default function CoordinatorSection({
-  name, bio, photo, lattes, email,
+  name, bio, photo, email, linkedin, lattes, orcid, scholar, arxiv,
 }: CoordinatorSectionProps) {
   const paragraphs = bio ? bio.split("\n\n") : [];
 
@@ -66,19 +75,16 @@ export default function CoordinatorSection({
                 </p>
               ))}
 
-              {/* Links acadêmicos */}
-              <div className="hp-coord__links">
-                {lattes && (
-                  <a className="hp-btn hp-btn--dark" href={lattes} target="_blank" rel="noopener noreferrer">
-                    Currículo Lattes
-                  </a>
-                )}
-                {email && (
-                  <a className="hp-btn hp-btn--ghost" href={`mailto:${email}`}>
-                    {email}
-                  </a>
-                )}
-              </div>
+              {/* Links acadêmicos — ícones SVG */}
+              <MemberLinks
+                className="hp-coord__links"
+                email={email}
+                linkedin={linkedin}
+                lattes={lattes}
+                orcid={orcid}
+                scholar={scholar}
+                arxiv={arxiv}
+              />
             </div>
 
             {/* ── Foto ───────────────────────────────────────────────────── */}

@@ -20,6 +20,7 @@
 
 "use client";
 
+import { motion } from "framer-motion";
 import { TextEffect } from "@/components/motion-primitives/text-effect";
 import HeroLogo from "@/components/HeroLogo";
 
@@ -133,6 +134,42 @@ export default function Hero({ subtitle }: HeroProps) {
         )}
 
       </div>
+
+      {/* ── Indicador de scroll ─────────────────────────────────────────────
+          Cue visual sutil na base do hero. Seta que faz fade in, desce
+          levemente e some, em loop contínuo, sugerindo movimento para
+          baixo. Apenas decorativo — não é interativo.                    */}
+      <motion.div
+        aria-hidden="true"
+        initial={{ opacity: 0, x: "-50%", y: 0 }}
+        animate={{ opacity: [0, 1, 0], x: "-50%", y: [0, 6, 14] }}
+        transition={{
+          duration: 1.5,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        style={{
+          position: "absolute",
+          bottom: "1.5rem",
+          left: "50%",
+          zIndex: 10,
+          pointerEvents: "none",
+          color: "var(--color-primary)",
+        }}
+      >
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </motion.div>
     </section>
   );
 }

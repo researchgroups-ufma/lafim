@@ -8,6 +8,7 @@
 import { getCollection } from "@/lib/mdx";
 import { siteConfig } from "@/lib/config";
 import PageHeader from "@/components/ui/PageHeader";
+import MemberLinks from "@/components/ui/MemberLinks";
 
 export const metadata = { title: "Contato" };
 
@@ -76,21 +77,14 @@ export default async function ContactPage() {
                     </a>
                   </dd>
 
-                  {/* Links do coordenador se disponíveis */}
+                  {/* Links do coordenador se disponíveis — ícones SVG */}
                   {coordinator && (coordinator.lattes as string | undefined) && (
                     <>
                       <dt style={{ fontWeight: 600, fontSize: "0.75rem", letterSpacing: "0.05em", textTransform: "uppercase", color: "var(--color-text-subtle)", paddingTop: "0.1rem" }}>
                         Lattes
                       </dt>
                       <dd>
-                        <a
-                          href={coordinator.lattes as string}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{ color: "var(--color-primary)", fontSize: "0.9rem" }}
-                        >
-                          Currículo Lattes ↗
-                        </a>
+                        <MemberLinks lattes={coordinator.lattes as string} />
                       </dd>
                     </>
                   )}

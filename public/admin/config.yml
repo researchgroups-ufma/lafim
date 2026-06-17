@@ -56,6 +56,7 @@ collections:
       - { label: "Bio",                name: "bio",           widget: "text" }
       - { label: "Foto",               name: "photo",         widget: "image",   required: false }
       - { label: "E-mail",             name: "email",         widget: "string",  required: false }
+      - { label: "LinkedIn",           name: "linkedin",      widget: "string",  required: false }
       - { label: "Lattes",             name: "lattes",        widget: "string",  required: false }
       - { label: "ORCID",              name: "orcid",         widget: "string",  required: false }
       - { label: "Google Scholar",     name: "scholar",       widget: "string",  required: false }

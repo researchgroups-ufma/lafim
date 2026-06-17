@@ -79,8 +79,12 @@ export default async function HomePage() {
           name={coordinator.title as string}
           bio={coordinator.bio as string}
           photo={coordinator.photo as string | undefined}
-          lattes={coordinator.lattes as string | undefined}
           email={coordinator.email as string | undefined}
+          linkedin={coordinator.linkedin as string | undefined}
+          lattes={coordinator.lattes as string | undefined}
+          orcid={coordinator.orcid as string | undefined}
+          scholar={coordinator.scholar as string | undefined}
+          arxiv={coordinator.arxiv as string | undefined}
         />
       )}
 

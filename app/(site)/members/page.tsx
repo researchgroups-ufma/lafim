@@ -19,6 +19,7 @@ import { getCollection } from "@/lib/mdx";
 import { siteConfig } from "@/lib/config";
 import PageHeader from "@/components/ui/PageHeader";
 import MemberCardModal from "@/components/ui/MemberCardModal";
+import MemberLinks from "@/components/ui/MemberLinks";
 import Image from "next/image";
 
 // Plurais irregulares — os demais recebem "s" simples
@@ -136,29 +137,15 @@ export default async function MembersPage() {
                     ))}
                   </div>
 
-                  {/* Links acadêmicos em pílulas — só renderiza se o campo existir */}
-                  <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
-                    {(coordinator.lattes as string | undefined) && (
-                      <a href={coordinator.lattes as string} target="_blank" rel="noopener noreferrer" className="pill-link">
-                        Currículo Lattes
-                      </a>
-                    )}
-                    {(coordinator.orcid as string | undefined) && (
-                      <a href={coordinator.orcid as string} target="_blank" rel="noopener noreferrer" className="pill-link">
-                        ORCID
-                      </a>
-                    )}
-                    {(coordinator.scholar as string | undefined) && (
-                      <a href={coordinator.scholar as string} target="_blank" rel="noopener noreferrer" className="pill-link">
-                        Google Scholar
-                      </a>
-                    )}
-                    {(coordinator.arxiv as string | undefined) && (
-                      <a href={coordinator.arxiv as string} target="_blank" rel="noopener noreferrer" className="pill-link">
-                        arXiv
-                      </a>
-                    )}
-                  </div>
+                  {/* Links acadêmicos em ícones — só renderiza se o campo existir */}
+                  <MemberLinks
+                    email={coordinator.email as string | undefined}
+                    linkedin={coordinator.linkedin as string | undefined}
+                    lattes={coordinator.lattes as string | undefined}
+                    orcid={coordinator.orcid as string | undefined}
+                    scholar={coordinator.scholar as string | undefined}
+                    arxiv={coordinator.arxiv as string | undefined}
+                  />
                 </div>
               </div>
             </section>
@@ -204,6 +191,7 @@ export default async function MembersPage() {
                           bio={member.bio as string | undefined}
                           photo={member.photo as string | undefined}
                           email={member.email as string | undefined}
+                          linkedin={member.linkedin as string | undefined}
                           lattes={member.lattes as string | undefined}
                           orcid={member.orcid as string | undefined}
                           scholar={member.scholar as string | undefined}

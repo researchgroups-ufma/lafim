@@ -19,6 +19,7 @@
  *   bio           — biografia completa (opcional)
  *   photo         — caminho da foto em /uploads/ (opcional)
  *   email         — e-mail institucional (opcional)
+ *   linkedin      — URL do LinkedIn (opcional)
  *   lattes        — URL do Lattes (opcional)
  *   orcid         — URL do ORCID (opcional)
  *   scholar       — URL do Google Scholar (opcional)
@@ -28,6 +29,7 @@
 "use client";
 
 import Image from "next/image";
+import MemberLinks from "@/components/ui/MemberLinks";
 import {
   MorphingDialog,
   MorphingDialogTrigger,
@@ -48,6 +50,7 @@ type MemberCardModalProps = {
   bio?: string;
   photo?: string;
   email?: string;
+  linkedin?: string;
   lattes?: string;
   orcid?: string;
   scholar?: string;
@@ -56,7 +59,7 @@ type MemberCardModalProps = {
 
 export default function MemberCardModal({
   name, role, research_area, scholarship, year_start,
-  bio, photo, email, lattes, orcid, scholar, arxiv,
+  bio, photo, email, linkedin, lattes, orcid, scholar, arxiv,
 }: MemberCardModalProps) {
   return (
     <MorphingDialog
@@ -211,24 +214,15 @@ export default function MemberCardModal({
                 </MorphingDialogSubtitle>
               )}
 
-              {/* Links acadêmicos */}
-              <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-                {email && (
-                  <a href={`mailto:${email}`} className="pill-link">Email</a>
-                )}
-                {lattes && (
-                  <a href={lattes} target="_blank" rel="noopener noreferrer" className="pill-link">Lattes</a>
-                )}
-                {orcid && (
-                  <a href={orcid} target="_blank" rel="noopener noreferrer" className="pill-link">ORCID</a>
-                )}
-                {scholar && (
-                  <a href={scholar} target="_blank" rel="noopener noreferrer" className="pill-link">Scholar</a>
-                )}
-                {arxiv && (
-                  <a href={arxiv} target="_blank" rel="noopener noreferrer" className="pill-link">arXiv</a>
-                )}
-              </div>
+              {/* Links acadêmicos — ícones SVG */}
+              <MemberLinks
+                email={email}
+                linkedin={linkedin}
+                lattes={lattes}
+                orcid={orcid}
+                scholar={scholar}
+                arxiv={arxiv}
+              />
             </div>
           </div>
 

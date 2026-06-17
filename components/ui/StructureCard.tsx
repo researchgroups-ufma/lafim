@@ -14,6 +14,7 @@
  *   photo         — caminho da foto em /uploads/ (opcional)
  *   research_area — linha de pesquisa (opcional)
  *   email         — e-mail institucional (opcional)
+ *   linkedin      — URL do LinkedIn (opcional)
  *   lattes        — URL do Lattes (opcional)
  *   orcid         — URL do ORCID (opcional)
  *   scholar       — URL do Google Scholar (opcional)
@@ -24,6 +25,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import MemberLinks from "@/components/ui/MemberLinks";
 
 type StructureCardProps = {
   name: string;
@@ -32,6 +34,7 @@ type StructureCardProps = {
   photo?: string;
   research_area?: string;
   email?: string;
+  linkedin?: string;
   lattes?: string;
   orcid?: string;
   scholar?: string;
@@ -39,7 +42,7 @@ type StructureCardProps = {
 };
 
 export default function StructureCard({
-  name, role, bio, photo, research_area, email, lattes, orcid, scholar, arxiv,
+  name, role, bio, photo, research_area, email, linkedin, lattes, orcid, scholar, arxiv,
 }: StructureCardProps) {
   // Controla se o modal de detalhes está aberto
   const [open, setOpen] = useState(false);
@@ -258,24 +261,15 @@ export default function StructureCard({
                   </p>
                 )}
 
-                {/* Links acadêmicos */}
-                <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-                  {email && (
-                    <a href={`mailto:${email}`} className="pill-link">Email</a>
-                  )}
-                  {lattes && (
-                    <a href={lattes} target="_blank" rel="noopener noreferrer" className="pill-link">Lattes</a>
-                  )}
-                  {orcid && (
-                    <a href={orcid} target="_blank" rel="noopener noreferrer" className="pill-link">ORCID</a>
-                  )}
-                  {scholar && (
-                    <a href={scholar} target="_blank" rel="noopener noreferrer" className="pill-link">Scholar</a>
-                  )}
-                  {arxiv && (
-                    <a href={arxiv} target="_blank" rel="noopener noreferrer" className="pill-link">arXiv</a>
-                  )}
-                </div>
+                {/* Links acadêmicos — ícones SVG */}
+                <MemberLinks
+                  email={email}
+                  linkedin={linkedin}
+                  lattes={lattes}
+                  orcid={orcid}
+                  scholar={scholar}
+                  arxiv={arxiv}
+                />
               </div>
             </div>
 
