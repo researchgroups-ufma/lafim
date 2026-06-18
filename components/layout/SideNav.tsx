@@ -95,6 +95,7 @@ export default function SideNav() {
   return (
     <nav
       aria-label="Navegação principal"
+      className="side-nav"
       style={{
         position: "fixed",
         top: "50%",

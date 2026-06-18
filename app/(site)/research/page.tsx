@@ -58,6 +58,7 @@ export default async function ResearchPage() {
                 {lines.map((line, index) => (
                   <div
                     key={line.slug}
+                    className="stack-mobile"
                     style={{
                       display: "grid",
                       gridTemplateColumns: line.image ? "1fr 280px" : "1fr",

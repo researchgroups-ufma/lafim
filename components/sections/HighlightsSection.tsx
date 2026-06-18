@@ -55,6 +55,7 @@ export default function HighlightsSection({ highlights }: HighlightsSectionProps
               transition={{ duration: 0.4, ease: "easeOut", delay: index * 0.1 }}
             >
             <div
+              className="stack-mobile"
               style={{
                 display: "grid",
                 // Se tiver imagem: duas colunas. Se não: uma coluna

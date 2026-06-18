@@ -8,17 +8,22 @@
  * O Footer permanece no rodapé de todas as páginas.
  */
 
+import MobileNav from "@/components/layout/MobileNav";
 import SideNav from "@/components/layout/SideNav";
 import Footer from "@/components/layout/Footer";
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      {/* Menu lateral fixo no lado direito */}
+      {/* Navegação mobile (navbar + overlay) — visível abaixo de 768px */}
+      <MobileNav />
+
+      {/* Menu lateral fixo no lado direito — oculto em mobile via .side-nav */}
       <SideNav />
 
-      {/* Sem paddingTop — o Hero ocupa 100svh e o menu fica sobreposto */}
-      <main>
+      {/* pt-14 compensa a navbar fixa do MobileNav; em desktop (md) não há
+          navbar e o Hero volta a ocupar 100svh sem padding no topo.        */}
+      <main className="pt-14 md:pt-0">
         {children}
       </main>
 

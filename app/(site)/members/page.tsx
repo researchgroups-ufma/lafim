@@ -76,6 +76,7 @@ export default async function MembersPage() {
               <span className="title-accent" />
 
               <div
+                className="stack-mobile"
                 style={{
                   display: "grid",
                   gridTemplateColumns: "160px 1fr",
@@ -172,6 +173,7 @@ export default async function MembersPage() {
 
                     {/* Grid de cards clicáveis */}
                     <div
+                      className="stack-mobile"
                       style={{
                         display: "grid",
                         gridTemplateColumns: "repeat(auto-fill, minmax(240px, 240px))",
@@ -257,6 +259,7 @@ export default async function MembersPage() {
               <span className="title-accent" />
 
               <div
+                className="stack-mobile"
                 style={{
                   display: "grid",
                   gridTemplateColumns: "1fr 1fr",
