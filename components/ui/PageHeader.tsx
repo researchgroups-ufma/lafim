@@ -1,19 +1,18 @@
-﻿/**
+/**
  * PageHeader — Cabeçalho padronizado para todas as páginas internas
  *
- * Exibe fundo escuro elevado, eyebrow com identificação do grupo
- * e título da página. Padrão visual consistente em todo o site.
+ * Exibe fundo elevado, o logo do LaFiM e o título da página.
+ * Padrão visual consistente em todo o site.
  *
  * Uso:
  *   <PageHeader title="Membros" />
- *   <PageHeader title="Publicações" eyebrow="LaFiM · UFMA" />
  *
  * Props:
  *   title   — título da página (obrigatório)
- *   eyebrow — texto acima do título (opcional — padrão: sigla · universidade)
+ *   eyebrow — mantido por compatibilidade com chamadas existentes; não é
+ *             mais renderizado (o logo substituiu o texto de identificação)
  */
 
-import { siteConfig } from "@/lib/config";
 import { TextEffect } from "@/components/motion-primitives/text-effect";
 
 type PageHeaderProps = {
@@ -21,12 +20,16 @@ type PageHeaderProps = {
   eyebrow?: string;
 };
 
-export default function PageHeader({ title, eyebrow }: PageHeaderProps) {
+export default function PageHeader({ title }: PageHeaderProps) {
   return (
     <div className="page-header">
-      <p className="page-header-eyebrow">
-        {eyebrow ?? `${siteConfig.acronym} · ${siteConfig.university}`}
-      </p>
+      {/* Logo do LaFiM — substitui o antigo texto "sigla · universidade".
+          fill preto nativo do SVG sobre o fundo claro do cabeçalho.        */}
+      <img
+        src="/logo/new_lafim.svg"
+        alt="LaFiM — Laboratório de Física dos Materiais"
+        style={{ height: "3rem", width: "auto", margin: "0 auto 0.75rem" }}
+      />
       <h1 className="section-title">
         <TextEffect per="char" preset="fade">
          {title}

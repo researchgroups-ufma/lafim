@@ -14,6 +14,7 @@
  */
 
 import Image from "next/image";
+import { InView } from "@/components/motion-primitives/in-view";
 
 type Highlight = {
   slug: string;
@@ -44,8 +45,16 @@ export default function HighlightsSection({ highlights }: HighlightsSectionProps
           const imageOnLeft = item.image_position === "left";
 
           return (
-            <div
+            <InView
               key={item.slug}
+              variants={{
+                hidden: { opacity: 0, y: 24, filter: "blur(4px)" },
+                visible: { opacity: 1, y: 0, filter: "blur(0px)" },
+              }}
+              viewOptions={{ margin: "0px 0px -60px 0px" }}
+              transition={{ duration: 0.4, ease: "easeOut", delay: index * 0.1 }}
+            >
+            <div
               style={{
                 display: "grid",
                 // Se tiver imagem: duas colunas. Se não: uma coluna
@@ -114,6 +123,7 @@ export default function HighlightsSection({ highlights }: HighlightsSectionProps
               </div>
 
             </div>
+            </InView>
           );
         })}
 

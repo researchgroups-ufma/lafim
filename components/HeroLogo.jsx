@@ -31,6 +31,7 @@ export default function HeroLogo() {
       const dBottom = q("#diamond-bottom");
       const diamonds = q("#diamond-top, #diamond-bottom");
       const text = q("#wordmark, #subtitle");
+      const glowBlur = q("#glow-blur"); // <feGaussianBlur> do filtro de glow
 
       // origem de transform no centro de cada peça (necessário p/ scale/pulso)
       gsap.set([...diamonds, ...text], {
@@ -55,6 +56,8 @@ export default function HeroLogo() {
       gsap.set(dTop, { opacity: 0, y: -18 });
       gsap.set(dBottom, { opacity: 0, y: 18 });
       gsap.set(text, { opacity: 0, y: 6 });
+      // glow começa quase imperceptível; o breathe assume após a entrada
+      gsap.set(glowBlur, { attr: { stdDeviation: 0.8 } });
 
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
@@ -88,6 +91,19 @@ export default function HeroLogo() {
         // 5) texto entra por último
         .to(text, { opacity: 1, y: 0, duration: 0.5, stagger: 0.08 }, "-=0.2");
 
+      // ---- breathe: glow branco pulsando suavemente em loop ----
+      // Anima stdDeviation do <feGaussianBlur> (0.8 → 3): a cada ciclo o glow
+      // surge e some. duration 1.5 + yoyo = pulso completo de ~3s. Começa após
+      // a animação de entrada (delay 1.5).
+      const glowBreathe = gsap.to(glowBlur, {
+        attr: { stdDeviation: 3 },
+        duration: 1.5,
+        repeat: -1,
+        yoyo: true,
+        ease: "power1.inOut",
+        delay: 1.5,
+      });
+
       // ---- hover: separação parcial com retorno ----
       const dac = root.current.querySelector(".dac-logo");
 
@@ -95,12 +111,23 @@ export default function HeroLogo() {
         gsap.to(dTop, { y: -8, duration: 0.4, ease: "power2.out", overwrite: "auto" });
         gsap.to(dBottom, { y: 8, duration: 0.4, ease: "power2.out", overwrite: "auto" });
         gsap.to(gasket, { scaleX: 0.85, duration: 0.3, ease: "power2.out", overwrite: "auto" });
+        // intensifica o glow — pausa o breathe e aumenta o blur
+        glowBreathe.pause();
+        gsap.to(glowBlur, { attr: { stdDeviation: 5 }, duration: 0.4, ease: "power2.out", overwrite: "auto" });
       };
 
       const onLeave = () => {
         gsap.to(dTop, { y: 0, duration: 0.6, ease: "elastic.out(1, 0.5)", overwrite: "auto" });
         gsap.to(dBottom, { y: 0, duration: 0.6, ease: "elastic.out(1, 0.5)", overwrite: "auto" });
         gsap.to(gasket, { scaleX: 1, duration: 0.5, ease: "elastic.out(1, 0.45)", overwrite: "auto" });
+        // volta ao glow suave e retoma o breathe ao terminar
+        gsap.to(glowBlur, {
+          attr: { stdDeviation: 0.8 },
+          duration: 0.5,
+          ease: "power2.out",
+          overwrite: "auto",
+          onComplete: () => glowBreathe.restart(),
+        });
       };
 
       dac.addEventListener("mouseenter", onEnter);
@@ -128,8 +155,30 @@ export default function HeroLogo() {
           width="100%"
           height="auto"
           role="img"
+          style={{ overflow: "visible" }}
         >
-          <g id="wordmark" fill="#F5F5F0">
+          {/* Filtro de glow branco para o texto. O GSAP anima stdDeviation
+              (breathe idle + intensificação no hover) — ver useGSAP acima.   */}
+          <defs>
+            <filter id="glow-text" x="-75%" y="-50%" width="250%" height="200%">
+              <feGaussianBlur id="glow-blur" stdDeviation="2" result="blur" />
+              <feColorMatrix
+                in="blur"
+                type="matrix"
+                values="1 0 0 0 1
+                        0 1 0 0 1
+                        0 0 1 0 1
+                        0 0 0 0.6 0"
+                result="glow"
+              />
+              <feMerge>
+                <feMergeNode in="glow" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+
+          <g id="wordmark" fill="#F5F5F0" filter="url(#glow-text)">
             <path d="M47.85,12.69h5.52v28.42h16.85v5.18h-22.37V12.69Z"/>
     <path d="M73.19,38.71c0-4.03,2.93-7.58,8.88-7.58h7.44v-.58c0-2.4-1.68-4.85-5.47-4.85-3.26,0-4.9,1.87-5.23,3.74h-4.9c.72-5.14,4.75-8.3,10.18-8.3,7.06,0,10.47,4.75,10.47,9.41v11.04h2.4v4.7h-4.08c-2.06,0-2.98-1.15-2.98-2.78v-.62c-1.01,2.02-3.41,3.84-7.82,3.84-4.85,0-8.88-3.12-8.88-8.02ZM89.52,36.6v-1.1h-7.44c-1.92,0-3.6,1.15-3.6,3.17,0,2.16,1.78,3.5,4.42,3.5,4.42,0,6.62-2.74,6.62-5.57Z"/>
     <path d="M103.24,12.69h22.56v5.04h-17.04v9.6h15.41v5.04h-15.41v13.92h-5.52V12.69Z"/>
@@ -137,7 +186,7 @@ export default function HeroLogo() {
     <path d="M146.3,12.69h6.58l11.76,26.5,11.81-26.5h6.58v33.6h-5.38v-23.33l-10.42,23.33h-5.14l-10.42-23.33v23.33h-5.38V12.69Z"/>
           </g>
 
-          <g id="subtitle" fill="#F5F5F0">
+          <g id="subtitle" fill="#F5F5F0" filter="url(#glow-text)">
             <path d="M185.61,21.31h.57v5.19h2.21v.55h-2.79v-5.75Z"/>
     <path d="M193.45,22.81v4.25h-.54v-.73c-.23.28-.49.49-.77.63s-.6.21-.94.21c-.6,0-1.12-.22-1.54-.65-.43-.44-.64-.97-.64-1.59s.21-1.14.64-1.57c.43-.44.95-.65,1.55-.65.35,0,.67.07.95.22.28.15.53.37.74.67v-.78h.54ZM191.26,23.23c-.3,0-.58.07-.84.22-.26.15-.46.36-.61.63s-.23.56-.23.86.08.58.23.86c.15.27.36.49.62.64s.54.23.83.23.58-.08.85-.23c.27-.15.47-.36.62-.61.14-.26.22-.55.22-.87,0-.49-.16-.9-.49-1.23-.32-.33-.72-.5-1.2-.5Z"/>
     <path d="M194.71,27.06v-5.89h.55v2.37c.23-.28.49-.49.77-.63.28-.14.59-.21.93-.21.6,0,1.11.22,1.54.65.42.44.64.96.64,1.59s-.21,1.14-.64,1.57c-.43.43-.95.65-1.55.65-.35,0-.66-.07-.94-.22-.28-.15-.53-.37-.75-.67v.78h-.55ZM196.9,26.64c.3,0,.58-.08.84-.22.26-.15.46-.36.61-.63.15-.27.23-.56.23-.86s-.08-.59-.23-.86-.36-.49-.62-.64-.53-.23-.83-.23-.58.08-.85.23c-.27.15-.48.36-.62.62-.14.26-.22.55-.22.87,0,.49.16.9.49,1.23.32.33.72.5,1.19.5Z"/>

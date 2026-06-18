@@ -109,7 +109,7 @@ export default function Hero({ subtitle }: HeroProps) {
           style={{
             width: "100%",
             height: "1px",
-            backgroundColor: "rgba(245, 245, 240, 0.3)", /* branco sutil      */
+            backgroundColor: "#ffffff",
             marginBottom: "1.25rem",
           }}
         />
@@ -120,7 +120,7 @@ export default function Hero({ subtitle }: HeroProps) {
               per="char"
               preset="fade"
               style={{
-              color: "var(--color-text-muted)",
+              color: "#ffffff",
               fontSize: "clamp(0.9rem, 1.5vw, 1.1rem)",
               fontWeight: 300,
               letterSpacing: "0.02em",
@@ -136,38 +136,39 @@ export default function Hero({ subtitle }: HeroProps) {
       </div>
 
       {/* ── Indicador de scroll ─────────────────────────────────────────────
-          Cue visual sutil na base do hero. Seta que faz fade in, desce
-          levemente e some, em loop contínuo, sugerindo movimento para
-          baixo. Apenas decorativo — não é interativo.                    */}
+          Seta branca (arrow.svg) que faz fade in, desliza para baixo e some,
+          em loop contínuo, sugerindo movimento para baixo. Apenas
+          decorativo — não é interativo.                                  */}
       <motion.div
         aria-hidden="true"
-        initial={{ opacity: 0, x: "-50%", y: 0 }}
-        animate={{ opacity: [0, 1, 0], x: "-50%", y: [0, 6, 14] }}
+        initial={{ opacity: 0, x: "-50%", y: -8 }}
+        animate={{ opacity: [0, 1, 0], x: "-50%", y: [-8, 0, 8] }}
         transition={{
-          duration: 1.5,
+          duration: 1.8,
           repeat: Infinity,
           ease: "easeInOut",
         }}
         style={{
           position: "absolute",
-          bottom: "1.5rem",
+          bottom: "2rem",
           left: "50%",
           zIndex: 10,
           pointerEvents: "none",
-          color: "var(--color-primary)",
         }}
       >
         <svg
-          width="24"
-          height="24"
+          className="w-12 h-12"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <polyline points="6 9 12 15 18 9" />
+          <path
+            d="M12 4V20M12 20L8 16M12 20L16 16"
+            stroke="#ffffff"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
       </motion.div>
     </section>

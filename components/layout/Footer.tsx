@@ -47,22 +47,15 @@ export default function Footer() {
       >
 
         {/* ── Bloco 1: Identidade ───────────────────────────────────────────
-            Sigla em âmbar, nome completo e vínculo institucional           */}
+            Logo do LaFiM e vínculo institucional                           */}
         <div>
-          <p
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "1.1rem",
-              fontWeight: 600,
-              color: "var(--color-primary)", /* sigla em âmbar */
-              marginBottom: "0.25rem",
-            }}
-          >
-            {siteConfig.acronym}
-          </p>
-          <p style={{ color: "var(--color-text-muted)", fontSize: "0.9rem" }}>
-            {siteConfig.name}
-          </p>
+          {/* Logo do LaFiM — substitui o texto "sigla / nome do laboratório".
+              fill preto nativo do SVG; mesmo padrão do cabeçalho.            */}
+          <img
+            src="/logo/new_lafim.svg"
+            alt="LaFiM — Laboratório de Física dos Materiais"
+            style={{ height: "2.5rem", width: "auto", marginBottom: "0.5rem" }}
+          />
           <p
             style={{
               color: "var(--color-text-subtle)",
