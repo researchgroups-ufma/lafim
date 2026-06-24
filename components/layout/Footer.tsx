@@ -38,11 +38,11 @@ export default function Footer() {
       <div
         className="container-site"
         style={{
-          paddingTop: "3rem",
-          paddingBottom: "3rem",
+          paddingTop: "1.44rem",
+          paddingBottom: "1.44rem",
           display: "flex",
           flexDirection: "column",
-          gap: "2rem", /* espaço entre os três blocos internos */
+          gap: "0.96rem", /* espaço entre os três blocos internos */
         }}
       >
 

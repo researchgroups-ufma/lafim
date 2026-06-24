@@ -4,6 +4,9 @@ date: "2026-03-12T15:00:00.000Z"
 category: "Premiação"
 excerpt: "Apresentação sobre materiais multifuncionais foi reconhecida entre os melhores trabalhos da sessão de física da matéria condensada."
 cover_image: "/uploads/dac.jpg"
+gallery:
+  - "/uploads/anvil.webp"
+  - "/uploads/xrd.webp"
 ---
 
 Durante o último congresso nacional de física, um dos trabalhos apresentados pelo

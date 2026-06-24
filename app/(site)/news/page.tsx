@@ -30,6 +30,10 @@ export default async function NewsPage() {
     .map((n) => {
       const parsed = n.date ? new Date(n.date as string) : null;
       const valid = parsed && !isNaN(parsed.getTime());
+      const cover = n.cover_image as string | undefined;
+      const gallery = Array.isArray(n.gallery) ? (n.gallery as string[]) : [];
+      // Carrossel: capa primeiro, depois a galeria — sem duplicar a capa
+      const images = [...new Set([cover, ...gallery].filter(Boolean))] as string[];
       return {
         slug: n.slug,
         title: n.title as string,
@@ -38,7 +42,8 @@ export default async function NewsPage() {
         month: valid ? parsed!.getUTCMonth() + 1 : 0,
         category: n.category as string | undefined,
         excerpt: n.excerpt as string | undefined,
-        cover_image: n.cover_image as string | undefined,
+        cover_image: cover,
+        images,
         body: n.body as string | undefined,
       };
     });

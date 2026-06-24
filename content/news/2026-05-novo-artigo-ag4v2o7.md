@@ -4,6 +4,10 @@ date: "2026-05-18T13:00:00.000Z"
 category: "Publicação"
 excerpt: "Estudo do grupo elucida as propriedades estruturais e optoeletrônicas dependentes da temperatura em microhexágonos de Ag4V2O7, combinando experimentos e cálculos de primeiros princípios."
 cover_image: "/uploads/xrd.webp"
+gallery:
+  - "/uploads/dac.jpg"
+  - "/uploads/anvil.webp"
+  - "/uploads/hero1.webp"
 ---
 
 O LAFIM teve mais um trabalho aceito em periódico internacional, abordando o

@@ -1,14 +1,14 @@
 /**
  * NewsList — Lista interativa de notícias
  *
- * Client Component — precisa de "use client" para os useState de filtro,
- * paginação e expansão. Recebe as notícias já lidas/ordenadas pelo Server
- * Component (app/(site)/news/page.tsx).
+ * Client Component — precisa de "use client" para os useState de filtro e
+ * paginação. Recebe as notícias já lidas/ordenadas pelo Server Component
+ * (app/(site)/news/page.tsx) e delega cada item ao NewsCard, que abre o
+ * Morphing Dialog com o texto integral e o carrossel de imagens.
  *
  * Comportamento:
  *   - Filtro por mês e ano da postagem (selects independentes)
  *   - Paginação: no máximo 10 notícias por página
- *   - Clique no título/resumo expande o texto integral na própria página
  *
  * Datas: o servidor já envia `dateFormatted` (pt-BR) para exibição e
  * `year`/`month` para filtro — este componente nunca importa lib/mdx (fs).
@@ -20,19 +20,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Image from "next/image";
-
-type NewsItem = {
-  slug: string;
-  title: string;
-  dateFormatted: string;
-  year: number;
-  month: number;
-  category?: string;
-  excerpt?: string;
-  cover_image?: string;
-  body?: string;
-};
+import NewsCard, { type NewsItem } from "@/components/ui/NewsCard";
 
 type NewsListProps = {
   news: NewsItem[];
@@ -50,7 +38,6 @@ export default function NewsList({ news }: NewsListProps) {
   const [filterYear, setFilterYear] = useState("all");
   const [filterMonth, setFilterMonth] = useState("all");
   const [page, setPage] = useState(1);
-  const [expanded, setExpanded] = useState<string | null>(null);
 
   // Anos distintos presentes nas notícias, em ordem decrescente
   const years = useMemo(
@@ -77,20 +64,14 @@ export default function NewsList({ news }: NewsListProps) {
     currentPage * PER_PAGE,
   );
 
-  // Troca de filtro sempre reinicia para a primeira página e fecha expansões
+  // Troca de filtro sempre reinicia para a primeira página
   function changeYear(value: string) {
     setFilterYear(value);
     setPage(1);
-    setExpanded(null);
   }
   function changeMonth(value: string) {
     setFilterMonth(value);
     setPage(1);
-    setExpanded(null);
-  }
-  function goToPage(p: number) {
-    setPage(p);
-    setExpanded(null);
   }
 
   return (
@@ -162,152 +143,9 @@ export default function NewsList({ news }: NewsListProps) {
         </p>
       ) : (
         <div style={{ display: "flex", flexDirection: "column" }}>
-          {pageItems.map((item, index) => {
-            const isOpen = expanded === item.slug;
-            return (
-              <div
-                key={item.slug}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: item.cover_image ? "1fr 200px" : "1fr",
-                  gap: "2rem",
-                  alignItems: "start",
-                  padding: "2rem 0",
-                  borderBottom: "1px solid var(--color-border)",
-                  borderTop: index === 0 ? "1px solid var(--color-border)" : "none",
-                }}
-              >
-                {/* Conteúdo */}
-                <div>
-                  {/* Categoria e data */}
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: "0.75rem",
-                      alignItems: "center",
-                      marginBottom: "0.75rem",
-                    }}
-                  >
-                    {item.category && (
-                      <span className="badge badge-primary">{item.category}</span>
-                    )}
-                    <span
-                      style={{ fontSize: "0.8rem", color: "var(--color-text-subtle)" }}
-                    >
-                      {item.dateFormatted}
-                    </span>
-                  </div>
-
-                  {/* Título + resumo — botão que expande/recolhe o texto integral */}
-                  <button
-                    type="button"
-                    onClick={() => setExpanded(isOpen ? null : item.slug)}
-                    aria-expanded={isOpen}
-                    aria-controls={`news-body-${item.slug}`}
-                    style={{
-                      display: "block",
-                      width: "100%",
-                      textAlign: "left",
-                      background: "none",
-                      border: "none",
-                      padding: 0,
-                      cursor: "pointer",
-                      fontFamily: "var(--font-body)",
-                    }}
-                  >
-                    <span
-                      style={{
-                        display: "block",
-                        fontFamily: "var(--font-display)",
-                        fontSize: "1.2rem",
-                        fontWeight: 500,
-                        color: "var(--color-text)",
-                        marginBottom: "0.5rem",
-                        lineHeight: 1.3,
-                      }}
-                    >
-                      {item.title}
-                    </span>
-
-                    {item.excerpt && (
-                      <span
-                        style={{
-                          display: "block",
-                          fontSize: "0.9rem",
-                          color: "var(--color-text-muted)",
-                          fontWeight: 300,
-                          lineHeight: 1.6,
-                        }}
-                      >
-                        {item.excerpt}
-                      </span>
-                    )}
-
-                    <span
-                      style={{
-                        display: "inline-block",
-                        marginTop: "0.75rem",
-                        fontSize: "0.8rem",
-                        fontWeight: 400,
-                        color: "var(--color-primary)",
-                      }}
-                    >
-                      {isOpen ? "Ler menos ↑" : "Ler matéria completa ↓"}
-                    </span>
-                  </button>
-
-                  {/* Texto integral — só renderiza quando expandido */}
-                  {isOpen && item.body && (
-                    <div
-                      id={`news-body-${item.slug}`}
-                      style={{
-                        marginTop: "1.5rem",
-                        paddingTop: "1.5rem",
-                        borderTop: "1px solid var(--color-border)",
-                        maxWidth: "680px",
-                      }}
-                    >
-                      {item.body
-                        .split(/\n{2,}/)
-                        .map((para) => para.trim())
-                        .filter(Boolean)
-                        .map((para, i) => (
-                          <p
-                            key={i}
-                            style={{
-                              fontSize: "0.95rem",
-                              lineHeight: 1.8,
-                              color: "var(--color-text-muted)",
-                              fontWeight: 300,
-                              marginBottom: "1rem",
-                            }}
-                          >
-                            {para.replace(/^>\s?/, "")}
-                          </p>
-                        ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* Imagem de capa — só renderiza se existir */}
-                {item.cover_image && (
-                  <Image
-                    src={item.cover_image}
-                    alt={item.title}
-                    width={200}
-                    height={113}
-                    style={{
-                      width: "100%",
-                      height: "auto",
-                      aspectRatio: "16/9",
-                      objectFit: "cover",
-                      border: "1px solid var(--color-border-strong)",
-                    }}
-                  />
-                )}
-              </div>
-            );
-          })}
+          {pageItems.map((item, index) => (
+            <NewsCard key={item.slug} item={item} isFirst={index === 0} />
+          ))}
         </div>
       )}
 
@@ -324,7 +162,7 @@ export default function NewsList({ news }: NewsListProps) {
         >
           <button
             type="button"
-            onClick={() => goToPage(currentPage - 1)}
+            onClick={() => setPage(currentPage - 1)}
             disabled={currentPage === 1}
             style={pageButtonStyle(false, currentPage === 1)}
           >
@@ -335,7 +173,7 @@ export default function NewsList({ news }: NewsListProps) {
             <button
               key={p}
               type="button"
-              onClick={() => goToPage(p)}
+              onClick={() => setPage(p)}
               aria-current={p === currentPage ? "page" : undefined}
               style={pageButtonStyle(p === currentPage, false)}
             >
@@ -345,7 +183,7 @@ export default function NewsList({ news }: NewsListProps) {
 
           <button
             type="button"
-            onClick={() => goToPage(currentPage + 1)}
+            onClick={() => setPage(currentPage + 1)}
             disabled={currentPage === totalPages}
             style={pageButtonStyle(false, currentPage === totalPages)}
           >

@@ -8,15 +8,17 @@
  *   1. Hero         — fullscreen com carrossel de imagens e logo SVG
  *   2. Pesquisa     — linhas de pesquisa + destaques (se houver)
  *   3. Page Cards   — atalhos para Membros e Publicações
- *   4. Coordenador  — bio e foto do coordenador do laboratório
+ *   4. Notícias     — 3 notícias mais recentes (link para /news)
+ *   5. Coordenador  — bio e foto do coordenador do laboratório
  */
 
 import Hero from "@/components/layout/Hero";
 import ResearchSection from "@/components/sections/ResearchSection";
 import HighlightsSection from "@/components/sections/HighlightsSection";
 import PageCards from "@/components/sections/PageCards";
+import NewsSection from "@/components/sections/NewsSection";
 import CoordinatorSection from "@/components/sections/CoordinatorSection";
-import { getSingleFile, getCollection } from "@/lib/mdx";
+import { getSingleFile, getCollection, formatDate } from "@/lib/mdx";
 
 export default async function HomePage() {
 
@@ -51,6 +53,23 @@ export default async function HomePage() {
       order?: number;
     }[];
 
+  // ── Notícias — 3 mais recentes ─────────────────────────────────────────────
+  const allNews = await getCollection("news");
+  const recentNews = allNews
+    .filter((n) => n.slug !== "placeholder")
+    .sort((a, b) => {
+      const dateA = a.date ? new Date(a.date as string).getTime() : 0;
+      const dateB = b.date ? new Date(b.date as string).getTime() : 0;
+      return (isNaN(dateB) ? 0 : dateB) - (isNaN(dateA) ? 0 : dateA);
+    })
+    .slice(0, 3)
+    .map((n) => ({
+      slug: n.slug,
+      title: n.title as string,
+      excerpt: n.excerpt as string | undefined,
+      dateFormatted: formatDate(n.date as string),
+    }));
+
   // ── Coordenador ────────────────────────────────────────────────────────────
   const allMembers = await getCollection("members");
   const coordinator = allMembers.find((m) => m.role === "Coordenador");
@@ -73,7 +92,10 @@ export default async function HomePage() {
       {/* ── 4. Cards de navegação ──────────────────────────────────────────── */}
       <PageCards />
 
-      {/* ── 5. Sobre o Coordenador ─────────────────────────────────────────── */}
+      {/* ── 5. Notícias — 3 mais recentes ──────────────────────────────────── */}
+      <NewsSection news={recentNews} />
+
+      {/* ── 6. Sobre o Coordenador ─────────────────────────────────────────── */}
       {coordinator && (
         <CoordinatorSection
           name={coordinator.title as string}

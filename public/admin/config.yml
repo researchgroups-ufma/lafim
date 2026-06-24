@@ -129,6 +129,11 @@ collections:
       - { label: "Resumo",         name: "excerpt",     widget: "text" }
       - { label: "Conteúdo",       name: "body",        widget: "markdown" }
       - { label: "Imagem de capa", name: "cover_image", widget: "image",   required: false }
+      - label: "Galeria (carrossel)"
+        name: "gallery"
+        widget: "list"
+        required: false
+        field: { label: "Imagem", name: "image", widget: "image" }
 
   # ── Infraestrutura ──────────────────────────────────────────────────────────
   - name: "equipment-info"

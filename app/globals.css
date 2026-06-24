@@ -378,6 +378,10 @@ img { max-width: 100%; display: block; }
   /* Colapsa grids com colunas definidas via style inline para coluna única.
      O !important é necessário para sobrescrever o grid-template-columns inline. */
   .stack-mobile { grid-template-columns: 1fr !important; }
+
+  /* Oculta no mobile (inverso de .mobile-only). Usado na capa da notícia,
+     que some da lista e reaparece apenas no dialog ao abrir o card. */
+  .desktop-only { display: none !important; }
 }
 
 /* Oculta o MobileNav (navbar + overlay) em desktop. O !important vence o
