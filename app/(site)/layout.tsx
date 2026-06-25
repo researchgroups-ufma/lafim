@@ -13,6 +13,30 @@ import MobileNav from "@/components/layout/MobileNav";
 import SideNav from "@/components/layout/SideNav";
 import Footer from "@/components/layout/Footer";
 
+const schemaOrg = {
+  "@context": "https://schema.org",
+  "@type": "ResearchOrganization",
+  name: "LaFiM — Laboratório de Física dos Materiais",
+  alternateName: "LaFiM",
+  url: "https://lafim.pages.dev",
+  description:
+    "Pesquisa em física da matéria condensada, nanomateriais e supercondutividade na Universidade Federal do Maranhão.",
+  parentOrganization: {
+    "@type": "CollegeOrUniversity",
+    name: "Universidade Federal do Maranhão",
+    alternateName: "UFMA",
+    url: "https://www.ufma.br",
+  },
+  knowsAbout: [
+    "Física da Matéria Condensada",
+    "Nanomateriais",
+    "Supercondutividade",
+    "Espectroscopia Raman",
+    "Transições de Fase",
+  ],
+  sameAs: [],
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://lafim.pages.dev'),
   alternates: {
@@ -45,6 +69,11 @@ export const metadata: Metadata = {
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }}
+      />
+
       {/* Navegação mobile (navbar + overlay) — visível abaixo de 768px */}
       <MobileNav />
 
