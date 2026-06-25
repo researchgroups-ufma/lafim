@@ -10,7 +10,7 @@ import { siteConfig } from "@/lib/config";
 import PageHeader from "@/components/ui/PageHeader";
 import MemberLinks from "@/components/ui/MemberLinks";
 
-export const metadata = { title: "Contato" };
+export const metadata = { title: "Contato", alternates: { canonical: "/contact" } };
 
 export default async function ContactPage() {
   const allMembers = await getCollection("members");

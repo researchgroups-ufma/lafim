@@ -8,9 +8,39 @@
  * O Footer permanece no rodapé de todas as páginas.
  */
 
+import type { Metadata } from "next";
 import MobileNav from "@/components/layout/MobileNav";
 import SideNav from "@/components/layout/SideNav";
 import Footer from "@/components/layout/Footer";
+
+export const metadata: Metadata = {
+  metadataBase: new URL('https://lafim.pages.dev'),
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: 'LaFiM — Universidade Federal do Maranhão',
+    description: 'Pesquisa em física da matéria condensada, nanomateriais e supercondutividade na UFMA.',
+    url: 'https://lafim.pages.dev',
+    siteName: 'LaFiM',
+    locale: 'pt_BR',
+    type: 'website',
+    images: [
+      {
+        url: '/images/hero-poster.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'LaFiM — Laboratório de Física dos Materiais',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'LaFiM — Universidade Federal do Maranhão',
+    description: 'Pesquisa em física da matéria condensada, nanomateriais e supercondutividade na UFMA.',
+    images: ['/images/hero-poster.jpg'],
+  },
+};
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
   return (

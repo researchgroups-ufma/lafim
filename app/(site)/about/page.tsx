@@ -9,7 +9,7 @@ import { getSingleFile } from "@/lib/mdx";
 import { siteConfig } from "@/lib/config";
 import PageHeader from "@/components/ui/PageHeader";
 
-export const metadata = { title: "Sobre" };
+export const metadata = { title: "Sobre", alternates: { canonical: "/about" } };
 
 export default async function AboutPage() {
   const about = await getSingleFile("about/index.md");

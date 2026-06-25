@@ -14,7 +14,7 @@ import { getCollection, formatDate } from "@/lib/mdx";
 import PageHeader from "@/components/ui/PageHeader";
 import NewsList from "@/components/ui/NewsList";
 
-export const metadata = { title: "Notícias" };
+export const metadata = { title: "Notícias", alternates: { canonical: "/news" } };
 
 export default async function NewsPage() {
   const allNews = await getCollection("news");

@@ -10,7 +10,7 @@ import { getCollection } from "@/lib/mdx";
 import PageHeader from "@/components/ui/PageHeader";
 import Image from "next/image";
 
-export const metadata = { title: "Pesquisa" };
+export const metadata = { title: "Pesquisa", alternates: { canonical: "/research" } };
 
 export default async function ResearchPage() {
   const allResearch = await getCollection("research");

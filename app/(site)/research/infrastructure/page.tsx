@@ -15,7 +15,7 @@ import PageHeader from "@/components/ui/PageHeader";
 import EquipmentCard from "@/components/ui/EquipmentCard";
 import { siteConfig } from "@/lib/config";
 
-export const metadata = { title: "Infraestrutura" };
+export const metadata = { title: "Infraestrutura", alternates: { canonical: "/research/infrastructure" } };
 
 export default async function InfrastructurePage() {
   // Texto introdutório e lista de equipamentos — leituras independentes, em paralelo

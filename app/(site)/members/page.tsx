@@ -39,6 +39,7 @@ const GROUP_ORDER = [
 
 export const metadata = {
   title: "Membros",
+  alternates: { canonical: "/members" },
 };
 
 export default async function MembersPage() {

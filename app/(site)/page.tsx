@@ -77,6 +77,11 @@ export default async function HomePage() {
   return (
     <div>
 
+      {/* Título principal da página (oculto visualmente) — H1 para SEO/acessibilidade */}
+      <h1 className="sr-only">
+        Laboratório de Física dos Materiais (LaFiM) — Universidade Federal do Maranhão
+      </h1>
+
       {/* ── 1. Hero ────────────────────────────────────────────────────────── */}
       <Hero
         images={heroImages}
