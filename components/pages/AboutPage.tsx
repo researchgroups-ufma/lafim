@@ -2,7 +2,9 @@
  * AboutPage.tsx — Conteúdo da página Sobre, parametrizado por locale
  *
  * Server Component — lê o conteúdo institucional de content/about/index.md
- * via getSingleFile() e exibe missão e histórico do laboratório.
+ * (ou index.en.md) via getSingleFile() e exibe missão e histórico do
+ * laboratório. about fica fora do i18n do Decap (dois arquivos separados) —
+ * se o EN não tiver body/mission (não traduzido), cai no PT.
  */
 
 import { getSingleFile } from "@/lib/mdx";
@@ -12,7 +14,11 @@ import { getDictionary, type Locale } from "@/lib/i18n";
 
 export default async function AboutPage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
-  const about = await getSingleFile("about/index.md");
+  const aboutFile = locale === "en" ? "about/index.en.md" : "about/index.md";
+  let about = await getSingleFile(aboutFile);
+  if (locale === "en" && !about.body && !about.mission) {
+    about = await getSingleFile("about/index.md");
+  }
 
   return (
     <div>

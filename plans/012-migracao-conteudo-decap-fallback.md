@@ -1,6 +1,6 @@
 # Plano 012 — Migração de conteúdo + Decap i18n + fallback em getCollection
 
-**Status:** TODO
+**Status:** DONE
 **Fase coberta:** Fase 3 (Conteúdo + CMS)
 **Depende de:** plano 008 (estrutura de rotas) e planos 002–006 (callers de getCollection)
 **Modelo recomendado:** sonnet
@@ -126,11 +126,57 @@ Antes de finalizar, valide o Decap com `local_backend` (se configurado) ou revis
 6. `npm run build`. → verify: verde; `/` e `/en` renderizam; item traduzido aparece em EN, item sem tradução aparece em PT no `/en`.
 
 ## Critérios de aceitação
-- [ ] `npm run build` verde.
-- [ ] `content/<coleção>/pt/` contém os arquivos migrados; histórico preservado (git mv).
-- [ ] `config.yml` com `i18n` global + `i18n: true` nas 6 coleções de pasta + file entry `about-en`; YAML válido.
-- [ ] `getCollection("news", "en")` retorna itens EN quando existem e PT como fallback.
-- [ ] Uma notícia com tradução EN criada aparece em inglês em `/en/news`; uma sem tradução aparece em PT em `/en/news`.
-- [ ] `/about` (PT) e `/en/about` (EN via index.en.md, com fallback PT se vazio) funcionam.
-- [ ] Commit único cobrindo pastas + config.yml + lib/mdx.ts + callers.
-- [ ] Docstring de `lib/mdx.ts` atualizada descrevendo o fallback.
+- [x] `npm run build` verde.
+- [x] `content/<coleção>/pt/` contém os arquivos migrados; histórico preservado (git mv).
+- [x] `config.yml` com `i18n` global + `i18n: true` nas 6 coleções de pasta + file entry `about-en`; YAML válido.
+- [x] `getCollection("news", "en")` retorna itens EN quando existem e PT como fallback.
+- [x] Uma notícia com tradução EN criada aparece em inglês em `/en/news`; uma sem tradução aparece em PT em `/en/news`.
+- [x] `/about` (PT) e `/en/about` (EN via index.en.md, com fallback PT se vazio) funcionam.
+- [x] Commit único cobrindo pastas + config.yml + lib/mdx.ts + callers. (feito pelo orquestrador após revisão APROVADO)
+- [x] Docstring de `lib/mdx.ts` atualizada descrevendo o fallback.
+
+## Evidência
+
+### 1. Migração de pastas (`git mv`)
+Contagem de arquivos migrados para `pt/` (verificado com `ls`):
+- `content/members/pt/` — 21 arquivos
+- `content/research/pt/` — 4 arquivos
+- `content/news/pt/` — 17 arquivos
+- `content/publications/pt/` — 3 arquivos
+- `content/equipment/pt/` — 5 arquivos (excluindo `index.md`, que permanece em `content/equipment/index.md`)
+- `content/highlights/pt/` — 2 arquivos
+
+`content/about/index.md` (PT) permaneceu no lugar; `content/equipment/index.md` (PT) permaneceu no lugar. `git status --porcelain` confirma todas as migrações como renames (`R  content/<col>/<f>.md -> content/<col>/pt/<f>.md`), preservando histórico. Pastas `en/` criadas para as 6 coleções; as vazias (members, research, publications, equipment, highlights) receberam `.gitkeep`; `content/news/en/` recebeu uma tradução real (`2025-11-artigo-vanadatos.md`). `content/about/index.en.md` criado com tradução institucional.
+
+### 2. `config.yml` — validação YAML
+```
+node_modules/.bin/js-yaml public/admin/config.yml > <tmp>.json
+exit: 0
+```
+Parse bem-sucedido; bloco `i18n` global (`structure: multiple_folders`, `locales: [pt, en]`, `default_locale: pt`) confirmado no JSON gerado; as 6 coleções de pasta (`members`, `research`, `publications`, `news`, `equipment`, `highlights`) têm `i18n: true`; `about` tem o segundo file entry `about-en` apontando para `content/about/index.en.md`.
+
+### 3. `npx tsc --noEmit`
+Saída vazia — sem erros de tipo.
+
+### 4. `npm run lint`
+```
+✖ 3 problems (0 errors, 3 warnings)
+```
+Os 3 warnings são os pré-existentes (Footer.tsx:56, text-effect.tsx:183, PageHeader.tsx:28) — nenhum novo.
+
+### 5. `npm run build`
+Build verde, 20 páginas estáticas geradas (10 rotas × 2 locales), export concluído (`✓ Exporting (2/2)`).
+
+### 6. Verificação de conteúdo no `out/`
+- `out/en/news.html` contém o título traduzido "Review on metal vanadates published in international journal" (item com tradução EN) **e** o título em PT "Grupo divulga balanço das atividades do ano anterior" (item sem tradução, fallback PT) — confirma `getCollection("news","en")` fazendo merge campo a campo.
+- `out/news.html` (PT) contém "Grupo divulga balanço das atividades" — PT intacto, não afetado pela migração.
+- `out/en/about.html` renderiza a missão/histórico em inglês ("To develop excellence in materials physics research...", "History and full description of the laboratory will be added here.") — via `content/about/index.en.md`.
+- `out/about.html` (PT) renderiza "Histórico e descrição completa do laboratório serão inseridos aqui." — PT intacto.
+- `out/research/infrastructure.html` e `out/en/research/infrastructure.html` mostram o mesmo texto introdutório em PT ("Para investigar o comportamento...") — confirma o fallback do `equipment/index.md` (sem `index.en.md` criado, conforme decisão documentada de não criar a tradução opcional).
+
+### 7. Artefatos gerados revertidos
+`public/sitemap.xml` e `tsconfig.tsbuildinfo` foram alterados pelo build (`lastmod`/hash) e revertidos com `git checkout -- public/sitemap.xml tsconfig.tsbuildinfo` ao final, conforme instrução.
+
+### Decisões documentadas
+- `research_area` (em `members` e `publications`) e `featured` (em `publications`) não constavam nas listas explícitas do plano (`i18n: true` / `i18n: duplicate` / "sem i18n"); foram tratados como "sem i18n" (só no locale padrão), consistindo com o tratamento de outros campos de dado canônico (`role`, `type`, `category`).
+- `content/equipment/index.en.md` **não foi criado** (era opcional no plano); o `InfrastructurePage` já implementa o fallback (lê `index.en.md`, se ausente/sem `intro` recai no PT) e o build confirma o fallback funcionando.

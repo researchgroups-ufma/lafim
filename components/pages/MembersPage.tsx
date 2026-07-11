@@ -37,7 +37,7 @@ const GROUP_ORDER = [
 
 export default async function MembersPage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
-  const allMembers = await getCollection("members");
+  const allMembers = await getCollection("members", locale);
 
   // Traduz apenas o TEXTO exibido — comparações de grupo continuam com o valor PT cru
   const roleLabel = (role: string) => dict.roles[role] ?? role;

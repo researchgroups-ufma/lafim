@@ -13,7 +13,7 @@ import { getDictionary, type Locale } from "@/lib/i18n";
 
 export default async function ResearchPage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
-  const allResearch = await getCollection("research");
+  const allResearch = await getCollection("research", locale);
 
   // Remove o placeholder gerado pelo scaffolding
   const lines = allResearch.filter((r) => r.slug !== "placeholder");

@@ -25,7 +25,13 @@ export default async function HomePage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
 
   // ── Dados do Hero ─────────────────────────────────────────────────────────
-  const about = await getSingleFile("about/index.md");
+  // about fica fora do i18n do Decap (dois arquivos separados) — se o EN
+  // não tiver body/mission (não traduzido), cai no PT.
+  const aboutFile = locale === "en" ? "about/index.en.md" : "about/index.md";
+  let about = await getSingleFile(aboutFile);
+  if (locale === "en" && !about.body && !about.mission) {
+    about = await getSingleFile("about/index.md");
+  }
 
   const heroImages: string[] = Array.isArray(about.hero_images)
     ? (about.hero_images as string[])
@@ -34,7 +40,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
     : ["/uploads/hero1.webp"];
 
   // ── Linhas de pesquisa ────────────────────────────────────────────────────
-  const allResearch = await getCollection("research");
+  const allResearch = await getCollection("research", locale);
   const researchLines = allResearch.filter((r) => r.slug !== "placeholder") as {
     slug: string;
     title: string;
@@ -42,7 +48,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
   }[];
 
   // ── Destaques — ordenados pelo campo order ─────────────────────────────────
-  const allHighlights = await getCollection("highlights");
+  const allHighlights = await getCollection("highlights", locale);
   const highlights = allHighlights
     .filter((h) => h.slug !== "placeholder")
     .sort((a, b) => ((a.order as number) || 0) - ((b.order as number) || 0)) as {
@@ -56,7 +62,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
     }[];
 
   // ── Notícias — 3 mais recentes ─────────────────────────────────────────────
-  const allNews = await getCollection("news");
+  const allNews = await getCollection("news", locale);
   const recentNews = allNews
     .filter((n) => n.slug !== "placeholder")
     .sort((a, b) => {
@@ -73,7 +79,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
     }));
 
   // ── Coordenador ────────────────────────────────────────────────────────────
-  const allMembers = await getCollection("members");
+  const allMembers = await getCollection("members", locale);
   const coordinator = allMembers.find((m) => m.role === "Coordenador");
 
   return (

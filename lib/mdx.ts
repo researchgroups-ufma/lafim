@@ -5,7 +5,11 @@
  * Nunca importe em arquivos com "use client".
  *
  * Funções:
- *   getCollection(folder)   — lê todos os .md de content/<folder>/
+ *   getCollection(folder, locale) — lê content/<folder>/pt/*.md (canônico) e,
+ *     se locale === "en", faz merge com content/<folder>/en/*.md por nome de
+ *     arquivo (campo a campo: base PT sobrescrita pelos campos presentes no
+ *     item EN). Item sem arquivo EN correspondente aparece 100% em PT — é o
+ *     fallback de tradução ausente.
  *   getSingleFile(filePath) — lê um único arquivo .md
  *   formatDate(date, locale) — converte data do CMS para string legível (pt-BR/en-US)
  */
@@ -22,20 +26,34 @@ export type ContentItem = {
   [key: string]: unknown;
 };
 
-export async function getCollection(folder: string): Promise<ContentItem[]> {
-  const dir = path.join(CONTENT_DIR, folder);
-  if (!fs.existsSync(dir)) return [];
+export async function getCollection(folder: string, locale: Locale = "pt"): Promise<ContentItem[]> {
+  const readDir = (sub: string) => {
+    const dir = path.join(CONTENT_DIR, folder, sub);
+    const map = new Map<string, ContentItem>();
+    if (!fs.existsSync(dir)) return map;
 
-  const files = fs.readdirSync(dir).filter((f) => f.endsWith(".md"));
+    for (const filename of fs.readdirSync(dir).filter((f) => f.endsWith(".md"))) {
+      const raw = fs.readFileSync(path.join(dir, filename), "utf-8");
+      const { data, content } = matter(raw);
+      // body = corpo markdown do arquivo (campo "Descrição completa" no CMS).
+      // Espelha getSingleFile; a homepage usa só `summary`, a página de
+      // pesquisa usa `body` para exibir a descrição completa.
+      map.set(filename, { slug: filename.replace(/\.md$/, ""), body: content, ...data });
+    }
+    return map;
+  };
 
-  return files.map((filename) => {
-    const raw = fs.readFileSync(path.join(dir, filename), "utf-8");
-    const { data, content } = matter(raw);
-    // body = corpo markdown do arquivo (campo "Descrição completa" no CMS).
-    // Espelha getSingleFile; a homepage usa só `summary`, a página de
-    // pesquisa usa `body` para exibir a descrição completa.
-    return { slug: filename.replace(/\.md$/, ""), body: content, ...data };
-  });
+  const pt = readDir("pt");
+  if (locale === "pt") return [...pt.values()];
+
+  // EN: merge campo a campo sobre a base PT — item sem arquivo EN fica 100% em PT.
+  const en = readDir("en");
+  const merged = new Map(pt);
+  for (const [filename, enItem] of en) {
+    const base = pt.get(filename) ?? {};
+    merged.set(filename, { ...base, ...enItem });
+  }
+  return [...merged.values()];
 }
 
 export async function getSingleFile(filePath: string): Promise<ContentItem> {

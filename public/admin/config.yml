@@ -20,9 +20,16 @@ media_folder: public/uploads
 public_folder: /uploads
 locale: pt
 
+i18n:
+  structure: multiple_folders
+  locales: [pt, en]
+  default_locale: pt
+
 collections:
 
   # ── Apresentação ────────────────────────────────────────────────────────────
+  # about fica fora do i18n nativo do Decap (file collection tem suporte
+  # limitado) — a tradução é um segundo file entry apontando para index.en.md.
   - name: "about"
     label: "Apresentação"
     files:
@@ -39,28 +46,44 @@ collections:
             widget: "list"
             required: false
             field: { label: "Imagem", name: "image", widget: "image" }
+      - name: "about-en"
+        label: "Texto Institucional (EN)"
+        file: "content/about/index.en.md"
+        fields:
+          - { label: "Título",         name: "title",       widget: "string" }
+          - { label: "Subtítulo",      name: "subtitle",    widget: "string",   required: false }
+          - { label: "Missão",         name: "mission",     widget: "text" }
+          - { label: "Histórico",      name: "body",        widget: "markdown" }
+          - label: "Imagens do Hero (carrossel)"
+            name: "hero_images"
+            widget: "list"
+            required: false
+            field: { label: "Imagem", name: "image", widget: "image" }
 
   # ── Membros ─────────────────────────────────────────────────────────────────
+  # title (nome próprio) e demais campos de dados/links usam "duplicate";
+  # só bio é de fato traduzida.
   - name: "members"
     label: "Membros"
     folder: "content/members"
     create: true
     slug: "{{slug}}"
+    i18n: true
     fields:
-      - { label: "Nome completo",      name: "title",         widget: "string" }
+      - { label: "Nome completo",      name: "title",         widget: "string",  i18n: duplicate }
       - label: "Função"
         name: "role"
         widget: "select"
         options: ["Coordenador", "Pesquisador Sênior", "Pós-Doutorando", "Doutorando", "Mestrando", "Iniciação Científica", "Egresso", "Colaborador Externo"]
-      - { label: "Afiliação",          name: "affiliation",   widget: "string" }
-      - { label: "Bio",                name: "bio",           widget: "text" }
-      - { label: "Foto",               name: "photo",         widget: "image",   required: false }
-      - { label: "E-mail",             name: "email",         widget: "string",  required: false }
-      - { label: "LinkedIn",           name: "linkedin",      widget: "string",  required: false }
-      - { label: "Lattes",             name: "lattes",        widget: "string",  required: false }
-      - { label: "ORCID",              name: "orcid",         widget: "string",  required: false }
-      - { label: "Google Scholar",     name: "scholar",       widget: "string",  required: false }
-      - { label: "arXiv",              name: "arxiv",         widget: "string",  required: false }
+      - { label: "Afiliação",          name: "affiliation",   widget: "string",  i18n: duplicate }
+      - { label: "Bio",                name: "bio",           widget: "text",    i18n: true }
+      - { label: "Foto",               name: "photo",         widget: "image",   required: false, i18n: duplicate }
+      - { label: "E-mail",             name: "email",         widget: "string",  required: false, i18n: duplicate }
+      - { label: "LinkedIn",           name: "linkedin",      widget: "string",  required: false, i18n: duplicate }
+      - { label: "Lattes",             name: "lattes",        widget: "string",  required: false, i18n: duplicate }
+      - { label: "ORCID",              name: "orcid",         widget: "string",  required: false, i18n: duplicate }
+      - { label: "Google Scholar",     name: "scholar",       widget: "string",  required: false, i18n: duplicate }
+      - { label: "arXiv",              name: "arxiv",         widget: "string",  required: false, i18n: duplicate }
       - { label: "Linha de pesquisa",  name: "research_area", widget: "string",  required: false }
       - label: "Bolsa"
         name: "scholarship"
@@ -77,25 +100,28 @@ collections:
     folder: "content/research"
     create: true
     slug: "{{slug}}"
+    i18n: true
     fields:
-      - { label: "Nome",               name: "title",   widget: "string" }
-      - { label: "Resumo curto",       name: "summary", widget: "text" }
-      - { label: "Descrição completa", name: "body",    widget: "markdown" }
-      - { label: "Imagem",             name: "image",   widget: "image",    required: false }
+      - { label: "Nome",               name: "title",   widget: "string", i18n: true }
+      - { label: "Resumo curto",       name: "summary", widget: "text",   i18n: true }
+      - { label: "Descrição completa", name: "body",    widget: "markdown", i18n: true }
+      - { label: "Imagem",             name: "image",   widget: "image",    required: false, i18n: duplicate }
 
   # ── Publicações ─────────────────────────────────────────────────────────────
+  # title já costuma estar em inglês — usa "duplicate" (não precisa traduzir).
   - name: "publications"
     label: "Publicações"
     folder: "content/publications"
     create: true
     slug: "{{year}}-{{slug}}"
+    i18n: true
     fields:
-      - { label: "Título",             name: "title",         widget: "string" }
-      - { label: "Autores",            name: "authors",       widget: "string" }
-      - { label: "Ano",                name: "year",          widget: "number" }
-      - { label: "Periódico",          name: "journal",       widget: "string",  required: false }
-      - { label: "DOI",                name: "doi",           widget: "string",  required: false }
-      - { label: "arXiv ID",           name: "arxiv",         widget: "string",  required: false }
+      - { label: "Título",             name: "title",         widget: "string",  i18n: duplicate }
+      - { label: "Autores",            name: "authors",       widget: "string",  i18n: duplicate }
+      - { label: "Ano",                name: "year",          widget: "number",  i18n: duplicate }
+      - { label: "Periódico",          name: "journal",       widget: "string",  required: false, i18n: duplicate }
+      - { label: "DOI",                name: "doi",           widget: "string",  required: false, i18n: duplicate }
+      - { label: "arXiv ID",           name: "arxiv",         widget: "string",  required: false, i18n: duplicate }
       - label: "Tipo"
         name: "type"
         widget: "select"
@@ -106,6 +132,7 @@ collections:
         widget: "select"
         required: false
         multiple: true
+        i18n: duplicate
         options:
           - { label: "Mat. Condensada",    value: "mat" }
           - { label: "Supercondutividade", value: "supercond" }
@@ -119,20 +146,22 @@ collections:
     folder: "content/news"
     create: true
     slug: "{{year}}-{{month}}-{{slug}}"
+    i18n: true
     fields:
-      - { label: "Título",         name: "title",       widget: "string" }
-      - { label: "Data",           name: "date",        widget: "datetime" }
+      - { label: "Título",         name: "title",       widget: "string", i18n: true }
+      - { label: "Data",           name: "date",        widget: "datetime", i18n: duplicate }
       - label: "Categoria"
         name: "category"
         widget: "select"
         options: ["Publicação", "Defesa", "Premiação", "Visita", "Mídia", "Outros"]
-      - { label: "Resumo",         name: "excerpt",     widget: "text" }
-      - { label: "Conteúdo",       name: "body",        widget: "markdown" }
-      - { label: "Imagem de capa", name: "cover_image", widget: "image",   required: false }
+      - { label: "Resumo",         name: "excerpt",     widget: "text", i18n: true }
+      - { label: "Conteúdo",       name: "body",        widget: "markdown", i18n: true }
+      - { label: "Imagem de capa", name: "cover_image", widget: "image",   required: false, i18n: duplicate }
       - label: "Galeria (carrossel)"
         name: "gallery"
         widget: "list"
         required: false
+        i18n: duplicate
         field: { label: "Imagem", name: "image", widget: "image" }
 
   # ── Infraestrutura ──────────────────────────────────────────────────────────
@@ -150,13 +179,14 @@ collections:
     folder: "content/equipment"
     create: true
     slug: "{{slug}}"
+    i18n: true
     fields:
-      - { label: "Nome do equipamento",    name: "title",        widget: "string" }
-      - { label: "Descrição breve",        name: "summary",      widget: "text" }
-      - { label: "Descrição completa",     name: "description",  widget: "markdown", required: false }
-      - { label: "Foto",                   name: "photo",        widget: "image",    required: false }
-      - { label: "Fabricante",             name: "manufacturer", widget: "string",   required: false }
-      - { label: "Modelo",                 name: "model",        widget: "string",   required: false }
+      - { label: "Nome do equipamento",    name: "title",        widget: "string", i18n: true }
+      - { label: "Descrição breve",        name: "summary",      widget: "text",   i18n: true }
+      - { label: "Descrição completa",     name: "description",  widget: "markdown", required: false, i18n: true }
+      - { label: "Foto",                   name: "photo",        widget: "image",    required: false, i18n: duplicate }
+      - { label: "Fabricante",             name: "manufacturer", widget: "string",   required: false, i18n: duplicate }
+      - { label: "Modelo",                 name: "model",        widget: "string",   required: false, i18n: duplicate }
 
   # ── Destaques da Homepage ────────────────────────────────────────────────────
   - name: "highlights"
@@ -164,16 +194,18 @@ collections:
     folder: "content/highlights"
     create: true
     slug: "{{slug}}"
+    i18n: true
     fields:
-      - { label: "Título",              name: "title",          widget: "string" }
-      - { label: "Descrição",           name: "description",    widget: "text" }
-      - { label: "Imagem",              name: "image",          widget: "image",  required: false }
-      - { label: "Legenda da imagem",   name: "image_caption",  widget: "string", required: false }
+      - { label: "Título",              name: "title",          widget: "string", i18n: true }
+      - { label: "Descrição",           name: "description",    widget: "text",   i18n: true }
+      - { label: "Imagem",              name: "image",          widget: "image",  required: false, i18n: duplicate }
+      - { label: "Legenda da imagem",   name: "image_caption",  widget: "string", required: false, i18n: true }
       - label: "Posição da imagem"
         name: "image_position"
         widget: "select"
         default: "right"
+        i18n: duplicate
         options:
           - { label: "Direita", value: "right" }
           - { label: "Esquerda", value: "left" }
-      - { label: "Ordem de exibição",   name: "order",          widget: "number", default: 1 }    
+      - { label: "Ordem de exibição",   name: "order",          widget: "number", default: 1, i18n: duplicate }

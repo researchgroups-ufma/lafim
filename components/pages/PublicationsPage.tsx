@@ -20,7 +20,7 @@ import { getDictionary, type Locale } from "@/lib/i18n";
 
 export default async function PublicationsPage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
-  const allPublications = await getCollection("publications");
+  const allPublications = await getCollection("publications", locale);
 
   // Remove o placeholder gerado pelo scaffolding
   const publications = allPublications.filter((p) => p.slug !== "placeholder");

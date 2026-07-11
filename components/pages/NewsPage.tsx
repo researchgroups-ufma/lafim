@@ -17,7 +17,7 @@ import { getDictionary, type Locale } from "@/lib/i18n";
 
 export default async function NewsPage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
-  const allNews = await getCollection("news");
+  const allNews = await getCollection("news", locale);
 
   // Remove placeholder, ordena por data e serializa para o client component
   const news = allNews

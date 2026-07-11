@@ -13,7 +13,7 @@ import { getDictionary, type Locale } from "@/lib/i18n";
 
 export default async function ContactPage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
-  const allMembers = await getCollection("members");
+  const allMembers = await getCollection("members", locale);
   const coordinator = allMembers.find((m) => m.role === "Coordenador");
 
   return (

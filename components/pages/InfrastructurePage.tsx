@@ -20,10 +20,17 @@ export default async function InfrastructurePage({ locale }: { locale: Locale })
   const dict = getDictionary(locale);
 
   // Texto introdutório e lista de equipamentos — leituras independentes, em paralelo
-  const [pageInfo, allEquipment] = await Promise.all([
-    getSingleFile("equipment/index.md"),
-    getCollection("equipment"),
+  // equipment/index.md (texto introdutório) fica fora do i18n do Decap — se o
+  // EN não tiver intro (não traduzido, ou sem index.en.md), cai no PT.
+  const equipmentIndexFile = locale === "en" ? "equipment/index.en.md" : "equipment/index.md";
+  const [pageInfoRead, allEquipment] = await Promise.all([
+    getSingleFile(equipmentIndexFile),
+    getCollection("equipment", locale),
   ]);
+  const pageInfo =
+    locale === "en" && !pageInfoRead.intro
+      ? await getSingleFile("equipment/index.md")
+      : pageInfoRead;
 
   const equipment = allEquipment.filter(
     (e) => e.slug !== "placeholder" && e.slug !== "index"
