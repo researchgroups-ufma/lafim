@@ -3,7 +3,7 @@
  *
  * Client Component — precisa de "use client" para os useState de filtro e
  * paginação. Recebe as notícias já lidas/ordenadas pelo Server Component
- * (app/(site)/news/page.tsx) e delega cada item ao NewsCard, que abre o
+ * (components/pages/NewsPage.tsx) e delega cada item ao NewsCard, que abre o
  * Morphing Dialog com o texto integral e o carrossel de imagens.
  *
  * Comportamento:
@@ -14,7 +14,8 @@
  * `year`/`month` para filtro — este componente nunca importa lib/mdx (fs).
  *
  * Props:
- *   news — array de notícias serializáveis vindas do Server Component
+ *   news    — array de notícias serializáveis vindas do Server Component
+ *   strings — strings de UI (filtros, paginação, meses) vindas do dicionário
  */
 
 "use client";
@@ -22,19 +23,24 @@
 import { useMemo, useState } from "react";
 import NewsCard, { type NewsItem } from "@/components/ui/NewsCard";
 
+type NewsListStrings = {
+  allMonths: string;
+  allYears: string;
+  clearFilters: string;
+  none: string;
+  prev: string;
+  next: string;
+  months: readonly string[];
+};
+
 type NewsListProps = {
   news: NewsItem[];
+  strings: NewsListStrings;
 };
 
 const PER_PAGE = 10;
 
-// Nomes dos meses em pt-BR — índice 1..12
-const MONTH_NAMES = [
-  "", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
-];
-
-export default function NewsList({ news }: NewsListProps) {
+export default function NewsList({ news, strings }: NewsListProps) {
   const [filterYear, setFilterYear] = useState("all");
   const [filterMonth, setFilterMonth] = useState("all");
   const [page, setPage] = useState(1);
@@ -92,8 +98,8 @@ export default function NewsList({ news }: NewsListProps) {
           aria-label="Filtrar por mês"
           style={selectStyle}
         >
-          <option value="all">Todos os meses</option>
-          {MONTH_NAMES.slice(1).map((name, i) => (
+          <option value="all">{strings.allMonths}</option>
+          {strings.months.slice(1).map((name, i) => (
             <option key={i + 1} value={i + 1}>
               {name}
             </option>
@@ -106,7 +112,7 @@ export default function NewsList({ news }: NewsListProps) {
           aria-label="Filtrar por ano"
           style={selectStyle}
         >
-          <option value="all">Todos os anos</option>
+          <option value="all">{strings.allYears}</option>
           {years.map((y) => (
             <option key={y} value={y}>
               {y}
@@ -131,7 +137,7 @@ export default function NewsList({ news }: NewsListProps) {
               textDecoration: "underline",
             }}
           >
-            Limpar filtros
+            {strings.clearFilters}
           </button>
         )}
       </div>
@@ -139,7 +145,7 @@ export default function NewsList({ news }: NewsListProps) {
       {/* ── Lista de notícias ───────────────────────────────────────────── */}
       {pageItems.length === 0 ? (
         <p style={{ color: "var(--color-text-subtle)" }}>
-          Nenhuma notícia encontrada para este filtro.
+          {strings.none}
         </p>
       ) : (
         <div style={{ display: "flex", flexDirection: "column" }}>
@@ -166,7 +172,7 @@ export default function NewsList({ news }: NewsListProps) {
             disabled={currentPage === 1}
             style={pageButtonStyle(false, currentPage === 1)}
           >
-            ← Anterior
+            {strings.prev}
           </button>
 
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
@@ -187,7 +193,7 @@ export default function NewsList({ news }: NewsListProps) {
             disabled={currentPage === totalPages}
             style={pageButtonStyle(false, currentPage === totalPages)}
           >
-            Próxima →
+            {strings.next}
           </button>
         </div>
       )}

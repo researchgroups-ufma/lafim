@@ -18,6 +18,7 @@
  *
  * Props:
  *   publications — array de publicações lidas de content/publications/
+ *   strings — labels de UI vindos do dicionário (locale)
  */
 
 "use client";
@@ -38,22 +39,32 @@ type Publication = {
   featured?: boolean;
 };
 
-type PublicationsFilterProps = {
-  publications: Publication[];
+type PubFilterStrings = {
+  filters: { all: string; mat: string; supercond: string; nano: string; comp: string };
+  allYears: string;
+  clearYear: string;
+  none: string;
+  prev: string;
+  next: string;
+  badgeFeatured: string;
 };
 
-// Filtros disponíveis — label exibido e valor que deve estar no campo tags
-const FILTERS = [
-  { label: "Todas",         value: "all" },
-  { label: "Mat. Condensada", value: "mat" },
-  { label: "Supercondutividade", value: "supercond" },
-  { label: "Nanomateriais", value: "nano" },
-  { label: "Computacional", value: "comp" },
-];
+type PublicationsFilterProps = {
+  publications: Publication[];
+  strings: PubFilterStrings;
+};
 
 const PER_PAGE = 10;
 
-export default function PublicationsFilter({ publications }: PublicationsFilterProps) {
+export default function PublicationsFilter({ publications, strings }: PublicationsFilterProps) {
+  // Filtros disponíveis — label exibido (via strings) e valor que deve estar no campo tags
+  const FILTERS = [
+    { label: strings.filters.all, value: "all" },
+    { label: strings.filters.mat, value: "mat" },
+    { label: strings.filters.supercond, value: "supercond" },
+    { label: strings.filters.nano, value: "nano" },
+    { label: strings.filters.comp, value: "comp" },
+  ];
   // Filtro de tag ativo — "all" por padrão
   const [activeFilter, setActiveFilter] = useState("all");
   // Filtro de ano — "all" por padrão
@@ -151,7 +162,7 @@ export default function PublicationsFilter({ publications }: PublicationsFilterP
           aria-label="Filtrar por ano"
           style={selectStyle}
         >
-          <option value="all">Todos os anos</option>
+          <option value="all">{strings.allYears}</option>
           {allYears.map((y) => (
             <option key={y} value={y}>
               {y}
@@ -173,7 +184,7 @@ export default function PublicationsFilter({ publications }: PublicationsFilterP
               textDecoration: "underline",
             }}
           >
-            Limpar filtro de ano
+            {strings.clearYear}
           </button>
         )}
       </div>
@@ -181,7 +192,7 @@ export default function PublicationsFilter({ publications }: PublicationsFilterP
       {/* ── Lista de publicações agrupada por ano ─────────────────────────── */}
       {years.length === 0 ? (
         <p style={{ color: "var(--color-text-subtle)", fontSize: "0.9rem" }}>
-          Nenhuma publicação encontrada para este filtro.
+          {strings.none}
         </p>
       ) : (
         years.map((year) => (
@@ -247,7 +258,7 @@ export default function PublicationsFilter({ publications }: PublicationsFilterP
                   {/* Tags e badge de destaque */}
                   <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", marginTop: "0.5rem" }}>
                     {pub.featured && (
-                      <span className="badge badge-primary">Destaque</span>
+                      <span className="badge badge-primary">{strings.badgeFeatured}</span>
                     )}
                     {pub.type && (
                       <span className="badge badge-muted">{pub.type}</span>
@@ -304,7 +315,7 @@ export default function PublicationsFilter({ publications }: PublicationsFilterP
             disabled={currentPage === 1}
             style={pageButtonStyle(false, currentPage === 1)}
           >
-            ← Anterior
+            {strings.prev}
           </button>
 
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
@@ -325,7 +336,7 @@ export default function PublicationsFilter({ publications }: PublicationsFilterP
             disabled={currentPage === totalPages}
             style={pageButtonStyle(false, currentPage === totalPages)}
           >
-            Próxima →
+            {strings.next}
           </button>
         </div>
       )}

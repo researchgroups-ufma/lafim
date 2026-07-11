@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { InView } from "@/components/motion-primitives/in-view";
+import { getDictionary, type Locale } from "@/lib/i18n";
 
 /**
  * NewsSection — Seção "Notícias" da homepage (estilo lafim_2.html)
@@ -13,7 +14,8 @@ import { InView } from "@/components/motion-primitives/in-view";
  * Dados: recebe as notícias já lidas/ordenadas em page.tsx via getCollection.
  *
  * Props:
- *   news — até 3 notícias mais recentes (slug, título, resumo, data formatada)
+ *   news   — até 3 notícias mais recentes (slug, título, resumo, data formatada)
+ *   locale — idioma para leitura das strings de UI no dicionário
  */
 
 type NewsTeaser = {
@@ -25,11 +27,14 @@ type NewsTeaser = {
 
 type NewsSectionProps = {
   news: NewsTeaser[];
+  locale: Locale;
 };
 
-export default function NewsSection({ news }: NewsSectionProps) {
+export default function NewsSection({ news, locale }: NewsSectionProps) {
   // Não renderiza a seção se não houver notícias cadastradas
   if (news.length === 0) return null;
+
+  const dict = getDictionary(locale).home.news;
 
   return (
     <section
@@ -49,8 +54,8 @@ export default function NewsSection({ news }: NewsSectionProps) {
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <div>
-            <p className="hp-eyebrow">Notícias</p>
-            <h2 className="hp-h2">Acompanhe as novidades do laboratório.</h2>
+            <p className="hp-eyebrow">{dict.eyebrow}</p>
+            <h2 className="hp-h2">{dict.heading}</h2>
           </div>
         </InView>
 
@@ -82,7 +87,7 @@ export default function NewsSection({ news }: NewsSectionProps) {
         {/* ── CTA — todas as notícias ──────────────────────────────────────── */}
         <div style={{ marginTop: "32px" }}>
           <Link className="hp-btn hp-btn--ghost" href="/news">
-            Ver todas as notícias →
+            {dict.ctaAll}
           </Link>
         </div>
 

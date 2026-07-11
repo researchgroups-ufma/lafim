@@ -1,0 +1,110 @@
+/**
+ * layout.tsx — Root layout da árvore EN do site LaFiM
+ *
+ * Root layout do App Router para o segmento /en: define <html lang="en">,
+ * o ThemeProvider e os metadados globais, além do chrome das páginas
+ * públicas — SideNav/MobileNav e Footer. Espelha app/(pt)/layout.tsx.
+ *
+ * Nesta fase (plano 008) o dicionário EN ainda clona o PT (plano 001) e a
+ * nav continua com os links PT (plano 011) — o conteúdo renderiza em PT
+ * como fallback esperado até os planos de tradução serem executados.
+ */
+
+import type { Metadata } from "next";
+import { siteConfig } from "@/lib/config";
+import ThemeProvider from "@/components/layout/ThemeProvider";
+import MobileNav from "@/components/layout/MobileNav";
+import SideNav from "@/components/layout/SideNav";
+import Footer from "@/components/layout/Footer";
+import "../globals.css";
+
+const schemaOrg = {
+  "@context": "https://schema.org",
+  "@type": "ResearchOrganization",
+  name: "LaFiM — Laboratório de Física dos Materiais",
+  alternateName: "LaFiM",
+  url: "https://lafim.pages.dev",
+  description:
+    "Pesquisa em física da matéria condensada, nanomateriais e supercondutividade na Universidade Federal do Maranhão.",
+  inLanguage: "en",
+  parentOrganization: {
+    "@type": "CollegeOrUniversity",
+    name: "Universidade Federal do Maranhão",
+    alternateName: "UFMA",
+    url: "https://www.ufma.br",
+  },
+  knowsAbout: [
+    "Física da Matéria Condensada",
+    "Nanomateriais",
+    "Supercondutividade",
+    "Espectroscopia Raman",
+    "Transições de Fase",
+  ],
+  sameAs: [],
+};
+
+// Metadados globais mínimos para a árvore EN (título/descrição completos em EN
+// e hreflang ficam para o plano 013).
+export const metadata: Metadata = {
+  title: {
+    default: `${siteConfig.acronym} — ${siteConfig.university}`, // aba padrão
+    template: `%s | ${siteConfig.acronym}`,                       // páginas internas
+  },
+  description: siteConfig.description,
+  metadataBase: new URL('https://lafim.pages.dev'),
+  alternates: {
+    canonical: '/en',
+  },
+  openGraph: {
+    title: 'LaFiM — Universidade Federal do Maranhão',
+    description: 'Pesquisa em física da matéria condensada, nanomateriais e supercondutividade na UFMA.',
+    url: 'https://lafim.pages.dev/en',
+    siteName: 'LaFiM',
+    locale: 'en',
+    type: 'website',
+    images: [
+      {
+        url: '/images/hero-poster.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'LaFiM — Laboratório de Física dos Materiais',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'LaFiM — Universidade Federal do Maranhão',
+    description: 'Pesquisa em física da matéria condensada, nanomateriais e supercondutividade na UFMA.',
+    images: ['/images/hero-poster.jpg'],
+  },
+};
+
+export default function EnLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        {/* ThemeProvider injeta as CSS variables do config.ts como style inline */}
+        <ThemeProvider>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }}
+          />
+
+          {/* Navegação mobile (navbar + overlay) — visível abaixo de 768px */}
+          <MobileNav />
+
+          {/* Menu lateral fixo no lado direito — oculto em mobile via .side-nav */}
+          <SideNav />
+
+          {/* pt-14 compensa a navbar fixa do MobileNav; em desktop (md) não há
+              navbar e o Hero volta a ocupar 100svh sem padding no topo.        */}
+          <main className="pt-14 md:pt-0">
+            {children}
+          </main>
+
+          <Footer />
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}

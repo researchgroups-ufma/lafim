@@ -1,4 +1,5 @@
 import { InView } from "@/components/motion-primitives/in-view";
+import { getDictionary, type Locale } from "@/lib/i18n";
 
 /**
  * ResearchSection — Seção de Pesquisa da homepage (estilo lafim_2.html)
@@ -11,6 +12,7 @@ import { InView } from "@/components/motion-primitives/in-view";
  *
  * Props:
  *   researchLines — array de linhas de pesquisa do laboratório
+ *   locale        — idioma para leitura das strings de UI no dicionário
  */
 
 type ResearchLine = {
@@ -21,9 +23,12 @@ type ResearchLine = {
 
 type ResearchSectionProps = {
   researchLines: ResearchLine[];
+  locale: Locale;
 };
 
-export default function ResearchSection({ researchLines }: ResearchSectionProps) {
+export default function ResearchSection({ researchLines, locale }: ResearchSectionProps) {
+  const dict = getDictionary(locale).home.research;
+
   return (
     <section
       id="research"
@@ -42,19 +47,13 @@ export default function ResearchSection({ researchLines }: ResearchSectionProps)
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <div>
-            <p className="hp-eyebrow">Pesquisa</p>
-            <h2 className="hp-h2">Da estrutura atômica à função do material.</h2>
+            <p className="hp-eyebrow">{dict.eyebrow}</p>
+            <h2 className="hp-h2">{dict.heading}</h2>
             <p className="hp-lead">
-              O LaFiM estuda a relação entre estrutura, composição e propriedades
-              físicas dos materiais, combinando caracterização experimental e
-              modelagem teórica. Partimos da escala atômica — onde simetria e
-              defeitos governam o sólido — e chegamos às aplicações em energia,
-              sensores e dispositivos funcionais.
+              {dict.lead}
             </p>
             <p className="hp-body">
-              O grupo mantém colaborações nacionais e internacionais, com
-              infraestrutura própria de síntese e caracterização, formando
-              pesquisadores em iniciação científica, mestrado e doutorado.
+              {dict.body}
             </p>
           </div>
         </InView>

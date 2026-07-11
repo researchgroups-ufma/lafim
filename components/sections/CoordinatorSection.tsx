@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { InView } from "@/components/motion-primitives/in-view";
 import MemberLinks from "@/components/ui/MemberLinks";
+import { getDictionary, type Locale } from "@/lib/i18n";
 
 /**
  * CoordinatorSection — Seção "Sobre o Coordenador" da homepage (estilo lafim_2.html)
@@ -21,6 +22,7 @@ import MemberLinks from "@/components/ui/MemberLinks";
  *   orcid    — URL do ORCID (opcional)
  *   scholar  — URL do Google Scholar (opcional)
  *   arxiv    — URL do arXiv (opcional)
+ *   locale   — idioma para leitura das strings de UI no dicionário
  */
 
 type CoordinatorSectionProps = {
@@ -33,12 +35,14 @@ type CoordinatorSectionProps = {
   orcid?: string;
   scholar?: string;
   arxiv?: string;
+  locale: Locale;
 };
 
 export default function CoordinatorSection({
-  name, bio, photo, email, linkedin, lattes, orcid, scholar, arxiv,
+  name, bio, photo, email, linkedin, lattes, orcid, scholar, arxiv, locale,
 }: CoordinatorSectionProps) {
   const paragraphs = bio ? bio.split("\n\n") : [];
+  const dict = getDictionary(locale).home.coordinator;
 
   return (
     <section
@@ -48,7 +52,7 @@ export default function CoordinatorSection({
     >
       <div className="container-site">
 
-        <p className="hp-eyebrow">Sobre o Coordenador</p>
+        <p className="hp-eyebrow">{dict.eyebrow}</p>
 
         <InView
           variants={{
@@ -63,7 +67,7 @@ export default function CoordinatorSection({
             {/* ── Texto ──────────────────────────────────────────────────── */}
             <div className="hp-coord__text">
               <h2 className="hp-coord__name">{name}</h2>
-              <p className="hp-coord__role">Coordenador do LaFiM · Departamento de Física</p>
+              <p className="hp-coord__role">{dict.role}</p>
 
               {/* Bio — último parágrafo em tom secundário (.hp-sec) */}
               {paragraphs.map((paragraph, index) => (
