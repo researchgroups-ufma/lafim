@@ -65,6 +65,11 @@ export const dictionaries = {
       prev: "← Anterior",
       next: "Próxima →",
       months: ["", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
+      filterMonth: "Filtrar por mês",
+      filterYear: "Filtrar por ano",
+      imgPrev: "Imagem anterior",
+      imgNext: "Próxima imagem",
+      imgGoTo: "Ir para imagem",
     },
     about: {
       title: "Sobre o Laboratório",
@@ -112,10 +117,28 @@ export const dictionaries = {
       },
       allYears: "Todos os anos",
       clearYear: "Limpar filtro de ano",
+      filterYear: "Filtrar por ano",
       none: "Nenhuma publicação encontrada para este filtro.",
       prev: "← Anterior",
       next: "Próxima →",
       badgeFeatured: "Destaque",
+    },
+    // Rótulos de acessibilidade (aria-label) — invisíveis na tela.
+    a11y: {
+      mainNav: "Navegação principal",
+      mobileNav: "Navegação mobile",
+      openMenu: "Abrir menu",
+      closeMenu: "Fechar menu",
+      language: "Idioma",
+      footerLinks: "Links do rodapé",
+      links: {
+        email: "Enviar e-mail",
+        linkedin: "Ver perfil no LinkedIn",
+        lattes: "Ver currículo Lattes",
+        orcid: "Ver perfil no ORCID",
+        scholar: "Ver perfil no Google Scholar",
+        arxiv: "Ver artigos no arXiv",
+      },
     },
     // Mapas de exibição de VALORES de dados (frontmatter fica em PT).
     // No pt cada mapa é identidade (chave = valor) para que display(role)
@@ -209,6 +232,11 @@ export const dictionaries = {
       prev: "← Previous",
       next: "Next →",
       months: ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+      filterMonth: "Filter by month",
+      filterYear: "Filter by year",
+      imgPrev: "Previous image",
+      imgNext: "Next image",
+      imgGoTo: "Go to image",
     },
     about: {
       title: "About the Lab",
@@ -256,10 +284,28 @@ export const dictionaries = {
       },
       allYears: "All years",
       clearYear: "Clear year filter",
+      filterYear: "Filter by year",
       none: "No publications found for this filter.",
       prev: "← Previous",
       next: "Next →",
       badgeFeatured: "Featured",
+    },
+    // Rótulos de acessibilidade (aria-label) — invisíveis na tela.
+    a11y: {
+      mainNav: "Main navigation",
+      mobileNav: "Mobile navigation",
+      openMenu: "Open menu",
+      closeMenu: "Close menu",
+      language: "Language",
+      footerLinks: "Footer links",
+      links: {
+        email: "Send email",
+        linkedin: "View LinkedIn profile",
+        lattes: "View Lattes CV",
+        orcid: "View ORCID profile",
+        scholar: "View Google Scholar profile",
+        arxiv: "View arXiv articles",
+      },
     },
     // Mapas de exibição de VALORES de dados (frontmatter fica em PT).
     // Chaves em PT (valor cru do frontmatter), valores traduzidos para EN.

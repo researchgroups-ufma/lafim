@@ -97,7 +97,7 @@ export default function SideNav({ locale }: { locale: Locale }) {
 
   return (
     <nav
-      aria-label="Navegação principal"
+      aria-label={dict.a11y.mainNav}
       className="side-nav"
       style={{
         position: "fixed",

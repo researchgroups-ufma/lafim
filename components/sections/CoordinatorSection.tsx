@@ -88,6 +88,7 @@ export default function CoordinatorSection({
                 orcid={orcid}
                 scholar={scholar}
                 arxiv={arxiv}
+                locale={locale}
               />
             </div>
 

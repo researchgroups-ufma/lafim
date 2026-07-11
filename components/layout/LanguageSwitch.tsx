@@ -11,7 +11,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { Locale } from "@/lib/i18n";
+import { getDictionary, type Locale } from "@/lib/i18n";
 
 // Remove/adiciona o prefixo /en preservando o restante do caminho
 function toLocale(pathname: string, target: Locale): string {
@@ -23,7 +23,7 @@ export default function LanguageSwitch({ locale }: { locale: Locale }) {
   const pathname = usePathname();
 
   return (
-    <nav aria-label="Idioma" style={{ display: "flex", gap: "0.5rem" }}>
+    <nav aria-label={getDictionary(locale).a11y.language} style={{ display: "flex", gap: "0.5rem" }}>
       {(["pt", "en"] as const).map((target) => (
         <Link
           key={target}

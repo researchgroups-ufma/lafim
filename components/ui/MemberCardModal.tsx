@@ -30,6 +30,7 @@
 
 import Image from "next/image";
 import MemberLinks from "@/components/ui/MemberLinks";
+import type { Locale } from "@/lib/i18n";
 import {
   MorphingDialog,
   MorphingDialogTrigger,
@@ -55,11 +56,13 @@ type MemberCardModalProps = {
   orcid?: string;
   scholar?: string;
   arxiv?: string;
+  /** idioma dos aria-labels dos links (default "pt") */
+  locale?: Locale;
 };
 
 export default function MemberCardModal({
   name, role, research_area, scholarship, year_start,
-  bio, photo, email, linkedin, lattes, orcid, scholar, arxiv,
+  bio, photo, email, linkedin, lattes, orcid, scholar, arxiv, locale = "pt",
 }: MemberCardModalProps) {
   return (
     <MorphingDialog
@@ -222,6 +225,7 @@ export default function MemberCardModal({
                 orcid={orcid}
                 scholar={scholar}
                 arxiv={arxiv}
+                locale={locale}
               />
             </div>
           </div>

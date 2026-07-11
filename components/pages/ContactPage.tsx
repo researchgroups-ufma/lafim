@@ -84,7 +84,7 @@ export default async function ContactPage({ locale }: { locale: Locale }) {
                         {dict.contact.lattes}
                       </dt>
                       <dd>
-                        <MemberLinks lattes={coordinator.lattes as string} />
+                        <MemberLinks lattes={coordinator.lattes as string} locale={locale} />
                       </dd>
                     </>
                   )}

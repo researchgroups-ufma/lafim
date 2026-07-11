@@ -71,7 +71,7 @@ export default function Footer({ locale }: { locale: Locale }) {
 
         {/* ── Bloco 2: Links de navegação ───────────────────────────────────
             Gerados a partir de footerLinks em lib/config.ts               */}
-        <nav aria-label="Links do rodapé">
+        <nav aria-label={dict.a11y.footerLinks}>
           <ul style={{ display: "flex", flexWrap: "wrap", gap: "1.5rem", listStyle: "none" }}>
             {footerLinks.map((link) => (
               <li key={link.href}>

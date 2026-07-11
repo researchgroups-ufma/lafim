@@ -70,7 +70,7 @@ export default function MobileNav({ locale }: { locale: Locale }) {
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          aria-label={open ? "Fechar menu" : "Abrir menu"}
+          aria-label={open ? dict.a11y.closeMenu : dict.a11y.openMenu}
           aria-expanded={open}
           style={{
             position: "relative",
@@ -123,7 +123,7 @@ export default function MobileNav({ locale }: { locale: Locale }) {
             }}
           >
             <nav
-              aria-label="Navegação mobile"
+              aria-label={dict.a11y.mobileNav}
               style={{
                 display: "flex",
                 flexDirection: "column",

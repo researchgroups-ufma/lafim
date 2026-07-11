@@ -31,6 +31,11 @@ type NewsListStrings = {
   prev: string;
   next: string;
   months: readonly string[];
+  filterMonth: string;
+  filterYear: string;
+  imgPrev: string;
+  imgNext: string;
+  imgGoTo: string;
 };
 
 type NewsListProps = {
@@ -95,7 +100,7 @@ export default function NewsList({ news, strings }: NewsListProps) {
         <select
           value={filterMonth}
           onChange={(e) => changeMonth(e.target.value)}
-          aria-label="Filtrar por mês"
+          aria-label={strings.filterMonth}
           style={selectStyle}
         >
           <option value="all">{strings.allMonths}</option>
@@ -109,7 +114,7 @@ export default function NewsList({ news, strings }: NewsListProps) {
         <select
           value={filterYear}
           onChange={(e) => changeYear(e.target.value)}
-          aria-label="Filtrar por ano"
+          aria-label={strings.filterYear}
           style={selectStyle}
         >
           <option value="all">{strings.allYears}</option>
@@ -150,7 +155,12 @@ export default function NewsList({ news, strings }: NewsListProps) {
       ) : (
         <div style={{ display: "flex", flexDirection: "column" }}>
           {pageItems.map((item, index) => (
-            <NewsCard key={item.slug} item={item} isFirst={index === 0} />
+            <NewsCard
+              key={item.slug}
+              item={item}
+              isFirst={index === 0}
+              imgLabels={{ prev: strings.imgPrev, next: strings.imgNext, goTo: strings.imgGoTo }}
+            />
           ))}
         </div>
       )}

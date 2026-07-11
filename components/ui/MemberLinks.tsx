@@ -12,6 +12,8 @@
  * Props: cada campo é a URL (ou e-mail) do respectivo perfil, todos opcionais.
  */
 
+import { getDictionary, type Locale } from "@/lib/i18n";
+
 type MemberLinksProps = {
   email?: string;
   linkedin?: string;
@@ -19,6 +21,8 @@ type MemberLinksProps = {
   orcid?: string;
   scholar?: string;
   arxiv?: string;
+  /** idioma dos aria-labels dos ícones (default "pt") */
+  locale?: Locale;
   /** classe extra aplicada ao container <div> da linha de ícones */
   className?: string;
   /** estilos extras aplicados ao container <div> da linha de ícones */
@@ -78,37 +82,38 @@ function ArxivIcon({ className }: IconProps) {
 }
 
 export default function MemberLinks({
-  email, linkedin, lattes, orcid, scholar, arxiv, className, style,
+  email, linkedin, lattes, orcid, scholar, arxiv, locale = "pt", className, style,
 }: MemberLinksProps) {
+  const labels = getDictionary(locale).a11y.links;
   return (
     <div className={className} style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap", alignItems: "center", ...style }}>
       {email && (
-        <a className="member-link" href={`mailto:${email}`} aria-label="Enviar e-mail">
+        <a className="member-link" href={`mailto:${email}`} aria-label={labels.email}>
           <EmailIcon className="w-6 h-6" />
         </a>
       )}
       {linkedin && (
-        <a className="member-link" href={linkedin} target="_blank" rel="noopener noreferrer" aria-label="Ver perfil no LinkedIn">
+        <a className="member-link" href={linkedin} target="_blank" rel="noopener noreferrer" aria-label={labels.linkedin}>
           <LinkedinIcon className="w-6 h-6" />
         </a>
       )}
       {lattes && (
-        <a className="member-link" href={lattes} target="_blank" rel="noopener noreferrer" aria-label="Ver currículo Lattes">
+        <a className="member-link" href={lattes} target="_blank" rel="noopener noreferrer" aria-label={labels.lattes}>
           <LattesIcon className="w-6 h-6" />
         </a>
       )}
       {orcid && (
-        <a className="member-link" href={orcid} target="_blank" rel="noopener noreferrer" aria-label="Ver perfil no ORCID">
+        <a className="member-link" href={orcid} target="_blank" rel="noopener noreferrer" aria-label={labels.orcid}>
           <OrcidIcon className="w-6 h-6" />
         </a>
       )}
       {scholar && (
-        <a className="member-link" href={scholar} target="_blank" rel="noopener noreferrer" aria-label="Ver perfil no Google Scholar">
+        <a className="member-link" href={scholar} target="_blank" rel="noopener noreferrer" aria-label={labels.scholar}>
           <ScholarIcon className="w-6 h-6" />
         </a>
       )}
       {arxiv && (
-        <a className="member-link" href={arxiv} target="_blank" rel="noopener noreferrer" aria-label="Ver artigos no arXiv">
+        <a className="member-link" href={arxiv} target="_blank" rel="noopener noreferrer" aria-label={labels.arxiv}>
           <ArxivIcon className="w-6 h-6" />
         </a>
       )}

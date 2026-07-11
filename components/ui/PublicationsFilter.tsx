@@ -45,6 +45,7 @@ type PubFilterStrings = {
   filters: { all: string; mat: string; supercond: string; nano: string; comp: string };
   allYears: string;
   clearYear: string;
+  filterYear: string;
   none: string;
   prev: string;
   next: string;
@@ -162,7 +163,7 @@ export default function PublicationsFilter({ publications, strings, typeLabels }
         <select
           value={filterYear}
           onChange={(e) => changeYear(e.target.value)}
-          aria-label="Filtrar por ano"
+          aria-label={strings.filterYear}
           style={selectStyle}
         >
           <option value="all">{strings.allYears}</option>

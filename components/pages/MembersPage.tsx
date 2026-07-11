@@ -145,6 +145,7 @@ export default async function MembersPage({ locale }: { locale: Locale }) {
                     orcid={coordinator.orcid as string | undefined}
                     scholar={coordinator.scholar as string | undefined}
                     arxiv={coordinator.arxiv as string | undefined}
+                    locale={locale}
                   />
                 </div>
               </div>
@@ -184,6 +185,7 @@ export default async function MembersPage({ locale }: { locale: Locale }) {
                       {group.map((member) => (
                         <MemberCardModal
                           key={member.slug}
+                          locale={locale}
                           name={member.title as string}
                           role={roleLabel(member.role as string)}
                           research_area={member.research_area as string | undefined}

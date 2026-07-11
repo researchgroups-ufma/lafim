@@ -45,9 +45,13 @@ export type NewsItem = {
 type NewsCardProps = {
   item: NewsItem;
   isFirst: boolean;
+  /** aria-labels da galeria de imagens (default PT; EN vem do dicionário via NewsList) */
+  imgLabels?: { prev: string; next: string; goTo: string };
 };
 
-export default function NewsCard({ item, isFirst }: NewsCardProps) {
+const IMG_LABELS_PT = { prev: "Imagem anterior", next: "Próxima imagem", goTo: "Ir para imagem" };
+
+export default function NewsCard({ item, isFirst, imgLabels = IMG_LABELS_PT }: NewsCardProps) {
   return (
     <MorphingDialog
       transition={{ type: "spring", bounce: 0.05, duration: 0.3 }}
@@ -164,7 +168,7 @@ export default function NewsCard({ item, isFirst }: NewsCardProps) {
         >
           {/* Carrossel de imagens */}
           {item.images.length > 0 && (
-            <NewsCarousel images={item.images} alt={item.title} />
+            <NewsCarousel images={item.images} alt={item.title} labels={imgLabels} />
           )}
 
           {/* Categoria e data */}
@@ -247,7 +251,15 @@ export default function NewsCard({ item, isFirst }: NewsCardProps) {
 /* ── Carrossel ──────────────────────────────────────────────────────────────
  * Percorre as imagens da notícia. Com uma única imagem, não exibe controles.
  */
-function NewsCarousel({ images, alt }: { images: string[]; alt: string }) {
+function NewsCarousel({
+  images,
+  alt,
+  labels,
+}: {
+  images: string[];
+  alt: string;
+  labels: { prev: string; next: string; goTo: string };
+}) {
   const [index, setIndex] = useState(0);
   const many = images.length > 1;
 
@@ -281,7 +293,7 @@ function NewsCarousel({ images, alt }: { images: string[]; alt: string }) {
             <button
               type="button"
               onClick={() => go(index - 1)}
-              aria-label="Imagem anterior"
+              aria-label={labels.prev}
               style={arrowStyle("left")}
             >
               ‹
@@ -289,7 +301,7 @@ function NewsCarousel({ images, alt }: { images: string[]; alt: string }) {
             <button
               type="button"
               onClick={() => go(index + 1)}
-              aria-label="Próxima imagem"
+              aria-label={labels.next}
               style={arrowStyle("right")}
             >
               ›
@@ -313,7 +325,7 @@ function NewsCarousel({ images, alt }: { images: string[]; alt: string }) {
               key={i}
               type="button"
               onClick={() => setIndex(i)}
-              aria-label={`Ir para imagem ${i + 1}`}
+              aria-label={`${labels.goTo} ${i + 1}`}
               aria-current={i === index ? "true" : undefined}
               style={{
                 width: "0.5rem",
