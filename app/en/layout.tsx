@@ -25,7 +25,7 @@ const schemaOrg = {
   alternateName: "LaFiM",
   url: "https://lafim.pages.dev",
   description:
-    "Pesquisa em física da matéria condensada, nanomateriais e supercondutividade na Universidade Federal do Maranhão.",
+    "Research in condensed matter physics, nanomaterials and superconductivity at the Federal University of Maranhão.",
   inLanguage: "en",
   parentOrganization: {
     "@type": "CollegeOrUniversity",
@@ -34,11 +34,11 @@ const schemaOrg = {
     url: "https://www.ufma.br",
   },
   knowsAbout: [
-    "Física da Matéria Condensada",
-    "Nanomateriais",
-    "Supercondutividade",
-    "Espectroscopia Raman",
-    "Transições de Fase",
+    "Condensed Matter Physics",
+    "Nanomaterials",
+    "Superconductivity",
+    "Raman Spectroscopy",
+    "Phase Transitions",
   ],
   sameAs: [],
 };
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     description: 'Pesquisa em física da matéria condensada, nanomateriais e supercondutividade na UFMA.',
     url: 'https://lafim.pages.dev/en',
     siteName: 'LaFiM',
-    locale: 'en',
+    locale: 'en_US',
     type: 'website',
     images: [
       {

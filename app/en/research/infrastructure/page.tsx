@@ -7,8 +7,11 @@
  */
 
 import InfrastructurePage from "@/components/pages/InfrastructurePage";
+import { pageMetadata } from "@/lib/i18n/seo";
 
-export const metadata = { title: "Infrastructure", alternates: { canonical: "/en/research/infrastructure" } };
+const description = "Research in condensed matter physics, nanomaterials and superconductivity at UFMA.";
+
+export const metadata = pageMetadata("en", "/research/infrastructure", "Infrastructure", description);
 
 export default function Page() {
   return <InfrastructurePage locale="en" />;

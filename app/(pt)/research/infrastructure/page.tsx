@@ -7,8 +7,10 @@
  */
 
 import InfrastructurePage from "@/components/pages/InfrastructurePage";
+import { siteConfig } from "@/lib/config";
+import { pageMetadata } from "@/lib/i18n/seo";
 
-export const metadata = { title: "Infraestrutura", alternates: { canonical: "/research/infrastructure" } };
+export const metadata = pageMetadata("pt", "/research/infrastructure", "Infraestrutura", siteConfig.description);
 
 export default function Page() {
   return <InfrastructurePage locale="pt" />;

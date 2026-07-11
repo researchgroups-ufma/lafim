@@ -5,8 +5,10 @@
  */
 
 import AboutPage from "@/components/pages/AboutPage";
+import { siteConfig } from "@/lib/config";
+import { pageMetadata } from "@/lib/i18n/seo";
 
-export const metadata = { title: "Sobre", alternates: { canonical: "/about" } };
+export const metadata = pageMetadata("pt", "/about", "Sobre", siteConfig.description);
 
 export default function Page() {
   return <AboutPage locale="pt" />;

@@ -28,6 +28,7 @@ const schemaOrg = {
   url: "https://lafim.pages.dev",
   description:
     "Pesquisa em física da matéria condensada, nanomateriais e supercondutividade na Universidade Federal do Maranhão.",
+  inLanguage: "pt-BR",
   parentOrganization: {
     "@type": "CollegeOrUniversity",
     name: "Universidade Federal do Maranhão",

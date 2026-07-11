@@ -1,35 +1,116 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://lafim.pages.dev/</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-11</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://lafim.pages.dev/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lafim.pages.dev/en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lafim.pages.dev/"/>
+  </url>
+  <url>
+    <loc>https://lafim.pages.dev/en</loc>
+    <lastmod>2026-07-11</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://lafim.pages.dev/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lafim.pages.dev/en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lafim.pages.dev/"/>
   </url>
   <url>
     <loc>https://lafim.pages.dev/about</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-11</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://lafim.pages.dev/about"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lafim.pages.dev/en/about"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lafim.pages.dev/about"/>
+  </url>
+  <url>
+    <loc>https://lafim.pages.dev/en/about</loc>
+    <lastmod>2026-07-11</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://lafim.pages.dev/about"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lafim.pages.dev/en/about"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lafim.pages.dev/about"/>
   </url>
   <url>
     <loc>https://lafim.pages.dev/contact</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-11</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://lafim.pages.dev/contact"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lafim.pages.dev/en/contact"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lafim.pages.dev/contact"/>
+  </url>
+  <url>
+    <loc>https://lafim.pages.dev/en/contact</loc>
+    <lastmod>2026-07-11</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://lafim.pages.dev/contact"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lafim.pages.dev/en/contact"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lafim.pages.dev/contact"/>
   </url>
   <url>
     <loc>https://lafim.pages.dev/members</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-11</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://lafim.pages.dev/members"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lafim.pages.dev/en/members"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lafim.pages.dev/members"/>
+  </url>
+  <url>
+    <loc>https://lafim.pages.dev/en/members</loc>
+    <lastmod>2026-07-11</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://lafim.pages.dev/members"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lafim.pages.dev/en/members"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lafim.pages.dev/members"/>
   </url>
   <url>
     <loc>https://lafim.pages.dev/news</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-11</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://lafim.pages.dev/news"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lafim.pages.dev/en/news"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lafim.pages.dev/news"/>
+  </url>
+  <url>
+    <loc>https://lafim.pages.dev/en/news</loc>
+    <lastmod>2026-07-11</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://lafim.pages.dev/news"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lafim.pages.dev/en/news"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lafim.pages.dev/news"/>
   </url>
   <url>
     <loc>https://lafim.pages.dev/publications</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-11</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://lafim.pages.dev/publications"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lafim.pages.dev/en/publications"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lafim.pages.dev/publications"/>
+  </url>
+  <url>
+    <loc>https://lafim.pages.dev/en/publications</loc>
+    <lastmod>2026-07-11</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://lafim.pages.dev/publications"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lafim.pages.dev/en/publications"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lafim.pages.dev/publications"/>
   </url>
   <url>
     <loc>https://lafim.pages.dev/research</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-11</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://lafim.pages.dev/research"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lafim.pages.dev/en/research"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lafim.pages.dev/research"/>
+  </url>
+  <url>
+    <loc>https://lafim.pages.dev/en/research</loc>
+    <lastmod>2026-07-11</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://lafim.pages.dev/research"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lafim.pages.dev/en/research"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lafim.pages.dev/research"/>
   </url>
   <url>
     <loc>https://lafim.pages.dev/research/infrastructure</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-11</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://lafim.pages.dev/research/infrastructure"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lafim.pages.dev/en/research/infrastructure"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lafim.pages.dev/research/infrastructure"/>
+  </url>
+  <url>
+    <loc>https://lafim.pages.dev/en/research/infrastructure</loc>
+    <lastmod>2026-07-11</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://lafim.pages.dev/research/infrastructure"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lafim.pages.dev/en/research/infrastructure"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lafim.pages.dev/research/infrastructure"/>
   </url>
 </urlset>

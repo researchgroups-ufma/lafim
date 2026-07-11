@@ -5,8 +5,11 @@
  */
 
 import ResearchPage from "@/components/pages/ResearchPage";
+import { pageMetadata } from "@/lib/i18n/seo";
 
-export const metadata = { title: "Research", alternates: { canonical: "/en/research" } };
+const description = "Research in condensed matter physics, nanomaterials and superconductivity at UFMA.";
+
+export const metadata = pageMetadata("en", "/research", "Research", description);
 
 export default function Page() {
   return <ResearchPage locale="en" />;

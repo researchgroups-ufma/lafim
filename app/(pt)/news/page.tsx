@@ -5,8 +5,10 @@
  */
 
 import NewsPage from "@/components/pages/NewsPage";
+import { siteConfig } from "@/lib/config";
+import { pageMetadata } from "@/lib/i18n/seo";
 
-export const metadata = { title: "Notícias", alternates: { canonical: "/news" } };
+export const metadata = pageMetadata("pt", "/news", "Notícias", siteConfig.description);
 
 export default function Page() {
   return <NewsPage locale="pt" />;

@@ -5,11 +5,10 @@
  */
 
 import PublicationsPage from "@/components/pages/PublicationsPage";
+import { siteConfig } from "@/lib/config";
+import { pageMetadata } from "@/lib/i18n/seo";
 
-export const metadata = {
-  title: "Publicações",
-  alternates: { canonical: "/publications" },
-};
+export const metadata = pageMetadata("pt", "/publications", "Publicações", siteConfig.description);
 
 export default function Page() {
   return <PublicationsPage locale="pt" />;
