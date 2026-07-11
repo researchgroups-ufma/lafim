@@ -83,7 +83,7 @@ export default async function PublicationsPage({ locale }: { locale: Locale }) {
             </p>
 
             {/* Filtros + lista — Client Component */}
-            <PublicationsFilter publications={papers} strings={dict.publications} />
+            <PublicationsFilter publications={papers} strings={dict.publications} typeLabels={dict.pubTypes} />
 
           </section>
 
@@ -114,7 +114,7 @@ export default async function PublicationsPage({ locale }: { locale: Locale }) {
                         {thesis.title as string}
                       </p>
                       <p style={{ fontSize: "0.82rem", color: "var(--color-text-muted)", fontWeight: 300 }}>
-                        {thesis.authors as string} · {thesis.type as string}
+                        {thesis.authors as string} · {dict.pubTypes[thesis.type as string] ?? (thesis.type as string)}
                       </p>
                       <p style={{ fontSize: "0.82rem", fontStyle: "italic", color: "var(--color-text-subtle)" }}>
                         {siteConfig.university}, {thesis.year as number}

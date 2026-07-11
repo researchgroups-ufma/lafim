@@ -20,22 +20,25 @@ export const siteConfig = {
 
 // ─── Navegação ────────────────────────────────────────────────────────────────
 
+// `key` referencia getDictionary(locale).nav[key] (labels traduzidos por
+// SideNav/MobileNav). `label` é mantido só para o Header.tsx legado (não usado
+// no site atual, mas ainda compilado pelo TypeScript).
 export const navLinks = [
-  { label: "Início",      href: "/" },
-  { label: "Pesquisa",    href: "/research" },
-  { label: "Membros",     href: "/members" },
-  { label: "Publicações", href: "/publications" },
-  { label: "Notícias",    href: "/news" },
-  { label: "Sobre",       href: "/about" },
-  { label: "Contato",     href: "/contact" },
-];
+  { key: "home",         href: "/",        label: "Início" },
+  { key: "research",     href: "/research", label: "Pesquisa" },
+  { key: "members",      href: "/members", label: "Membros" },
+  { key: "publications", href: "/publications", label: "Publicações" },
+  { key: "news",         href: "/news",    label: "Notícias" },
+  { key: "about",        href: "/about",   label: "Sobre" },
+  { key: "contact",      href: "/contact", label: "Contato" },
+] as const;
 
 export const footerLinks = [
-  { label: "Pesquisa",    href: "/research" },
-  { label: "Membros",     href: "/members" },
-  { label: "Publicações", href: "/publications" },
-  { label: "Contato",     href: "/contact" },
-];
+  { key: "research",     href: "/research" },
+  { key: "members",      href: "/members" },
+  { key: "publications", href: "/publications" },
+  { key: "contact",      href: "/contact" },
+] as const;
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
 // Espelha as CSS variables de app/globals.css

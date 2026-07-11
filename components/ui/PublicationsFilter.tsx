@@ -19,6 +19,8 @@
  * Props:
  *   publications — array de publicações lidas de content/publications/
  *   strings — labels de UI vindos do dicionário (locale)
+ *   typeLabels — mapa PT→locale para o texto exibido no badge de tipo
+ *                (pub.type continua cru — usado só para exibição)
  */
 
 "use client";
@@ -52,11 +54,12 @@ type PubFilterStrings = {
 type PublicationsFilterProps = {
   publications: Publication[];
   strings: PubFilterStrings;
+  typeLabels: Record<string, string>;
 };
 
 const PER_PAGE = 10;
 
-export default function PublicationsFilter({ publications, strings }: PublicationsFilterProps) {
+export default function PublicationsFilter({ publications, strings, typeLabels }: PublicationsFilterProps) {
   // Filtros disponíveis — label exibido (via strings) e valor que deve estar no campo tags
   const FILTERS = [
     { label: strings.filters.all, value: "all" },
@@ -261,7 +264,7 @@ export default function PublicationsFilter({ publications, strings }: Publicatio
                       <span className="badge badge-primary">{strings.badgeFeatured}</span>
                     )}
                     {pub.type && (
-                      <span className="badge badge-muted">{pub.type}</span>
+                      <span className="badge badge-muted">{typeLabels[pub.type] ?? pub.type}</span>
                     )}
                     {(pub.tags || []).map((tag) => (
                       <span key={tag} className="badge badge-muted">{tag}</span>

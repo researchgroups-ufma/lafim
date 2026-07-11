@@ -22,8 +22,10 @@
 
 import Link from "next/link";
 import { siteConfig, footerLinks } from "@/lib/config";
+import { getDictionary, localizeHref, type Locale } from "@/lib/i18n";
 
-export default function Footer() {
+export default function Footer({ locale }: { locale: Locale }) {
+  const dict = getDictionary(locale);
   // Ano atual gerado em tempo de build — atualiza automaticamente a cada deploy
   const currentYear = new Date().getFullYear();
 
@@ -74,14 +76,14 @@ export default function Footer() {
             {footerLinks.map((link) => (
               <li key={link.href}>
                 <Link
-                  href={link.href}
+                  href={localizeHref(link.href, locale)}
                   style={{
                     color: "var(--color-text-muted)",
                     fontSize: "0.9rem",
                     transition: "color 0.15s ease",
                   }}
                 >
-                  {link.label}
+                  {dict.nav[link.key]}
                 </Link>
               </li>
             ))}

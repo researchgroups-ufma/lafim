@@ -7,12 +7,13 @@
  * Funções:
  *   getCollection(folder)   — lê todos os .md de content/<folder>/
  *   getSingleFile(filePath) — lê um único arquivo .md
- *   formatDate(date)        — converte data do CMS para string legível
+ *   formatDate(date, locale) — converte data do CMS para string legível (pt-BR/en-US)
  */
 
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import type { Locale } from "@/lib/i18n";
 
 const CONTENT_DIR = path.join(process.cwd(), "content");
 
@@ -46,11 +47,12 @@ export async function getSingleFile(filePath: string): Promise<ContentItem> {
   return { slug: filePath, body: content, ...data };
 }
 
-export function formatDate(date: string | Date | undefined): string {
+export function formatDate(date: string | Date | undefined, locale: Locale = "pt"): string {
   if (!date) return "";
   const parsed = typeof date === "string" ? new Date(date) : date;
   if (isNaN(parsed.getTime())) return String(date);
-  return parsed.toLocaleDateString("pt-BR", {
+  const tag = locale === "en" ? "en-US" : "pt-BR";
+  return parsed.toLocaleDateString(tag, {
     day: "numeric",
     month: "long",
     year: "numeric",

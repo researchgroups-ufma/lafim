@@ -69,7 +69,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
       slug: n.slug,
       title: n.title as string,
       excerpt: n.excerpt as string | undefined,
-      dateFormatted: formatDate(n.date as string),
+      dateFormatted: formatDate(n.date as string, locale),
     }));
 
   // ── Coordenador ────────────────────────────────────────────────────────────

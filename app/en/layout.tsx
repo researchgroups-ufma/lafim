@@ -5,9 +5,9 @@
  * o ThemeProvider e os metadados globais, além do chrome das páginas
  * públicas — SideNav/MobileNav e Footer. Espelha app/(pt)/layout.tsx.
  *
- * Nesta fase (plano 008) o dicionário EN ainda clona o PT (plano 001) e a
- * nav continua com os links PT (plano 011) — o conteúdo renderiza em PT
- * como fallback esperado até os planos de tradução serem executados.
+ * O dicionário EN já traz traduções reais (plano 009) e a navegação
+ * (SideNav/MobileNav/Footer) recebe locale="en" — labels e hrefs
+ * localizados para /en/* (plano 011).
  */
 
 import type { Metadata } from "next";
@@ -91,10 +91,10 @@ export default function EnLayout({ children }: { children: React.ReactNode }) {
           />
 
           {/* Navegação mobile (navbar + overlay) — visível abaixo de 768px */}
-          <MobileNav />
+          <MobileNav locale="en" />
 
           {/* Menu lateral fixo no lado direito — oculto em mobile via .side-nav */}
-          <SideNav />
+          <SideNav locale="en" />
 
           {/* pt-14 compensa a navbar fixa do MobileNav; em desktop (md) não há
               navbar e o Hero volta a ocupar 100svh sem padding no topo.        */}
@@ -102,7 +102,7 @@ export default function EnLayout({ children }: { children: React.ReactNode }) {
             {children}
           </main>
 
-          <Footer />
+          <Footer locale="en" />
         </ThemeProvider>
       </body>
     </html>

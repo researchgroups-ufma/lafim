@@ -17,22 +17,25 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { getDictionary, localizeHref, type Locale } from "@/lib/i18n";
+import LanguageSwitch from "./LanguageSwitch";
 
 // Links da navegação mobile — mesmos da SideNav, simplificados e sem submenu
 const LINKS = [
-  { label: "Início", href: "/" },
-  { label: "Pesquisa", href: "/research" },
-  { label: "Infraestrutura", href: "/research/infrastructure" },
-  { label: "Membros", href: "/members" },
-  { label: "Publicações", href: "/publications" },
-  { label: "Notícias", href: "/news" },
-  { label: "Sobre", href: "/about" },
-  { label: "Contato", href: "/contact" },
-];
+  { key: "home", href: "/" },
+  { key: "research", href: "/research" },
+  { key: "infrastructure", href: "/research/infrastructure" },
+  { key: "members", href: "/members" },
+  { key: "publications", href: "/publications" },
+  { key: "news", href: "/news" },
+  { key: "about", href: "/about" },
+  { key: "contact", href: "/contact" },
+] as const;
 
-export default function MobileNav() {
+export default function MobileNav({ locale }: { locale: Locale }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const dict = getDictionary(locale);
 
   // Base de cada linha do hamburguer — posição via `top`, movimento via `y`
   const lineBase: React.CSSProperties = {
@@ -129,19 +132,25 @@ export default function MobileNav() {
               }}
             >
               {LINKS.map((link) => {
-                const isActive = pathname === link.href;
+                const href = localizeHref(link.href, locale);
+                const isActive = pathname === href;
                 return (
                   <Link
                     key={link.href}
-                    href={link.href}
+                    href={href}
                     onClick={() => setOpen(false)}
                     aria-current={isActive ? "page" : undefined}
                     className={`mobile-nav-link${isActive ? " is-active" : ""}`}
                   >
-                    {link.label}
+                    {dict.nav[link.key]}
                   </Link>
                 );
               })}
+
+              {/* Switch de idioma PT | EN */}
+              <div style={{ color: "#f5f5f0" }}>
+                <LanguageSwitch locale={locale} />
+              </div>
             </nav>
           </motion.div>
         )}

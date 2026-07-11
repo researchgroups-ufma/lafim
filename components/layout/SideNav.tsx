@@ -19,16 +19,19 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import { navLinks } from "@/lib/config";
+import { getDictionary, localizeHref, type Locale } from "@/lib/i18n";
+import LanguageSwitch from "./LanguageSwitch";
 
-// Subitens de cada link principal
-const SUB_ITEMS: Record<string, { label: string; href: string }[]> = {
+// Subitens de cada link principal, indexados pelo href canônico (PT) do pai
+const SUB_ITEMS: Record<string, { key: "infrastructure"; href: string }[]> = {
   "/research": [
-    { label: "Infraestrutura", href: "/research/infrastructure" },
+    { key: "infrastructure", href: "/research/infrastructure" },
   ],
 };
 
-export default function SideNav() {
+export default function SideNav({ locale }: { locale: Locale }) {
   const pathname = usePathname();
+  const dict = getDictionary(locale);
 
   // Indica se o menu (centralizado na vertical) está sobreposto ao Hero escuro.
   // Quando true → texto branco; quando false (seções creme) → texto charcoal.
@@ -107,10 +110,14 @@ export default function SideNav() {
       }}
     >
       {navLinks.map((link, index) => {
+        const href = localizeHref(link.href, locale);
+        const label = dict.nav[link.key];
         const isActive =
-          pathname === link.href || pathname.startsWith(link.href + "/");
+          pathname === href ||
+          (link.href !== "/" && pathname.startsWith(href + "/"));
         const subItems = SUB_ITEMS[link.href];
-        const showSubItems = subItems && pathname.startsWith(link.href);
+        const showSubItems =
+          subItems && (pathname === href || pathname.startsWith(href + "/"));
 
         return (
           <div key={link.href}>
@@ -131,7 +138,7 @@ export default function SideNav() {
               style={{ transformOrigin: "right center" }}
             >
               <Link
-                href={link.href}
+                href={href}
                 aria-current={isActive ? "page" : undefined}
                 onMouseEnter={() => handleEnter(index)}
                 onMouseLeave={() => handleLeave(index)}
@@ -174,7 +181,7 @@ export default function SideNav() {
                   />
                 )}
                 <span ref={(el) => { textsRef.current[index] = el; }}>
-                  {link.label}
+                  {label}
                 </span>
                 {/* Underline âmbar — cresce no hover */}
                 <span
@@ -196,7 +203,9 @@ export default function SideNav() {
             {/* Subitens — dropdown com AnimatePresence + reveal GSAP */}
             <AnimatePresence>
               {showSubItems && subItems.map((sub) => {
-                const subActive = pathname === sub.href;
+                const subHref = localizeHref(sub.href, locale);
+                const subLabel = dict.nav[sub.key];
+                const subActive = pathname === subHref;
                 return (
                   <motion.div
                     key={sub.href}
@@ -234,7 +243,7 @@ export default function SideNav() {
                       ref={(el) => { subItemsRef.current[sub.href] = el; }}
                     >
                       <Link
-                        href={sub.href}
+                        href={subHref}
                         style={{
                           display: "flex",
                           alignItems: "center",
@@ -273,7 +282,7 @@ export default function SideNav() {
                             }}
                           />
                         )}
-                        {sub.label}
+                        {subLabel}
                       </Link>
                     </div>
                   </motion.div>
@@ -295,6 +304,11 @@ export default function SideNav() {
           </div>
         );
       })}
+
+      {/* Switch de idioma PT | EN */}
+      <div style={{ marginTop: "0.75rem", color: fg, display: "flex", justifyContent: "flex-end" }}>
+        <LanguageSwitch locale={locale} />
+      </div>
     </nav>
   );
 }

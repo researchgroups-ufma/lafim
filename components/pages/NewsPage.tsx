@@ -34,13 +34,15 @@ export default async function NewsPage({ locale }: { locale: Locale }) {
       const gallery = Array.isArray(n.gallery) ? (n.gallery as string[]) : [];
       // Carrossel: capa primeiro, depois a galeria — sem duplicar a capa
       const images = [...new Set([cover, ...gallery].filter(Boolean))] as string[];
+      const category = n.category as string | undefined;
       return {
         slug: n.slug,
         title: n.title as string,
-        dateFormatted: formatDate(n.date as string),
+        dateFormatted: formatDate(n.date as string, locale),
         year: valid ? parsed!.getUTCFullYear() : 0,
         month: valid ? parsed!.getUTCMonth() + 1 : 0,
-        category: n.category as string | undefined,
+        // Texto exibido traduzido; category segue não usada para lógica no client
+        category: category ? (dict.newsCategories[category] ?? category) : undefined,
         excerpt: n.excerpt as string | undefined,
         cover_image: cover,
         images,

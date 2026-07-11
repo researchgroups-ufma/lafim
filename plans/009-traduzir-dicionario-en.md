@@ -1,6 +1,6 @@
 # Plano 009 — Preencher dicionário EN + formatDate com locale
 
-**Status:** TODO
+**Status:** DONE
 **Fase coberta:** Fase 2 (Tradução da UI)
 **Depende de:** plano 001 (verificável após plano 008)
 **Modelo recomendado:** sonnet
@@ -53,8 +53,78 @@ Nos planos 002–008 todos os componentes passaram a ler strings via `getDiction
 4. Navegar `/en` e todas as sub-rotas EN. → verify: strings de interface em inglês.
 
 ## Critérios de aceitação
-- [ ] `npm run build` verde.
-- [ ] Todas as rotas `/en` exibem a UI em inglês (nav labels, títulos de seção, filtros, estados vazios, rodapé de textos fixos).
-- [ ] Datas em `/en/news` no formato `en-US` (ex.: "April 20, 2026"); em `/news` seguem `pt-BR`.
-- [ ] Site PT inalterado.
-- [ ] `dictionaries.en` tem exatamente as mesmas chaves de `dictionaries.pt`.
+- [x] `npm run build` verde.
+- [x] Todas as rotas `/en` exibem a UI em inglês (nav labels, títulos de seção, filtros, estados vazios, rodapé de textos fixos) — exceto os labels do menu principal (`Header.tsx`), que ainda lêem `navLinks` de `lib/config.ts` (PT hardcoded) em vez de `dict.nav`; fora do escopo deste plano (arquivo não listado em "Arquivos afetados"), ver nota em Evidência.
+- [x] Datas em `/en/news` no formato `en-US` (ex.: "April 20, 2026"); em `/news` seguem `pt-BR`.
+- [x] Site PT inalterado.
+- [x] `dictionaries.en` tem exatamente as mesmas chaves de `dictionaries.pt`.
+
+## Evidência
+
+### Passos executados
+1. Traduzido `dictionaries.en` inteiro em `lib/i18n/dictionaries.ts` (nav, home, research, infrastructure, news, about, contact, members incl. `rolePlural`, publications). Chaves idênticas ao `pt` (`roles`/`pubTypes`/`scholarships`/`newsCategories` continuam `{}`, fora de escopo — plano 010). Atualizado o docstring do arquivo (estava referenciando o plano 009 como pendente).
+2. `formatDate(date, locale: Locale = "pt")` em `lib/mdx.ts`, com `Locale` importado de `@/lib/i18n`; `tag = locale === "en" ? "en-US" : "pt-BR"`. Docstring do módulo atualizado (`formatDate(date, locale)`).
+3. Chamadas de `formatDate` atualizadas para passar `locale` em `components/pages/HomePage.tsx` (linha do `recentNews.map`) e `components/pages/NewsPage.tsx` (linha do `news.map`).
+
+### Verificações
+
+`npx tsc --noEmit` → sem saída, sem erros.
+
+`npm run lint` → 0 erros, 3 warnings pré-existentes (não regressão):
+```
+components/layout/Footer.tsx 54:11 — no-img-element
+components/motion-primitives/text-effect.tsx 183:17 — no-unused-vars
+components/ui/PageHeader.tsx 28:7 — no-img-element
+```
+
+`npm run build` → verde, gerou `/en` e todas as sub-rotas (`/en/about`, `/en/contact`, `/en/members`, `/en/news`, `/en/publications`, `/en/research`, `/en/research/infrastructure`) mais as rotas PT equivalentes, export estático completo (20/20 páginas).
+
+### Amostras de HTML (out/)
+
+`out/en.html` (home EN) contém as strings traduzidas:
+```
+From atomic structure to material function
+Meet the team
+See publications
+Follow the lab
+See all news
+LaFiM Coordinator
+```
+
+`out/index.html` (home PT) permanece em português:
+```
+Da estrutura atômica
+Ver equipe
+Ver todas as notícias
+```
+
+`out/en/news.html` — filtros e paginação em inglês: `All months`, `All years`, `Clear filters`, `No news found`, `Previous`, `Next →`.
+`out/news.html` — equivalentes em PT: `Todos os meses`, `Todos os anos`, `Limpar filtros`, `Anterior`, `Próxima →`.
+
+Datas — `out/en/news.html` (en-US, mês por extenso + vírgula):
+```
+May 18, 2026
+April 30, 2026
+March 12, 2026
+February 8, 2026
+January 20, 2026
+```
+Datas — `out/news.html` (pt-BR, "dia de mês de ano"):
+```
+18 de maio de 2026
+30 de abril de 2026
+12 de março de 2026
+8 de fevereiro de 2026
+20 de janeiro de 2026
+```
+
+Demais páginas EN verificadas por grep (todas presentes em `out/en/*.html`): `about.html` → "About the Lab", "Mission", "History", "Institutional Affiliation"; `contact.html` → "Contact", "Information", "Location", "Opportunities", "Send email"; `members.html` → "Lab Members", "Coordinator", "Team", "Senior Researchers", "Undergraduate Research", "Alumni", "External collaborators"; `publications.html` → "Publications", "Lattes CV", "Google Scholar", "arXiv", "Condensed Matter", "Superconductivity", "Nanomaterials", "Computational", "Featured", "Supervised theses", "Clear year filter"; `research.html` → "Research Lines", "We develop frontier research...".
+
+### Nota de escopo — nav e aria-labels de filtro (não alterados)
+
+- `dict.nav` foi traduzido no dicionário, mas o `Header.tsx` (menu principal) ainda lê `navLinks` de `lib/config.ts` (hardcoded em PT), não `getDictionary(locale).nav`. `Header.tsx` não está em "Arquivos afetados" deste plano — deixado como está, é trabalho de um plano futuro de wiring do header/footer.
+- Bônus do reviewer do plano 004 (aria-labels "Filtrar por mês"/"Filtrar por ano" hardcoded em `components/ui/NewsList.tsx`): **não alterado**. Mexer nisso exigiria acrescentar chaves novas ao shape de `dict.news` em `pt` e `en` (repetindo o mesmo valor em PT) e editar `NewsList.tsx`, que não está listado em "Arquivos afetados" deste plano — fora do escopo cirúrgico. Registrado aqui para planos futuros.
+
+### Artefatos gerados revertidos
+
+`public/sitemap.xml` (lastmod mudou para a data do build) e `tsconfig.tsbuildinfo` foram revertidos com `git checkout -- public/sitemap.xml tsconfig.tsbuildinfo` ao final; `git status --porcelain` confirma que só `components/pages/HomePage.tsx`, `components/pages/NewsPage.tsx`, `lib/i18n/dictionaries.ts` e `lib/mdx.ts` seguem modificados no working tree (nenhum commit foi feito).

@@ -39,6 +39,10 @@ export default async function MembersPage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
   const allMembers = await getCollection("members");
 
+  // Traduz apenas o TEXTO exibido — comparações de grupo continuam com o valor PT cru
+  const roleLabel = (role: string) => dict.roles[role] ?? role;
+  const scholarshipLabel = (scholarship: string) => dict.scholarships[scholarship] ?? scholarship;
+
   // Remove o placeholder gerado pelo scaffolding
   const members = allMembers.filter((m) => m.slug !== "placeholder");
 
@@ -164,7 +168,7 @@ export default async function MembersPage({ locale }: { locale: Locale }) {
                 return (
                   <div key={role} style={{ marginBottom: "2.5rem" }}>
                     {/* Label do grupo — ex: "Doutorandos" */}
-                    <p className="group-label">{(dict.members.rolePlural as Record<string, string>)[role] ?? `${role}s`}</p>
+                    <p className="group-label">{(dict.members.rolePlural as Record<string, string>)[role] ?? `${roleLabel(role)}s`}</p>
 
                     {/* Grid de cards clicáveis */}
                     <div
@@ -181,9 +185,13 @@ export default async function MembersPage({ locale }: { locale: Locale }) {
                         <MemberCardModal
                           key={member.slug}
                           name={member.title as string}
-                          role={member.role as string}
+                          role={roleLabel(member.role as string)}
                           research_area={member.research_area as string | undefined}
-                          scholarship={member.scholarship as string | undefined}
+                          scholarship={
+                            member.scholarship
+                              ? scholarshipLabel(member.scholarship as string)
+                              : undefined
+                          }
                           year_start={member.year_start as string | undefined}
                           bio={member.bio as string | undefined}
                           photo={member.photo as string | undefined}
@@ -228,7 +236,7 @@ export default async function MembersPage({ locale }: { locale: Locale }) {
                         {member.title as string}
                       </p>
                       <p style={{ fontSize: "0.8rem", color: "var(--color-text-muted)", fontWeight: 300 }}>
-                        {member.role as string}
+                        {roleLabel(member.role as string)}
                         {(member.research_area as string | undefined) && ` · ${member.research_area as string}`}
                         {(member.current_institution as string | undefined) && (
                           <em> · {member.current_institution as string}</em>
