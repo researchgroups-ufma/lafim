@@ -39,6 +39,15 @@ export async function onRequest(context) {
     }
   );
 
+  // fetch não rejeita em 4xx/5xx: sem esta checagem um erro HTTP do GitHub
+  // (ex.: 502 com corpo HTML) estouraria no .json() como exceção genérica.
+  if (!tokenResponse.ok) {
+    return new Response(
+      `Erro ao contatar o GitHub: ${tokenResponse.status} ${tokenResponse.statusText}`,
+      { status: 502 }
+    );
+  }
+
   const tokenData = await tokenResponse.json();
 
   if (tokenData.error) {

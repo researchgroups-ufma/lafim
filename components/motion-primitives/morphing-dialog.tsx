@@ -197,11 +197,16 @@ function MorphingDialogContent({
     }
   }, [isOpen, triggerRef]);
 
-  useClickOutside(containerRef, () => {
+  // useCallback estabiliza a referência: sem isso o handler nasce novo a cada
+  // render e o useEffect interno do useClickOutside reinscreve os listeners
+  // de mousedown/touchstart em todo render.
+  const handleClickOutside = useCallback(() => {
     if (isOpen) {
       setIsOpen(false);
     }
-  });
+  }, [isOpen, setIsOpen]);
+
+  useClickOutside(containerRef, handleClickOutside);
 
   return (
     <motion.div

@@ -61,7 +61,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'LaFiM — Universidade Federal do Maranhão',
     description: 'Pesquisa em física da matéria condensada, nanomateriais e supercondutividade na UFMA.',
-    url: 'https://lafim.pages.dev',
+    url: '/', // mesmo alvo do alternates.canonical, resolvido via metadataBase
     siteName: 'LaFiM',
     locale: 'pt_BR',
     type: 'website',
@@ -90,7 +90,11 @@ export default function PtLayout({ children }: { children: React.ReactNode }) {
         <ThemeProvider>
           <script
             type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }}
+            // JSON.stringify não escapa HTML: um "</script>" nos dados fecharia
+            // o bloco e viraria XSS. Escapar "<" como < mantém o JSON válido.
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(schemaOrg).replace(/</g, '\\u003c'),
+            }}
           />
 
           {/* Navegação mobile (navbar + overlay) — visível abaixo de 768px */}

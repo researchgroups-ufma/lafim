@@ -105,7 +105,7 @@ export default function NewsList({ news, strings }: NewsListProps) {
         >
           <option value="all">{strings.allMonths}</option>
           {strings.months.slice(1).map((name, i) => (
-            <option key={i + 1} value={i + 1}>
+            <option key={name} value={i + 1}>
               {name}
             </option>
           ))}

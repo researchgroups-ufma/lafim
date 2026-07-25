@@ -137,21 +137,24 @@ export default function StructureCard({
       {open && (
         <>
           {/* Overlay escuro — clique fora fecha o modal */}
-          <div
+          <button
+            type="button"
             onClick={() => setOpen(false)}
             onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " " || e.key === "Escape") {
+              // Enter/Espaço já são nativos do <button>; só Escape precisa disto
+              if (e.key === "Escape") {
                 setOpen(false);
               }
             }}
-            role="button"
-            tabIndex={0}
             aria-label="Fechar"
             style={{
               position: "fixed",
               inset: 0,
               backgroundColor: "rgba(0, 0, 0, 0.75)",
               zIndex: 200,
+              border: "none",
+              padding: 0,
+              cursor: "pointer",
             }}
           />
 

@@ -32,20 +32,21 @@ const LINKS = [
   { key: "contact", href: "/contact" },
 ] as const;
 
+// Base de cada linha do hamburguer — posição via `top`, movimento via `y`.
+// Não depende de estado local, então vive no módulo e é alocada uma só vez.
+const lineBase: React.CSSProperties = {
+  position: "absolute",
+  left: 0,
+  width: 24,
+  height: 2,
+  borderRadius: 2,
+  backgroundColor: "#1c1c1c",
+};
+
 export default function MobileNav({ locale }: { locale: Locale }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const dict = getDictionary(locale);
-
-  // Base de cada linha do hamburguer — posição via `top`, movimento via `y`
-  const lineBase: React.CSSProperties = {
-    position: "absolute",
-    left: 0,
-    width: 24,
-    height: 2,
-    borderRadius: 2,
-    backgroundColor: "#1c1c1c",
-  };
 
   return (
     <>
