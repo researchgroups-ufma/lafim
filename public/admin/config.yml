@@ -161,7 +161,8 @@ collections:
         name: "gallery"
         widget: "list"
         required: false
-        i18n: duplicate
+        # sem i18n: o schema do Decap só aceita boolean em widget de lista, e a
+        # galeria é compartilhada — o EN cai no PT pelo merge de lib/mdx.ts.
         field: { label: "Imagem", name: "image", widget: "image" }
 
   # ── Infraestrutura ──────────────────────────────────────────────────────────
