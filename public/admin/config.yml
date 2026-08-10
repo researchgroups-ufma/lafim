@@ -1,12 +1,17 @@
 ﻿# =============================================================================
 # config.yml — Configuração do Decap CMS
 #
-# A autenticação usa Cloudflare Functions como proxy OAuth para o GitHub.
-# As funções ficam em functions/auth.js e functions/callback.js.
+# A autenticação usa um Cloudflare Worker como proxy OAuth para o GitHub.
+# O código do Worker é worker/index.js — é a fonte de verdade, faça o deploy
+# a partir dele (ele já divergiu do repo uma vez e enganou o diagnóstico).
 #
-# Variáveis necessárias no Cloudflare Pages (Settings > Environment variables):
+# Variáveis necessárias no painel do Worker (Settings > Variables):
 #   GITHUB_CLIENT_ID
 #   GITHUB_CLIENT_SECRET
+#
+# O login depende de Cross-Origin-Opener-Policy: same-origin-allow-popups em
+# public/_headers: com same-origin o navegador corta o window.opener do popup
+# de OAuth e o token nunca chega ao painel.
 # =============================================================================
 
 backend:
@@ -14,7 +19,7 @@ backend:
   repo: researchgroups-ufma/lafim
   branch: main          # branch que o CMS vai commitar
   base_url: https://decap-proxy.and-near.workers.dev # Worker OAuth; código em worker/index.js
-  auth_endpoint: /auth          # rota da Cloudflare Function de autenticação
+  auth_endpoint: /auth          # rota de autenticação no Worker
 
 media_folder: public/uploads
 public_folder: /uploads
