@@ -13,9 +13,10 @@
 export async function onRequest(context) {
   const { env } = context;
 
-  // Monta a URL de autorização do GitHub com o Client ID
+  // trim: a variável no painel do Cloudflare veio com \n no fim, o que
+  // gerava client_id=...%0A e um OAuth inválido
   const params = new URLSearchParams({
-    client_id: env.GITHUB_CLIENT_ID,
+    client_id: env.GITHUB_CLIENT_ID.trim(),
     scope: "repo,user",        // permissões necessárias para o Decap CMS
     redirect_uri: `https://lafim.pages.dev/callback`,
   });

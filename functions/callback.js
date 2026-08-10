@@ -32,8 +32,8 @@ export async function onRequest(context) {
         Accept: "application/json",
       },
       body: JSON.stringify({
-        client_id: env.GITHUB_CLIENT_ID,
-        client_secret: env.GITHUB_CLIENT_SECRET,
+        client_id: env.GITHUB_CLIENT_ID.trim(),
+        client_secret: env.GITHUB_CLIENT_SECRET.trim(),
         code,
       }),
     }
@@ -57,27 +57,40 @@ export async function onRequest(context) {
   const token = tokenData.access_token;
   const provider = "github";
 
-  // Retorna HTML que envia o token para o Decap CMS via postMessage
-  // Este é o padrão esperado pelo Decap para autenticação externa
+  // Retorna HTML que envia o token para o Decap CMS via postMessage.
+  //
+  // O Decap exige um handshake ANTES do token: o popup anuncia
+  // "authorizing:<provider>", o opener responde, e só ao responder ele
+  // registra o listener que aceita "authorization:<provider>:success:".
+  // Mandar o token direto entrega a mensagem antes de existir quem a
+  // escute — a janela fecha e o painel continua na tela de login.
+  const payload = JSON.stringify({ token, provider });
   const html = `
 <!DOCTYPE html>
 <html>
   <head><title>Autenticando...</title></head>
   <body>
     <script>
-      // Envia o token para a janela pai (o painel /admin do Decap CMS)
-      // O formato "authorization:provider:success:token" é obrigatório
-      window.opener.postMessage(
-        'authorization:${provider}:success:{"token":"${token}","provider":"${provider}"}',
-        '*'
-      );
-      window.close();
+      (function () {
+        function receiveMessage(message) {
+          window.opener.postMessage(
+            'authorization:${provider}:success:' + ${JSON.stringify(payload)},
+            message.origin
+          );
+          window.removeEventListener('message', receiveMessage, false);
+          // quem fecha esta janela é o próprio Decap, ao receber o token
+        }
+        window.addEventListener('message', receiveMessage, false);
+        window.opener.postMessage('authorizing:${provider}', '*');
+      })();
     </script>
     <p>Autenticado com sucesso. Esta janela será fechada automaticamente.</p>
   </body>
 </html>`;
 
+  // sem o charset explícito o navegador decodifica como Latin-1 e o
+  // acento vira mojibake ("será" → "serÃ¡")
   return new Response(html, {
-    headers: { "Content-Type": "text/html" },
+    headers: { "Content-Type": "text/html; charset=utf-8" },
   });
 }

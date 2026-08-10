@@ -13,7 +13,7 @@ backend:
   name: github
   repo: researchgroups-ufma/lafim
   branch: main          # branch que o CMS vai commitar
-  base_url: https://decap-proxy.and-near.workers.dev # URL base para o proxy OAuth
+  base_url: https://lafim.pages.dev # o próprio site: usa functions/auth.js e functions/callback.js
   auth_endpoint: /auth          # rota da Cloudflare Function de autenticação
 
 media_folder: public/uploads
