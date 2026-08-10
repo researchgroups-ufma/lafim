@@ -22,6 +22,20 @@ import { navLinks } from "@/lib/config";
 import { getDictionary, localizeHref, type Locale } from "@/lib/i18n";
 import LanguageSwitch from "./LanguageSwitch";
 
+/**
+ * Duração de animação que respeita "reduzir movimento" do sistema (WCAG 2.3.3).
+ *
+ * O CSS em globals.css não alcança o GSAP, que anima via JS escrevendo estilo
+ * inline. Retornar 0 faz o GSAP aplicar o estado FINAL imediatamente — de
+ * propósito, em vez de pular a chamada: um `fromTo` pulado deixaria o submenu
+ * preso em height:0, ou seja, invisível.
+ */
+const dur = (seconds: number) =>
+  typeof window !== "undefined" &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ? 0
+    : seconds;
+
 // Subitens de cada link principal, indexados pelo href canônico (PT) do pai
 const SUB_ITEMS: Record<string, { key: "infrastructure"; href: string }[]> = {
   "/research": [
@@ -70,8 +84,8 @@ export default function SideNav({ locale }: { locale: Locale }) {
     gsap.from(linksRef.current, {
       opacity: 0,
       x: 20,
-      duration: 0.4,
-      stagger: 0.08,
+      duration: dur(0.4),
+      stagger: dur(0.08),
       ease: "power2.out",
     });
   }, []);
@@ -82,8 +96,8 @@ export default function SideNav({ locale }: { locale: Locale }) {
     const underlineEl = underlinesRef.current[i];
     if (!textEl || !underlineEl) return;
     const tl = gsap.timeline();
-    tl.to(textEl, { x: -4, duration: 0.2, ease: "power2.out" })
-      .to(underlineEl, { scaleX: 1, duration: 0.25, ease: "power2.out" }, 0);
+    tl.to(textEl, { x: -4, duration: dur(0.2), ease: "power2.out" })
+      .to(underlineEl, { scaleX: 1, duration: dur(0.25), ease: "power2.out" }, 0);
   };
 
   const handleLeave = (i: number) => {
@@ -91,8 +105,8 @@ export default function SideNav({ locale }: { locale: Locale }) {
     const underlineEl = underlinesRef.current[i];
     if (!textEl || !underlineEl) return;
     const tl = gsap.timeline();
-    tl.to(textEl, { x: 0, duration: 0.2, ease: "power2.in" })
-      .to(underlineEl, { scaleX: 0, duration: 0.2, ease: "power2.in" }, 0);
+    tl.to(textEl, { x: 0, duration: dur(0.2), ease: "power2.in" })
+      .to(underlineEl, { scaleX: 0, duration: dur(0.2), ease: "power2.in" }, 0);
   };
 
   return (
@@ -165,7 +179,7 @@ export default function SideNav({ locale }: { locale: Locale }) {
                         gsap.from(el, {
                           scale: 0,
                           opacity: 0,
-                          duration: 0.3,
+                          duration: dur(0.3),
                           ease: "back.out(1.7)",
                         });
                       }
@@ -224,13 +238,14 @@ export default function SideNav({ locale }: { locale: Locale }) {
                       ) {
                         const subItemEl = subItemsRef.current[sub.href];
                         if (subItemEl) {
+                          // duration 0 aterrissa direto em height:auto/opacity:1
                           gsap.fromTo(
                             subItemEl,
                             { height: 0, opacity: 0 },
                             {
                               height: "auto",
                               opacity: 1,
-                              duration: 0.25,
+                              duration: dur(0.25),
                               ease: "power2.out",
                               overwrite: "auto",
                             }
@@ -267,7 +282,7 @@ export default function SideNav({ locale }: { locale: Locale }) {
                                 gsap.from(el, {
                                   scale: 0,
                                   opacity: 0,
-                                  duration: 0.3,
+                                  duration: dur(0.3),
                                   ease: "back.out(1.7)",
                                 });
                               }

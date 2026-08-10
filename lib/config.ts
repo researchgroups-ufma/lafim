@@ -21,16 +21,15 @@ export const siteConfig = {
 // ─── Navegação ────────────────────────────────────────────────────────────────
 
 // `key` referencia getDictionary(locale).nav[key] (labels traduzidos por
-// SideNav/MobileNav). `label` é mantido só para o Header.tsx legado (não usado
-// no site atual, mas ainda compilado pelo TypeScript).
+// SideNav/MobileNav).
 export const navLinks = [
-  { key: "home",         href: "/",        label: "Início" },
-  { key: "research",     href: "/research", label: "Pesquisa" },
-  { key: "members",      href: "/members", label: "Membros" },
-  { key: "publications", href: "/publications", label: "Publicações" },
-  { key: "news",         href: "/news",    label: "Notícias" },
-  { key: "about",        href: "/about",   label: "Sobre" },
-  { key: "contact",      href: "/contact", label: "Contato" },
+  { key: "home",         href: "/" },
+  { key: "research",     href: "/research" },
+  { key: "members",      href: "/members" },
+  { key: "publications", href: "/publications" },
+  { key: "news",         href: "/news" },
+  { key: "about",        href: "/about" },
+  { key: "contact",      href: "/contact" },
 ] as const;
 
 export const footerLinks = [

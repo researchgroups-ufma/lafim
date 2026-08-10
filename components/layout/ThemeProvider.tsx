@@ -20,6 +20,8 @@
 
 "use client";
 
+import { MotionConfig } from "framer-motion";
+import { MotionConfig as MotionConfigReact } from "motion/react";
 import { designTokens } from "@/lib/config";
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
@@ -44,6 +46,20 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   } as React.CSSProperties;
 
   // O div raiz recebe todas as variáveis como style inline
-  // Todos os componentes filhos herdam essas variáveis via CSS cascade
-  return <div style={cssVars}>{children}</div>;
+  // Todos os componentes filhos herdam essas variáveis via CSS cascade.
+  //
+  // Os dois MotionConfig são intencionais: o projeto usa "framer-motion"
+  // (templates, Hero, MobileNav, SideNav, EquipmentCard) e "motion/react"
+  // (motion-primitives). São pacotes instalados separadamente, com contextos
+  // React distintos — um provider sozinho não alcançaria a outra metade.
+  //
+  // reducedMotion="user" respeita a preferência do sistema (WCAG 2.3.3):
+  // animações de transform/layout são neutralizadas, opacidade é preservada.
+  return (
+    <MotionConfig reducedMotion="user">
+      <MotionConfigReact reducedMotion="user">
+        <div style={cssVars}>{children}</div>
+      </MotionConfigReact>
+    </MotionConfig>
+  );
 }
