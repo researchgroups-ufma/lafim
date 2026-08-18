@@ -1,4 +1,4 @@
-/**
+﻿/**
  * dictionaries.ts — Dicionário de strings de UI por idioma (i18n sem biblioteca)
  *
  * Centraliza as strings de UI hoje lidas via `getDictionary(locale)` nas
@@ -88,7 +88,7 @@ export const dictionaries = {
       sendEmail: "Enviar e-mail →",
     },
     members: {
-      title: "Membros do laboratório",
+      title: "Membros",
       coordinator: "Coordenador",
       coordinatorRole: "Coordenador", // usado como "Coordenador · LaFiM"
       team: "Equipe",
@@ -255,7 +255,7 @@ export const dictionaries = {
       sendEmail: "Send email →",
     },
     members: {
-      title: "Lab Members",
+      title: "Members",
       coordinator: "Coordinator",
       coordinatorRole: "Coordinator", // usado como "Coordinator · LaFiM"
       team: "Team",

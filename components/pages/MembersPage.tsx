@@ -1,4 +1,4 @@
-/**
+﻿/**
  * MembersPage.tsx — Conteúdo da página Membros, parametrizado por locale
  *
  * Server Component — lê todos os membros de content/members/ via getCollection()
@@ -55,7 +55,9 @@ export default async function MembersPage({ locale }: { locale: Locale }) {
   return (
     <div>
 
-      <PageHeader title={dict.members.title} />
+      <PageHeader
+        title={dict.members.title}
+      />
 
       <main>
         <div className="container-site">

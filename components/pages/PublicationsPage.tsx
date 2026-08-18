@@ -1,4 +1,4 @@
-/**
+﻿/**
  * PublicationsPage.tsx — Conteúdo da página Publicações, parametrizado por locale
  *
  * Server Component — lê todas as publicações de content/publications/
@@ -49,7 +49,11 @@ export default async function PublicationsPage({ locale }: { locale: Locale }) {
   return (
     <div>
 
-      <PageHeader title={dict.publications.title} />
+      {/* O texto introdutório fica no corpo: traz links externos (Lattes,
+          Scholar, arXiv) que perderiam contraste sobre a foto do cabeçalho. */}
+      <PageHeader
+        title={dict.publications.title}
+      />
 
       <main>
         <div className="container-site">

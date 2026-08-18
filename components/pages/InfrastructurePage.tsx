@@ -1,4 +1,4 @@
-/**
+﻿/**
  * InfrastructurePage.tsx — Conteúdo da página Infraestrutura, parametrizado por locale
  *
  * Rota: /research/infrastructure
@@ -13,7 +13,6 @@
 import { getCollection, getSingleFile } from "@/lib/mdx";
 import PageHeader from "@/components/ui/PageHeader";
 import EquipmentCard from "@/components/ui/EquipmentCard";
-import { siteConfig } from "@/lib/config";
 import { getDictionary, type Locale } from "@/lib/i18n";
 
 export default async function InfrastructurePage({ locale }: { locale: Locale }) {
@@ -38,30 +37,16 @@ export default async function InfrastructurePage({ locale }: { locale: Locale })
 
   return (
     <div>
+      {/* O texto introdutório (editável pelo CMS em content/equipment/index.md)
+          vive no cabeçalho — não se repete no corpo.                          */}
       <PageHeader
         title={dict.infrastructure.title}
-        eyebrow={`${siteConfig.acronym} · ${siteConfig.university}`}
+        lead={pageInfo.intro as string | undefined}
       />
 
       <main>
         <div className="container-site">
           <section style={{ padding: "4rem 0" }}>
-
-            {/* Texto introdutório — editável pelo CMS em content/equipment/index.md */}
-            {(pageInfo.intro as string | undefined) && (
-              <p
-                style={{
-                  fontSize: "1rem",
-                  lineHeight: 1.8,
-                  color: "var(--color-text-muted)",
-                  fontWeight: 300,
-                  maxWidth: "720px",
-                  marginBottom: "3rem",
-                }}
-              >
-                {pageInfo.intro as string}
-              </p>
-            )}
 
             {/* Grid de equipamentos */}
             {equipment.length === 0 ? (

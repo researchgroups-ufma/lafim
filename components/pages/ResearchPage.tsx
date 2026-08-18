@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ResearchPage.tsx — Conteúdo da página Linhas de Pesquisa, parametrizado por locale
  *
  * Server Component — lê todas as linhas de pesquisa de content/research/
@@ -20,25 +20,16 @@ export default async function ResearchPage({ locale }: { locale: Locale }) {
 
   return (
     <div>
-      <PageHeader title={dict.research.title} />
+      {/* O texto de introdução vive no cabeçalho — não se repete aqui. */}
+      <PageHeader
+        title={dict.research.title}
+        lead={dict.research.intro}
+      />
 
       <main>
         <div className="container-site">
 
-          {/* ── Introdução ─────────────────────────────────────────────────── */}
           <section style={{ padding: "4rem 0", borderBottom: "1px solid var(--color-border)" }}>
-            <p
-              style={{
-                fontSize: "1rem",
-                lineHeight: 1.8,
-                color: "var(--color-text-muted)",
-                fontWeight: 300,
-                maxWidth: "720px",
-                marginBottom: "3rem",
-              }}
-            >
-              {dict.research.intro}
-            </p>
 
             {/* ── Grid de linhas ──────────────────────────────────────────── */}
             {lines.length === 0 ? (

@@ -229,19 +229,104 @@ img { max-width: 100%; display: block; }
 
 /* ── Page header — cabeçalho escuro de páginas internas ─────────────────────
    Usado no topo das páginas Membros e Publicações                           */
+/* ── Cabeçalho das páginas internas ────────────────────────────────────────
+   Faixa escura sobre foto, conteúdo alinhado à base e à esquerda.
+   O texto é branco fixo (não usa os tokens), pois o fundo é sempre escuro. */
 .page-header {
-  background: var(--color-bg-elevated);
-  border-bottom: 1px solid var(--color-border);
-  padding: 5rem 0 3rem;
-  text-align: center;
+  position: relative;
+  min-height: 420px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  background-color: #111111; /* cor de espera enquanto a foto carrega */
 }
 
-.page-header-eyebrow {
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--color-text-subtle);
-  margin-bottom: 0.75rem;
+.page-header-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url("/uploads/dac.jpg");
+  background-size: cover;
+  background-position: center;
+  opacity: 0.45;
+  filter: grayscale(0.3);
+}
+
+/* Dois gradientes numa camada só: escurece à esquerda (onde fica o texto)
+   e na base (onde o bloco de conteúdo se apoia).                          */
+.page-header-scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, rgba(8,8,8,0.9) 0%, transparent 58%),
+    linear-gradient(to right, rgba(8,8,8,0.94) 0%, rgba(8,8,8,0.72) 55%, rgba(8,8,8,0.38) 100%);
+}
+
+.page-header-inner {
+  position: relative;
+  z-index: 5;       /* acima da foto e dos gradientes */
+  width: 100%;
+  padding-top: 6rem;
+  padding-bottom: 3.25rem;
+}
+
+/* Máscara em vez de <img>: new_lafim.svg não declara fill e renderiza preto.
+   Largura fixa para preservar a razão nativa de 232,35 × 48,29 (4,81:1).   */
+.page-header-logo {
+  height: 48px;
+  width: 231px;
+  margin-bottom: 1.5rem;
+  background-color: #ffffff;
+  -webkit-mask-image: url("/logo/new_lafim.svg");
+          mask-image: url("/logo/new_lafim.svg");
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+          mask-size: contain;
+}
+
+.page-header-title {
+  font-size: clamp(2.5rem, 5.6vw, 4.25rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  color: #ffffff;
+  max-width: 14ch;
+  margin-bottom: 1.75rem;
+}
+
+/* A régua é o ::before; o metadado (quando existe) fica na ponta direita. */
+.page-header-rule {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 1.6rem;
+}
+
+/* Sem lead a régua é o último bloco: a margem inferior viraria espaço morto. */
+.page-header-rule:last-child {
+  margin-bottom: 0;
+}
+
+.page-header-rule::before {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.42);
+}
+
+.page-header-lead {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.78);
+  max-width: 56ch;
+}
+
+@media (max-width: 767px) {
+  .page-header { min-height: 340px; }
+  .page-header-inner { padding-top: 4rem; padding-bottom: 2.5rem; }
+  .page-header-logo { height: 40px; width: 193px; }
+  .page-header-title { max-width: none; }
 }
 
 /* ── Group label — label de grupo dentro de seções ──────────────────────────
