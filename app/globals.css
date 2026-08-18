@@ -322,11 +322,95 @@ img { max-width: 100%; display: block; }
   max-width: 56ch;
 }
 
+/* Cópia do lead no topo do corpo — só entra no mobile (ver a media query
+   abaixo e o comentário em PageHeader.tsx).                                */
+.page-lead-body {
+  display: none;
+}
+
 @media (max-width: 767px) {
-  .page-header { min-height: 340px; }
+  /* 280px: é o piso que iguala TODAS as páginas. Os títulos de duas linhas
+     ("Linhas de Pesquisa", "Sobre o Laboratório") medem 277px; abaixo disso
+     eles furam o piso e a altura volta a variar entre as páginas.         */
+  .page-header { min-height: 280px; }
+
+  /* No mobile o lead sai do cabeçalho: ele quebrava em 6 linhas e fazia a
+     altura variar até 136px entre as páginas. Vai para o corpo, com o
+     estilo de texto do corpo.                                             */
+  .page-header-lead { display: none; }
+
+  /* O lead oculto continua no DOM, então a régua não vira :last-child e
+     mantinha a margem inferior — 26px a mais só nas páginas com lead.     */
+  .page-header-rule { margin-bottom: 0; }
+
+  .page-lead-body {
+    display: block;
+    padding-top: 2.5rem;
+  }
+
+  .page-lead-body p {
+    font-size: 1rem;
+    line-height: 1.8;
+    font-weight: 300;
+    color: var(--color-text-muted);
+    max-width: 720px;
+  }
   .page-header-inner { padding-top: 4rem; padding-bottom: 2.5rem; }
   .page-header-logo { height: 40px; width: 193px; }
   .page-header-title { max-width: none; }
+}
+
+/* ── Botão de fechar dos modais (equipamento e membro) ──────────────────────
+   O MorphingDialogClose é `absolute`, mas o MorphingDialogContent não é
+   `relative`: sem isso o X se ancorava no container `fixed inset-0` e ia
+   parar no canto da TELA, em cima do botão do menu. Quem resolve é o
+   position:relative no style do Content — aqui fica só o visual.
+   O fundo existe porque no modal de equipamento o X cai sobre a foto.     */
+.modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  color: var(--color-text);
+  background: rgba(252, 251, 248, 0.85);
+  -webkit-backdrop-filter: blur(4px);
+          backdrop-filter: blur(4px);
+  border: 1px solid var(--color-border-strong);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.modal-close:hover {
+  background: var(--color-bg-elevated);
+  color: var(--color-primary);
+}
+
+/* No mobile o X vira só o traço: o círculo de 36px cobria os nomes no modal
+   de membros. O halo branco substitui o fundo — sem ele o traço charcoal
+   sumiria sobre a foto escura do modal de equipamento.                     */
+@media (max-width: 767px) {
+  .modal-close {
+    width: 1.5rem;
+    height: 1.5rem;
+    background: none;
+    border: none;
+    border-radius: 0;
+    -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.95));
+  }
+
+  .modal-close:hover {
+    background: none;
+  }
+
+  /* o XIcon do primitivo vem com size=24 fixo no atributo */
+  .modal-close svg {
+    width: 20px;
+    height: 20px;
+  }
 }
 
 /* ── Group label — label de grupo dentro de seções ──────────────────────────
@@ -473,6 +557,17 @@ img { max-width: 100%; display: block; }
    display:flex inline desses elementos (uma classe simples perderia). */
 @media (min-width: 768px) {
   .mobile-only { display: none !important; }
+}
+
+/* Com um modal aberto, o botão do menu cai no MESMO canto do X do modal —
+   dois botões colados, e o menu ainda por cima por causa do z-index. O
+   MorphingDialog é montado por portal no body com role="dialog", então dá
+   para detectá-lo daqui e sumir com o botão enquanto o modal existir.
+   O z-index do botão (abaixo do z-50 do modal) é a rede de segurança para
+   navegadores sem suporte a :has().                                       */
+body:has([role="dialog"]) .mobile-only {
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Respeita a preferência "reduzir movimento" do sistema (WCAG 2.3.3).

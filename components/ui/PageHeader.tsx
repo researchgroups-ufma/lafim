@@ -11,7 +11,13 @@
  *
  * Props:
  *   title — título da página (obrigatório)
- *   lead  — texto de abertura exibido abaixo da régua (opcional)
+ *   lead  — texto de abertura (opcional)
+ *
+ * O lead é renderizado DUAS vezes e o CSS escolhe qual aparece: dentro do
+ * cabeçalho em telas ≥768px, e no topo do corpo abaixo disso. No mobile ele
+ * quebra em 6 linhas em vez de 3, o que fazia a altura do cabeçalho variar
+ * até 136px entre as páginas; tirá-lo dali deixa todas com o mesmo conteúdo.
+ * Só um dos dois está visível por vez, então leitores de tela leem uma vez.
  *
  * ATENÇÃO: o atributo data-dark-bg é o que faz o SideNav pintar os links de
  * branco enquanto o cabeçalho cruza o centro da viewport. Removê-lo deixa o
@@ -27,6 +33,7 @@ type PageHeaderProps = {
 
 export default function PageHeader({ title, lead }: PageHeaderProps) {
   return (
+    <>
     <header className="page-header" data-dark-bg>
       {/* Foto de fundo e gradientes de legibilidade — puramente decorativos */}
       <div className="page-header-bg" />
@@ -54,5 +61,15 @@ export default function PageHeader({ title, lead }: PageHeaderProps) {
         </div>
       </div>
     </header>
+
+    {/* Mesmo lead, no topo do corpo — só visível abaixo de 768px */}
+    {lead && (
+      <div className="page-lead-body">
+        <div className="container-site">
+          <p>{lead}</p>
+        </div>
+      </div>
+    )}
+    </>
   );
 }
