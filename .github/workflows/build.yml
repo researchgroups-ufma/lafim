@@ -1,0 +1,58 @@
+name: build
+
+# Roda o mesmo build que a Cloudflare roda, a cada push na main e em cada PR.
+# Vantagem sobre o alerta da Cloudflare: falha aqui chega antes do deploy, e o
+# GitHub manda e-mail de falha sozinho — sem configurar nada.
+#
+# O repositorio e publico, entao os minutos sao gratuitos e ilimitados.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instala dependencias
+        run: npm ci
+
+      - name: Verifica tipos
+        run: npx tsc --noEmit
+
+      - name: Build
+        run: npm run build
+
+      # Guarda contra o caso "build passa mas a pagina sai vazia": se alguma
+      # colecao ficar sem conteudo, o estado vazio aparece no HTML gerado.
+      - name: Nenhuma secao renderizou estado vazio
+        run: |
+          set -euo pipefail
+          falhou=0
+          for par in \
+            "out/research.html|Nenhuma linha de pesquisa cadastrada ainda." \
+            "out/research/infrastructure.html|Nenhum equipamento cadastrado ainda."
+          do
+            arquivo="${par%%|*}"
+            agulha="${par##*|}"
+            if [ ! -f "$arquivo" ]; then
+              echo "::error::$arquivo nao foi gerado pelo build"
+              falhou=1
+            elif grep -qF "$agulha" "$arquivo"; then
+              echo "::error::$arquivo renderizou o estado vazio: $agulha"
+              falhou=1
+            else
+              echo "ok  $arquivo"
+            fi
+          done
+          exit $falhou

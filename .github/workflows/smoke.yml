@@ -1,0 +1,76 @@
+name: smoke
+
+# Verifica o site JA PUBLICADO. Cobre o caso que nem o alerta da Cloudflare
+# nem o workflow de build pegam: deploy verde, pagina quebrada.
+#
+# Nao checa frases do conteudo de proposito — o professor edita o texto pelo
+# painel, e um smoke test que quebra a cada edicao vira alarme falso ignorado.
+# Checa: a rota responde 200, o painel carrega, e nenhuma secao caiu no
+# estado vazio.
+
+on:
+  schedule:
+    - cron: "0 11 * * *" # 08:00 em Sao Luis (UTC-3)
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Rotas respondem e nao estao vazias
+        run: |
+          set -uo pipefail
+          base=https://lafim.pages.dev
+          falhou=0
+
+          # Busca a rota; devolve 1 e loga se nao vier 200.
+          # Deixa o HTML em $html.
+          busca() {
+            local resposta codigo
+            resposta=$(curl -sS --max-time 25 -w '\n%{http_code}' "$base$1") || {
+              echo "::error::$1 — curl falhou"; return 1
+            }
+            codigo=$(printf '%s' "$resposta" | tail -n1)
+            html=$(printf '%s' "$resposta" | sed '$d')
+            if [ "$codigo" != "200" ]; then
+              echo "::error::$1 respondeu HTTP $codigo"; return 1
+            fi
+            return 0
+          }
+
+          # Pagina do site: 200, corpo cheio e sem o estado vazio (2o arg).
+          pagina() {
+            busca "$1" || { falhou=1; return; }
+            if [ "${#html}" -lt 10000 ]; then
+              echo "::error::$1 respondeu 200 mas o corpo tem so ${#html} bytes"; falhou=1; return
+            fi
+            if [ -n "${2-}" ] && printf '%s' "$html" | grep -qF "$2"; then
+              echo "::error::$1 caiu no estado vazio: $2"; falhou=1; return
+            fi
+            echo "ok  $1 (${#html} bytes)"
+          }
+
+          # Arquivo de apoio: 200 e contem a marca esperada (2o arg).
+          contem() {
+            busca "$1" || { falhou=1; return; }
+            if ! printf '%s' "$html" | grep -qF "$2"; then
+              echo "::error::$1 respondeu 200 mas nao contem: $2"; falhou=1; return
+            fi
+            echo "ok  $1 (contem \"$2\")"
+          }
+
+          pagina /
+          pagina /research                "Nenhuma linha de pesquisa cadastrada ainda."
+          pagina /research/infrastructure "Nenhum equipamento cadastrado ainda."
+          pagina /members
+          pagina /publications
+          pagina /about
+          pagina /contact
+          pagina /en
+          pagina /en/research             "No research lines registered yet."
+
+          # O painel precisa carregar, senao o professor nao consegue editar.
+          contem /admin/           "decap-cms.js"
+          contem /admin/config.yml "collections:"
+
+          exit $falhou
