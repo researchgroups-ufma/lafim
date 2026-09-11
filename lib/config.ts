@@ -12,7 +12,7 @@ export const siteConfig = {
   acronym: "LaFiM",
   university: "Universidade Federal do Maranhão",
   department: "Departamento de Física — CCET",
-  email: "lafim@ufma.br",
+  email: "jvb.moura@ufma.br",
   location: "São Luís, Maranhão, Brasil",
   url: "https://lafim-ufma.pages.dev",
   description: "Laboratório da UFMA dedicado à pesquisa experimental em Física de Materiais: síntese de materiais inorgânicos e estudo de suas propriedades sob condições extremas de pressão e temperatura.",
