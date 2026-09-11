@@ -12,6 +12,7 @@ bio: "Possui Graduação (2013) e Mestrado (2015) em Física pela Universidade
   condições extremas de pressão e/ou temperatura, espectroscopia Raman e no
   infravermelho, difração de raios X e microscopia eletrônica de varredura."
 photo: https://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4402600P6
+linkedin: https://www.linkedin.com/in/jo%C3%A3o-victor-barbosa-moura-2a9882b0/
 instagram: https://www.instagram.com/joaovictorprof
 lattes: http://lattes.cnpq.br/0208481199560436
 orcid: https://orcid.org/0000-0002-5174-4144

@@ -12,7 +12,7 @@ bio: "Holds a B.Sc. (2013) and an M.Sc. (2015) in Physics from the Federal
   diffraction and scanning electron microscopy."
 photo: https://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4402600P6
 email: null
-linkedin: null
+linkedin: https://www.linkedin.com/in/jo%C3%A3o-victor-barbosa-moura-2a9882b0/
 instagram: https://www.instagram.com/joaovictorprof
 lattes: http://lattes.cnpq.br/0208481199560436
 orcid: https://orcid.org/0000-0002-5174-4144
