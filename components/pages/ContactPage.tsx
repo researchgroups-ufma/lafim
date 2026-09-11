@@ -8,14 +8,8 @@
 import { getCollection, getSingleFile } from "@/lib/mdx";
 import { siteConfig } from "@/lib/config";
 import PageHeader from "@/components/ui/PageHeader";
-import MemberLinks from "@/components/ui/MemberLinks";
+import MemberLinks, { instagramHandle } from "@/components/ui/MemberLinks";
 import { getDictionary, type Locale } from "@/lib/i18n";
-
-/** Extrai "@handle" de uma URL do Instagram; devolve a propria URL se nao casar. */
-function handleFrom(url: string): string {
-  const m = url.match(/instagram\.com\/([^/?#]+)/i);
-  return m ? `@${m[1]}` : url;
-}
 
 export default async function ContactPage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
@@ -60,7 +54,10 @@ export default async function ContactPage({ locale }: { locale: Locale }) {
                 <dl
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "90px 1fr",
+                    // 90px cabia em "Lattes"; "Coordenador" estoura a coluna e
+                    // encosta nos ícones. auto acompanha o maior rótulo e
+                    // sobrevive à tradução, que muda o comprimento.
+                    gridTemplateColumns: "auto 1fr",
                     gap: "0.6rem 1rem",
                     fontSize: "0.9rem",
                   }}
@@ -99,7 +96,7 @@ export default async function ContactPage({ locale }: { locale: Locale }) {
                           rel="noopener noreferrer"
                           style={{ color: "var(--color-primary)", fontSize: "0.9rem" }}
                         >
-                          {handleFrom(labInstagram)}
+                          {instagramHandle(labInstagram)}
                         </a>
                       </dd>
                     </>

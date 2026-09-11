@@ -24,7 +24,7 @@
 import Link from "next/link";
 import { siteConfig, footerLinks } from "@/lib/config";
 import { getSingleFile } from "@/lib/mdx";
-import MemberLinks from "@/components/ui/MemberLinks";
+import { InstagramIcon, instagramHandle } from "@/components/ui/MemberLinks";
 import { getDictionary, localizeHref, type Locale } from "@/lib/i18n";
 
 export default async function Footer({ locale }: { locale: Locale }) {
@@ -74,9 +74,24 @@ export default async function Footer({ locale }: { locale: Locale }) {
             {siteConfig.department} · {siteConfig.university}
           </p>
 
-          {/* Redes do laboratorio — some quando o campo esta vazio */}
+          {/* Redes do laboratório — some quando o campo está vazio.
+              O handle visível é o nome acessível do link, então não há
+              aria-label: ele sobrescreveria o texto que está na tela. */}
           {labInstagram && (
-            <MemberLinks instagram={labInstagram} locale={locale} style={{ marginTop: "0.75rem" }} />
+            <a
+              className="member-link"
+              href={labInstagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                gap: "0.4rem",
+                marginTop: "0.75rem",
+                fontSize: "0.85rem",
+              }}
+            >
+              <InstagramIcon className="w-5 h-5" />
+              {instagramHandle(labInstagram)}
+            </a>
           )}
         </div>
 
