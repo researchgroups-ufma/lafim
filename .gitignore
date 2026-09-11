@@ -26,3 +26,6 @@ DESIGN.md
 
 # secrets locais do wrangler (worker/.dev.vars)
 .dev.vars
+
+# artefatos temporarios do wrangler
+.wrangler/
