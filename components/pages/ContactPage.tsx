@@ -5,16 +5,25 @@
  * Também exibe o coordenador com links acadêmicos se estiver cadastrado.
  */
 
-import { getCollection } from "@/lib/mdx";
+import { getCollection, getSingleFile } from "@/lib/mdx";
 import { siteConfig } from "@/lib/config";
 import PageHeader from "@/components/ui/PageHeader";
 import MemberLinks from "@/components/ui/MemberLinks";
 import { getDictionary, type Locale } from "@/lib/i18n";
 
+/** Extrai "@handle" de uma URL do Instagram; devolve a propria URL se nao casar. */
+function handleFrom(url: string): string {
+  const m = url.match(/instagram\.com\/([^/?#]+)/i);
+  return m ? `@${m[1]}` : url;
+}
+
 export default async function ContactPage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
   const allMembers = await getCollection("members", locale);
   const coordinator = allMembers.find((m) => m.role === "Coordenador");
+  // Perfis institucionais editaveis pelo painel (colecao "Redes Sociais")
+  const social = await getSingleFile("settings/social.md");
+  const labInstagram = social.instagram as string | undefined;
 
   return (
     <div>
@@ -77,14 +86,37 @@ export default async function ContactPage({ locale }: { locale: Locale }) {
                     </a>
                   </dd>
 
-                  {/* Links do coordenador se disponíveis — ícones SVG */}
-                  {coordinator && (coordinator.lattes as string | undefined) && (
+                  {/* Instagram do laboratorio — so aparece se preenchido no painel */}
+                  {labInstagram && (
                     <>
                       <dt style={{ fontWeight: 600, fontSize: "0.75rem", letterSpacing: "0.05em", textTransform: "uppercase", color: "var(--color-text-subtle)", paddingTop: "0.1rem" }}>
-                        {dict.contact.lattes}
+                        {dict.contact.instagram}
                       </dt>
                       <dd>
-                        <MemberLinks lattes={coordinator.lattes as string} locale={locale} />
+                        <a
+                          href={labInstagram}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ color: "var(--color-primary)", fontSize: "0.9rem" }}
+                        >
+                          {handleFrom(labInstagram)}
+                        </a>
+                      </dd>
+                    </>
+                  )}
+
+                  {/* Links do coordenador se disponíveis — ícones SVG */}
+                  {coordinator && ((coordinator.lattes as string | undefined) || (coordinator.instagram as string | undefined)) && (
+                    <>
+                      <dt style={{ fontWeight: 600, fontSize: "0.75rem", letterSpacing: "0.05em", textTransform: "uppercase", color: "var(--color-text-subtle)", paddingTop: "0.1rem" }}>
+                        {dict.contact.coordinator}
+                      </dt>
+                      <dd>
+                        <MemberLinks
+                          lattes={coordinator.lattes as string | undefined}
+                          instagram={coordinator.instagram as string | undefined}
+                          locale={locale}
+                        />
                       </dd>
                     </>
                   )}

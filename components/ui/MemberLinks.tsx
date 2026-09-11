@@ -17,6 +17,7 @@ import { getDictionary, type Locale } from "@/lib/i18n";
 type MemberLinksProps = {
   email?: string;
   linkedin?: string;
+  instagram?: string;
   lattes?: string;
   orcid?: string;
   scholar?: string;
@@ -45,6 +46,14 @@ function LinkedinIcon({ className }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
       <path d="M18.72 4H5.37C5.2 3.99 5.03 4.02 4.86 4.08C4.7 4.13 4.55 4.22 4.43 4.34C4.3 4.46 4.2 4.6 4.12 4.75C4.05 4.91 4.01 5.08 4 5.25V18.63C4.01 18.99 4.16 19.33 4.41 19.59C4.67 19.84 5.01 19.99 5.37 20H18.72C19.07 19.98 19.4 19.83 19.64 19.58C19.88 19.32 20.01 18.98 20 18.63V5.25C20 5.08 19.97 4.92 19.91 4.76C19.84 4.61 19.75 4.47 19.63 4.35C19.51 4.23 19.37 4.14 19.21 4.08C19.05 4.02 18.89 3.99 18.72 4ZM9 17.34H6.67V10.21H9V17.34ZM7.89 9.13C7.73 9.14 7.57 9.11 7.41 9.05C7.26 8.99 7.13 8.9 7.01 8.78C6.9 8.67 6.81 8.53 6.75 8.38C6.69 8.22 6.66 8.06 6.67 7.9C6.66 7.74 6.69 7.57 6.75 7.42C6.81 7.27 6.9 7.13 7.02 7.01C7.13 6.89 7.27 6.8 7.43 6.75C7.58 6.69 7.75 6.66 7.91 6.67C8.07 6.66 8.23 6.69 8.39 6.75C8.54 6.81 8.67 6.9 8.79 7.02C8.9 7.13 8.99 7.27 9.05 7.42C9.11 7.58 9.14 7.74 9.13 7.9C9.14 8.06 9.11 8.23 9.05 8.38C8.99 8.53 8.9 8.67 8.78 8.79C8.67 8.91 8.53 9 8.37 9.05C8.22 9.11 8.05 9.14 7.89 9.13ZM17.34 17.34H15V13.44C15 12.51 14.67 11.87 13.84 11.87C13.58 11.87 13.33 11.95 13.12 12.1C12.91 12.25 12.75 12.47 12.67 12.71C12.61 12.89 12.58 13.09 12.59 13.28V17.34H10.29V10.21H12.59V11.21C12.79 10.83 13.1 10.52 13.47 10.31C13.84 10.1 14.26 9.99 14.69 10C16.2 10 17.34 11 17.34 13.13V17.34Z" />
+    </svg>
+  );
+}
+
+function InstagramIcon({ className }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
     </svg>
   );
 }
@@ -82,7 +91,7 @@ function ArxivIcon({ className }: IconProps) {
 }
 
 export default function MemberLinks({
-  email, linkedin, lattes, orcid, scholar, arxiv, locale = "pt", className, style,
+  email, linkedin, instagram, lattes, orcid, scholar, arxiv, locale = "pt", className, style,
 }: MemberLinksProps) {
   const labels = getDictionary(locale).a11y.links;
   return (
@@ -95,6 +104,11 @@ export default function MemberLinks({
       {linkedin && (
         <a className="member-link" href={linkedin} target="_blank" rel="noopener noreferrer" aria-label={labels.linkedin}>
           <LinkedinIcon className="w-6 h-6" />
+        </a>
+      )}
+      {instagram && (
+        <a className="member-link" href={instagram} target="_blank" rel="noopener noreferrer" aria-label={labels.instagram}>
+          <InstagramIcon className="w-6 h-6" />
         </a>
       )}
       {lattes && (

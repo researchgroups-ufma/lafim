@@ -15,17 +15,23 @@
  *   - footerLinks           — links exibidos na navegação do rodapé
  *
  * Para alterar qualquer dado exibido aqui:
- *   Edite apenas lib/config.ts — não mexa neste arquivo.
+ *   Edite lib/config.ts — exceto o Instagram do laboratório, que vem de
+ *   content/settings/social.md (coleção "Redes Sociais" do painel).
  *
  * Usado em: app/(site)/layout.tsx (layout das páginas públicas)
  */
 
 import Link from "next/link";
 import { siteConfig, footerLinks } from "@/lib/config";
+import { getSingleFile } from "@/lib/mdx";
+import MemberLinks from "@/components/ui/MemberLinks";
 import { getDictionary, localizeHref, type Locale } from "@/lib/i18n";
 
-export default function Footer({ locale }: { locale: Locale }) {
+export default async function Footer({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
+  // Perfis institucionais — colecao "Redes Sociais" do painel.
+  const social = await getSingleFile("settings/social.md");
+  const labInstagram = social.instagram as string | undefined;
   // Ano atual gerado em tempo de build — atualiza automaticamente a cada deploy
   const currentYear = new Date().getFullYear();
 
@@ -67,6 +73,11 @@ export default function Footer({ locale }: { locale: Locale }) {
           >
             {siteConfig.department} · {siteConfig.university}
           </p>
+
+          {/* Redes do laboratorio — some quando o campo esta vazio */}
+          {labInstagram && (
+            <MemberLinks instagram={labInstagram} locale={locale} style={{ marginTop: "0.75rem" }} />
+          )}
         </div>
 
         {/* ── Bloco 2: Links de navegação ───────────────────────────────────

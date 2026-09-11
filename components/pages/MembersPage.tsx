@@ -141,6 +141,7 @@ export default async function MembersPage({ locale }: { locale: Locale }) {
                   <MemberLinks
                     email={coordinator.email as string | undefined}
                     linkedin={coordinator.linkedin as string | undefined}
+                    instagram={coordinator.instagram as string | undefined}
                     lattes={coordinator.lattes as string | undefined}
                     orcid={coordinator.orcid as string | undefined}
                     scholar={coordinator.scholar as string | undefined}
@@ -199,6 +200,7 @@ export default async function MembersPage({ locale }: { locale: Locale }) {
                           photo={member.photo as string | undefined}
                           email={member.email as string | undefined}
                           linkedin={member.linkedin as string | undefined}
+                          instagram={member.instagram as string | undefined}
                           lattes={member.lattes as string | undefined}
                           orcid={member.orcid as string | undefined}
                           scholar={member.scholar as string | undefined}

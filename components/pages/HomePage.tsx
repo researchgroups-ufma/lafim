@@ -116,6 +116,7 @@ export default async function HomePage({ locale }: { locale: Locale }) {
           photo={coordinator.photo as string | undefined}
           email={coordinator.email as string | undefined}
           linkedin={coordinator.linkedin as string | undefined}
+          instagram={coordinator.instagram as string | undefined}
           lattes={coordinator.lattes as string | undefined}
           orcid={coordinator.orcid as string | undefined}
           scholar={coordinator.scholar as string | undefined}
