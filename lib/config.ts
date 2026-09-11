@@ -15,7 +15,7 @@ export const siteConfig = {
   email: "lafim@ufma.br",
   location: "São Luís, Maranhão, Brasil",
   url: "https://lafim-ufma.pages.dev",
-  description: "Pesquisa em física da matéria condensada, nanomateriais e supercondutividade na UFMA.",
+  description: "Laboratório da UFMA dedicado à pesquisa experimental em Física de Materiais: síntese de materiais inorgânicos e estudo de suas propriedades sob condições extremas de pressão e temperatura.",
 };
 
 // ─── Navegação ────────────────────────────────────────────────────────────────
