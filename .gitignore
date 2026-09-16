@@ -29,3 +29,11 @@ DESIGN.md
 
 # artefatos temporarios do wrangler
 .wrangler/
+
+# Material de trabalho local — não faz parte do site
+plans/
+briefing_implementacao_lafim.md
+lafim_2.html
+lafimsvg.zip
+*.log
+.claude/
