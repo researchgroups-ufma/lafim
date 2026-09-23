@@ -36,12 +36,10 @@ const dur = (seconds: number) =>
     ? 0
     : seconds;
 
-// Subitens de cada link principal, indexados pelo href canônico (PT) do pai
-const SUB_ITEMS: Record<string, { key: "infrastructure"; href: string }[]> = {
-  "/research": [
-    { key: "infrastructure", href: "/research/infrastructure" },
-  ],
-};
+// Subitens de cada link principal, indexados pelo href canônico (PT) do pai.
+// Infraestrutura saiu do menu enquanto é reformulada; a rota continua no ar.
+// Para voltar: "/research": [{ key: "infrastructure", href: "/research/infrastructure" }]
+const SUB_ITEMS: Record<string, { key: "infrastructure"; href: string }[]> = {};
 
 export default function SideNav({ locale }: { locale: Locale }) {
   const pathname = usePathname();

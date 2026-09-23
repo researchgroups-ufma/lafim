@@ -24,11 +24,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { getDictionary, localizeHref, type Locale } from "@/lib/i18n";
 import LanguageSwitch from "./LanguageSwitch";
 
-// Links da navegação mobile — mesmos da SideNav, simplificados e sem submenu
+// Links da navegação mobile — mesmos da SideNav, simplificados e sem submenu.
+// Infraestrutura (/research/infrastructure) saiu do menu enquanto é reformulada.
 const LINKS = [
   { key: "home", href: "/" },
   { key: "research", href: "/research" },
-  { key: "infrastructure", href: "/research/infrastructure" },
   { key: "members", href: "/members" },
   { key: "publications", href: "/publications" },
   { key: "news", href: "/news" },
