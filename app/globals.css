@@ -397,6 +397,50 @@ img { max-width: 100%; display: block; }
   }
 }
 
+/* ── Rodapé: micrografia em traço ───────────────────────────────────────────
+   images/micrografia-cor.webp vem de figurav1-semlegendajpeg.jpg (MEV
+   colorizada; original fora do repo), gerada uma vez com Pillow no padrão
+   da dac-traco.webp: figura sobre fundo transparente, recortada no feixe e
+   girada 90° no sentido horário. Diferença: a opacidade vem do CROMA
+   (max − min dos canais), não da luminância — o feixe colorido tem o mesmo
+   brilho do fundo cinza e sumiria; pela cor ele sai isolado.
+   A imagem já está deitada: base do feixe à esquerda, leque abrindo para
+   a direita, por trás do bloco de textos. Fica dentro do container para
+   alinhar com a coluna de texto, e o z-index -1 a mantém atrás dos textos
+   sem sair do contexto de empilhamento do container (z-index 1).
+   Mantém as cores originais da MEV (vermelho e verde) sob opacidade baixa;
+   a versão em charcoal foi testada e preterida.                         */
+.site-footer {
+  position: relative;
+  overflow: hidden;
+}
+
+.footer-content {
+  position: relative;
+  z-index: 1;
+}
+
+.footer-figure {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 110%;
+  aspect-ratio: 768 / 416;
+  background: url("/images/micrografia-cor.webp") left center / contain no-repeat;
+  opacity: 0.18;
+  z-index: -1;
+  -webkit-mask-image: linear-gradient(to right, #000 45%, transparent 100%);
+          mask-image: linear-gradient(to right, #000 45%, transparent 100%);
+  pointer-events: none;
+}
+
+@media (max-width: 767px) {
+  .footer-figure {
+    opacity: 0.12;
+  }
+}
+
 /* ── Botão de fechar dos modais (equipamento, membro e notícia) ─────────────
    O MorphingDialogClose é `absolute`, mas o MorphingDialogContent não é
    `relative`: sem isso o X se ancorava no container `fixed inset-0` e ia
