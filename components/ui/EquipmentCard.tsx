@@ -160,9 +160,16 @@ export default function EquipmentCard({
             borderRadius: "0.75rem",
             width: "min(640px, 90vw)",
             maxHeight: "85vh",
-            overflowY: "auto",
+            // ancora o MorphingDialogClose, que é `absolute`, no modal —
+            // sem isso ele se prende ao container fixo e vai para o canto da tela
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
+          {/* Só este bloco rola: o Close fica ancorado no Content, que não
+              rola, e assim continua visível no canto durante a leitura. */}
+          <div style={{ overflowY: "auto" }}>
           {/* Foto grande */}
           {photo && (
             <MorphingDialogImage
@@ -248,10 +255,10 @@ export default function EquipmentCard({
             </MorphingDialogDescription>
           </div>
 
-          {/* Botão fechar */}
-          <MorphingDialogClose
-            className="text-zinc-400"
-          />
+          </div>
+
+          {/* Botão fechar — canto superior direito do modal */}
+          <MorphingDialogClose className="modal-close" />
         </MorphingDialogContent>
       </MorphingDialogContainer>
     </MorphingDialog>

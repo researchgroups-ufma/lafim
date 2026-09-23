@@ -52,26 +52,51 @@ export default function SideNav({ locale }: { locale: Locale }) {
   // Inicializa como true na home para evitar flash escuro antes do observer.
   const [overDark, setOverDark] = useState(pathname === "/");
 
-  // Observa o Hero com uma "linha" no centro vertical da viewport (rootMargin
-  // -50%/-50%). Enquanto o Hero cruza essa linha, o menu está sobre fundo escuro.
+  // Distância do topo até onde o menu se ancora. Null = sem bloco escuro na
+  // página, e o menu cai no centro da viewport (ver `top` no <nav>).
+  const [anchorTop, setAnchorTop] = useState<number | null>(null);
+
+  // Observa o bloco escuro da página com uma "linha" no centro vertical da
+  // viewport (rootMargin -50%/-50%). Enquanto esse bloco cruza a linha, o menu
+  // está sobre fundo escuro. Hoje só o Hero da home é marcado com
+  // data-dark-bg; o PageHeader das páginas internas é claro.
+  //
+  // O mesmo bloco também ancora o menu: ele se centraliza na ALTURA DO BLOCO,
+  // não na da viewport, para caber inteiro dentro do cabeçalho na posição
+  // inicial. Na home o bloco é o Hero (100svh), então isso dá exatamente o
+  // centro da tela — o comportamento de sempre.
   useEffect(() => {
-    const hero = document.getElementById("hero");
-    if (!hero) {
-      setOverDark(false); // páginas sem Hero (fundo creme) → texto escuro
+    const darkBlock = document.querySelector("[data-dark-bg]");
+    if (!darkBlock) {
+      setOverDark(false); // páginas sem bloco escuro (fundo creme) → texto escuro
+      setAnchorTop(null);
       return;
     }
+
+    // O Hero usa 100svh: a altura muda quando a janela é redimensionada.
+    const measure = () =>
+      setAnchorTop(darkBlock.getBoundingClientRect().height / 2);
+    measure();
+    window.addEventListener("resize", measure);
+
     const io = new IntersectionObserver(
       ([entry]) => setOverDark(entry.isIntersecting),
       { rootMargin: "-50% 0px -50% 0px", threshold: 0 }
     );
-    io.observe(hero);
-    return () => io.disconnect();
+    io.observe(darkBlock);
+
+    return () => {
+      io.disconnect();
+      window.removeEventListener("resize", measure);
+    };
   }, [pathname]);
 
   // Cores derivadas do contexto (escuro sobre o Hero / claro sobre o creme)
   const fg = overDark ? "#ffffff" : "var(--color-text)";
   const accent = overDark ? "#ffffff" : "var(--color-primary)";
   const sepColor = overDark ? "rgba(245, 245, 240, 0.2)" : "rgba(28, 28, 28, 0.15)";
+  // Subitem inativo — um degrau abaixo de fg, para manter a hierarquia visual
+  const subFg = overDark ? "rgba(255, 255, 255, 0.65)" : "var(--color-text-muted)";
 
   // Refs para as animações GSAP
   const linksRef = useRef<(HTMLDivElement | null)[]>([]);
@@ -120,7 +145,7 @@ export default function SideNav({ locale }: { locale: Locale }) {
       className="side-nav"
       style={{
         position: "fixed",
-        top: "50%",
+        top: anchorTop === null ? "50%" : `${anchorTop}px`,
         right: "2.5rem",
         transform: "translateY(-50%)",
         zIndex: 100,
@@ -272,9 +297,7 @@ export default function SideNav({ locale }: { locale: Locale }) {
                           padding: "0.35rem 0",
                           fontSize: "0.775rem",
                           letterSpacing: "0.04em",
-                          color: subActive
-                            ? "var(--color-primary)"
-                            : "var(--color-text-muted)",
+                          color: subActive ? accent : subFg,
                           transition: "color 0.15s ease",
                           whiteSpace: "nowrap",
                         }}
@@ -297,7 +320,7 @@ export default function SideNav({ locale }: { locale: Locale }) {
                               width: "4px",
                               height: "4px",
                               borderRadius: "50%",
-                              backgroundColor: "var(--color-primary)",
+                              backgroundColor: accent,
                               flexShrink: 0,
                             }}
                           />

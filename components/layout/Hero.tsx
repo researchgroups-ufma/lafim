@@ -33,6 +33,7 @@ export default function Hero({ subtitle }: HeroProps) {
   return (
     <section
       id="hero"
+      data-dark-bg
       style={{
         position: "relative",
         width: "100%",

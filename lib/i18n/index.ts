@@ -1,4 +1,4 @@
-/**
+﻿/**
  * index.ts — Ponto de entrada do módulo de i18n
  *
  * Reexporta o dicionário e expõe os helpers `getDictionary` (busca as

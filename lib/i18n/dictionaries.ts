@@ -1,4 +1,4 @@
-/**
+﻿/**
  * dictionaries.ts — Dicionário de strings de UI por idioma (i18n sem biblioteca)
  *
  * Centraliza as strings de UI hoje lidas via `getDictionary(locale)` nas
@@ -10,6 +10,7 @@
 
 export const dictionaries = {
   pt: {
+    labName: "Laboratório de Física dos Materiais",
     nav: {
       home: "Início",
       research: "Pesquisa",
@@ -89,7 +90,7 @@ export const dictionaries = {
       sendEmail: "Enviar e-mail →",
     },
     members: {
-      title: "Membros do laboratório",
+      title: "Membros",
       coordinator: "Coordenador",
       coordinatorRole: "Coordenador", // usado como "Coordenador · LaFiM"
       team: "Equipe",
@@ -172,6 +173,7 @@ export const dictionaries = {
     } as Record<string, string>,
   },
   en: {
+    labName: "Laboratory of Materials Physics",
     nav: {
       home: "Home",
       research: "Research",
@@ -251,7 +253,7 @@ export const dictionaries = {
       sendEmail: "Send email →",
     },
     members: {
-      title: "Lab Members",
+      title: "Members",
       coordinator: "Coordinator",
       coordinatorRole: "Coordinator", // usado como "Coordinator · LaFiM"
       team: "Team",

@@ -182,10 +182,16 @@ export default function NewsCard({ item, isFirst, imgLabels = IMG_LABELS_PT }: N
             borderRadius: "0.75rem",
             width: "min(720px, 92vw)",
             maxHeight: "85vh",
-            overflowY: "auto",
-            padding: "2rem",
+            // ancora o MorphingDialogClose, que é `absolute`, no modal —
+            // sem isso ele se prende ao container fixo e vai para o canto da tela
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
+          {/* Só este bloco rola: o Close fica ancorado no Content, que não
+              rola, e assim continua visível no canto durante a leitura. */}
+          <div style={{ overflowY: "auto", padding: "2rem" }}>
           {/* Carrossel de imagens */}
           {item.images.length > 0 && (
             <NewsCarousel images={item.images} alt={item.title} labels={imgLabels} />
@@ -259,9 +265,10 @@ export default function NewsCard({ item, isFirst, imgLabels = IMG_LABELS_PT }: N
               </div>
             </MorphingDialogDescription>
           )}
+          </div>
 
-          {/* Botão fechar */}
-          <MorphingDialogClose className="text-zinc-400" />
+          {/* Botão fechar — canto superior direito do modal */}
+          <MorphingDialogClose className="modal-close" />
         </MorphingDialogContent>
       </MorphingDialogContainer>
     </MorphingDialog>

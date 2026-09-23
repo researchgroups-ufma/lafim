@@ -1,4 +1,4 @@
-/**
+﻿/**
  * layout.tsx — Root layout da árvore PT do site LaFiM
  *
  * Root layout do App Router para o route group (pt): define <html>/<body>,
@@ -105,9 +105,9 @@ export default function PtLayout({ children }: { children: React.ReactNode }) {
           {/* Menu lateral fixo no lado direito — oculto em mobile via .side-nav */}
           <SideNav locale="pt" />
 
-          {/* pt-14 compensa a navbar fixa do MobileNav; em desktop (md) não há
-              navbar e o Hero volta a ocupar 100svh sem padding no topo.        */}
-          <main className="pt-14 md:pt-0">
+          {/* Sem padding no topo: o MobileNav agora é só um botão flutuante,
+              não ocupa espaço, e o cabeçalho começa no topo da tela.        */}
+          <main>
             {children}
           </main>
 

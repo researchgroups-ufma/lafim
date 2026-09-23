@@ -227,21 +227,227 @@ img { max-width: 100%; display: block; }
   color: var(--color-primary);
 }
 
-/* ── Page header — cabeçalho escuro de páginas internas ─────────────────────
-   Usado no topo das páginas Membros e Publicações                           */
-.page-header {
-  background: var(--color-bg-elevated);
-  border-bottom: 1px solid var(--color-border);
-  padding: 5rem 0 3rem;
-  text-align: center;
+/* ── Cabeçalho das páginas internas — "folha de rosto" ─────────────────────
+   Sobre o mesmo creme do corpo: faixa de metadados com régua, título à
+   esquerda e lead à direita alinhados pela base, e o traço de difratograma
+   (Diffractogram.tsx) fechando o bloco. A altura vem do conteúdo.          */
+/* O respiro do topo fica no container, e não no header, para a foto (que
+   se posiciona no container) cobrir também esse trecho, sem borda reta.   */
+.page-header-container {
+  position: relative;
+  padding-top: 3rem;
 }
 
-.page-header-eyebrow {
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--color-text-subtle);
-  margin-bottom: 0.75rem;
+/* Foto da célula de bigorna de diamante (uploads/dac.jpg) convertida em
+   traço: images/dac-traco.webp tem os diamantes em charcoal sobre fundo
+   TRANSPARENTE, com o crédito do pé da foto recortado. Foi gerada uma vez
+   (Pillow: alpha = luminância da foto, cor #1c1c1c) em vez de filtro CSS
+   com mix-blend-mode: a animação de entrada da página cria um contexto de
+   empilhamento e o multiply passava a misturar com transparente, não com
+   o creme — a foto saía lavada. A máscara esmaece as bordas.             */
+.page-header-figure {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 60%;
+  background: url("/images/dac-traco.webp") center 45% / cover no-repeat;
+  opacity: 0.16;
+  /* Centro alto e raio vertical curto: a base some antes do traço de
+     difratograma, sem deixar borda reta no pé do cabeçalho.             */
+  -webkit-mask-image: radial-gradient(ellipse 68% 72% at 66% 38%, #000 25%, transparent 74%);
+          mask-image: radial-gradient(ellipse 68% 72% at 66% 38%, #000 25%, transparent 74%);
+  pointer-events: none;
+}
+
+/* Conteúdo acima da foto */
+.page-header-meta,
+.page-header-body,
+.page-header-trace {
+  position: relative;
+  z-index: 1;
+}
+
+.page-header-meta {
+  --logo-h: 26px;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding-bottom: 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+
+/* A caixa do SVG tem folga acima das letras: o "LaFiM" vai de y 12,69 a
+   46,29 num viewBox de 48,29, com o meio em 61% da altura, e não em 50%. */
+.page-header-logo {
+  height: var(--logo-h);
+  width: auto;
+}
+
+/* Texto e traço descem até o meio das letras do logo: 11% da altura dele
+   ((29,49 − 24,15) / 48,29), em vez do meio da caixa do SVG.            */
+.page-header-meta-text {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  transform: translateY(calc(var(--logo-h) * 0.11));
+}
+
+.page-header-meta-text::before {
+  content: "";
+  width: 1.5rem;
+  height: 1px;
+  background: var(--color-primary-muted);
+}
+
+/* A régua se desenha da esquerda para a direita. */
+.page-header-meta::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--color-text);
+  transform-origin: left center;
+  animation: page-header-draw 0.9s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+.page-header-body {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 3rem;
+  align-items: end;
+  padding-top: 3.25rem;
+}
+
+.page-header-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 5.2vw, 4.5rem);
+  font-weight: 600;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--color-text);
+}
+
+.page-header-lead {
+  max-width: 46ch;
+  padding-bottom: 0.3rem; /* casa a base do texto com a do título */
+  font-size: 1rem;
+  line-height: 1.7;
+  font-weight: 300;
+  color: var(--color-text-muted);
+}
+
+/* O SVG estica na horizontal; non-scaling-stroke mantém o traço em 1px.
+   A revelação é por clip-path, e não por stroke-dashoffset: o dash não
+   acompanha o non-scaling-stroke de forma confiável entre navegadores.    */
+.page-header-trace {
+  display: block;
+  width: 100%;
+  height: 56px;
+  margin-top: 2.75rem;
+  color: var(--color-text);
+  animation: page-header-reveal 1.8s cubic-bezier(0.65, 0, 0.35, 1) 0.2s both;
+}
+
+.page-header-trace path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  opacity: 0.5;
+  vector-effect: non-scaling-stroke;
+}
+
+@keyframes page-header-draw {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+@keyframes page-header-reveal {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0 0 0); }
+}
+
+@media (max-width: 767px) {
+  /* 4.75rem: a faixa de metadados fica abaixo do botão flutuante do menu. */
+  .page-header-container { padding-top: 4.75rem; }
+
+  /* No mobile só o logo e "UFMA": o nome completo quebraria a faixa. */
+  .page-header-lab { display: none; }
+
+  /* Coluna estreita: a foto ocupa a largura toda, mais apagada, para não
+     competir com o lead, que no mobile fica embaixo do título.            */
+  .page-header-figure {
+    width: 100%;
+    opacity: 0.09;
+  }
+
+  .page-header-body {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding-top: 2.25rem;
+  }
+
+  .page-header-trace {
+    height: 40px;
+    margin-top: 2rem;
+  }
+}
+
+/* ── Botão de fechar dos modais (equipamento, membro e notícia) ─────────────
+   O MorphingDialogClose é `absolute`, mas o MorphingDialogContent não é
+   `relative`: sem isso o X se ancorava no container `fixed inset-0` e ia
+   parar no canto da TELA, em cima do botão do menu. Quem resolve é o
+   position:relative no style do Content — aqui fica só o visual.
+   O fundo existe porque no modal de equipamento o X cai sobre a foto.     */
+.modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  color: var(--color-text);
+  background: rgba(252, 251, 248, 0.85);
+  -webkit-backdrop-filter: blur(4px);
+          backdrop-filter: blur(4px);
+  border: 1px solid var(--color-border-strong);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.modal-close:hover {
+  background: var(--color-bg-elevated);
+  color: var(--color-primary);
+}
+
+/* No mobile o X vira só o traço: o círculo de 36px cobria os nomes no modal
+   de membros. O halo branco substitui o fundo — sem ele o traço charcoal
+   sumiria sobre a foto escura do modal de equipamento.                     */
+@media (max-width: 767px) {
+  .modal-close {
+    width: 1.5rem;
+    height: 1.5rem;
+    background: none;
+    border: none;
+    border-radius: 0;
+    -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.95));
+  }
+
+  .modal-close:hover {
+    background: none;
+  }
+
+  /* o XIcon do primitivo vem com size=24 fixo no atributo */
+  .modal-close svg {
+    width: 20px;
+    height: 20px;
+  }
 }
 
 /* ── Group label — label de grupo dentro de seções ──────────────────────────
@@ -388,6 +594,17 @@ img { max-width: 100%; display: block; }
    display:flex inline desses elementos (uma classe simples perderia). */
 @media (min-width: 768px) {
   .mobile-only { display: none !important; }
+}
+
+/* Com um modal aberto, o botão do menu cai no MESMO canto do X do modal —
+   dois botões colados, e o menu ainda por cima por causa do z-index. O
+   MorphingDialog é montado por portal no body com role="dialog", então dá
+   para detectá-lo daqui e sumir com o botão enquanto o modal existir.
+   O z-index do botão (abaixo do z-50 do modal) é a rede de segurança para
+   navegadores sem suporte a :has().                                       */
+body:has([role="dialog"]) .mobile-only {
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Respeita a preferência "reduzir movimento" do sistema (WCAG 2.3.3).

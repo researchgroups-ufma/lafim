@@ -1,4 +1,4 @@
-/**
+﻿/**
  * NewsPage.tsx — Conteúdo da página Notícias, parametrizado por locale
  *
  * Server Component — lê todas as notícias de content/news/ via getCollection(),
@@ -52,7 +52,9 @@ export default async function NewsPage({ locale }: { locale: Locale }) {
 
   return (
     <div>
-      <PageHeader title={dict.news.title} />
+      <PageHeader
+        title={dict.news.title}
+      />
 
       <main>
         <div className="container-site">

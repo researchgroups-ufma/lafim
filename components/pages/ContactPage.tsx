@@ -28,6 +28,7 @@ export default async function ContactPage({ locale }: { locale: Locale }) {
           <section style={{ padding: "4rem 0" }}>
 
             <div
+              className="stack-mobile"
               style={{
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr",

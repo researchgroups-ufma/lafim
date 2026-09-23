@@ -1,40 +1,54 @@
 /**
  * PageHeader — Cabeçalho padronizado para todas as páginas internas
  *
- * Exibe fundo elevado, o logo do LaFiM e o título da página.
- * Padrão visual consistente em todo o site.
+ * Formato de "folha de rosto" de artigo científico, sobre o mesmo fundo
+ * creme do corpo: faixa com o nome do laboratório, título grande à esquerda
+ * com o texto de abertura à direita, alinhados pela base, e um traço de
+ * difratograma de raios X fechando o bloco. Atrás, à direita, a foto da
+ * célula de bigorna de diamante em negativo, esmaecida (ver globals.css).
  *
  * Uso:
  *   <PageHeader title="Membros" />
+ *   <PageHeader title="Linhas de Pesquisa" lead={dict.research.intro} />
  *
  * Props:
- *   title   — título da página (obrigatório)
- *   eyebrow — mantido por compatibilidade com chamadas existentes; não é
- *             mais renderizado (o logo substituiu o texto de identificação)
+ *   title — título da página (obrigatório)
+ *   lead  — texto de abertura (opcional)
+ *
+ * Sem data-dark-bg: o cabeçalho é claro, então o SideNav e o botão do
+ * MobileNav ficam na cor escura padrão. Ver SideNav.tsx e MobileNav.tsx.
  */
 
 import { TextEffect } from "@/components/motion-primitives/text-effect";
+import PageHeaderMeta from "@/components/ui/PageHeaderMeta";
+import Diffractogram from "@/components/ui/Diffractogram";
 
 type PageHeaderProps = {
   title: string;
-  eyebrow?: string;
+  lead?: string;
 };
 
-export default function PageHeader({ title }: PageHeaderProps) {
+export default function PageHeader({ title, lead }: PageHeaderProps) {
   return (
-    <div className="page-header">
-      {/* Logo do LaFiM — substitui o antigo texto "sigla · universidade".
-          fill preto nativo do SVG sobre o fundo claro do cabeçalho.        */}
-      <img
-        src="/logo/new_lafim.svg"
-        alt="LaFiM — Laboratório de Física dos Materiais"
-        style={{ height: "3rem", width: "auto", margin: "0 auto 0.75rem" }}
-      />
-      <h1 className="section-title">
-        <TextEffect per="char" preset="fade">
-         {title}
-        </TextEffect>
-      </h1>
-    </div>
+    <header className="page-header">
+      <div className="container-site page-header-container">
+        {/* Foto de fundo — puramente decorativa */}
+        <div className="page-header-figure" aria-hidden="true" />
+
+        <PageHeaderMeta />
+
+        <div className="page-header-body">
+          <h1 className="page-header-title">
+            <TextEffect per="char" preset="fade">
+              {title}
+            </TextEffect>
+          </h1>
+
+          {lead && <p className="page-header-lead">{lead}</p>}
+        </div>
+
+        <Diffractogram />
+      </div>
+    </header>
   );
 }
