@@ -50,7 +50,7 @@ export default async function PublicationsPage({ locale }: { locale: Locale }) {
     <div>
 
       {/* O texto introdutório fica no corpo: traz links externos (Lattes,
-          Scholar, arXiv) que perderiam contraste sobre a foto do cabeçalho. */}
+          Scholar, arXiv), e o lead do PageHeader é só texto. */}
       <PageHeader
         title={dict.publications.title}
       />

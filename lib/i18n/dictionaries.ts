@@ -10,6 +10,7 @@
 
 export const dictionaries = {
   pt: {
+    labName: "Laboratório de Física dos Materiais",
     nav: {
       home: "Início",
       research: "Pesquisa",
@@ -172,6 +173,7 @@ export const dictionaries = {
     } as Record<string, string>,
   },
   en: {
+    labName: "Laboratory of Materials Physics",
     nav: {
       home: "Home",
       research: "Research",

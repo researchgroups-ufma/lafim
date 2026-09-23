@@ -227,140 +227,177 @@ img { max-width: 100%; display: block; }
   color: var(--color-primary);
 }
 
-/* ── Page header — cabeçalho escuro de páginas internas ─────────────────────
-   Usado no topo das páginas Membros e Publicações                           */
-/* ── Cabeçalho das páginas internas ────────────────────────────────────────
-   Faixa escura sobre foto, conteúdo alinhado à base e à esquerda.
-   O texto é branco fixo (não usa os tokens), pois o fundo é sempre escuro. */
-.page-header {
+/* ── Cabeçalho das páginas internas — "folha de rosto" ─────────────────────
+   Sobre o mesmo creme do corpo: faixa de metadados com régua, título à
+   esquerda e lead à direita alinhados pela base, e o traço de difratograma
+   (Diffractogram.tsx) fechando o bloco. A altura vem do conteúdo.          */
+/* O respiro do topo fica no container, e não no header, para a foto (que
+   se posiciona no container) cobrir também esse trecho, sem borda reta.   */
+.page-header-container {
   position: relative;
-  min-height: 420px;
+  padding-top: 3rem;
+}
+
+/* Foto da célula de bigorna de diamante (uploads/dac.jpg) convertida em
+   traço: images/dac-traco.webp tem os diamantes em charcoal sobre fundo
+   TRANSPARENTE, com o crédito do pé da foto recortado. Foi gerada uma vez
+   (Pillow: alpha = luminância da foto, cor #1c1c1c) em vez de filtro CSS
+   com mix-blend-mode: a animação de entrada da página cria um contexto de
+   empilhamento e o multiply passava a misturar com transparente, não com
+   o creme — a foto saía lavada. A máscara esmaece as bordas.             */
+.page-header-figure {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 60%;
+  background: url("/images/dac-traco.webp") center 45% / cover no-repeat;
+  opacity: 0.16;
+  /* Centro alto e raio vertical curto: a base some antes do traço de
+     difratograma, sem deixar borda reta no pé do cabeçalho.             */
+  -webkit-mask-image: radial-gradient(ellipse 68% 72% at 66% 38%, #000 25%, transparent 74%);
+          mask-image: radial-gradient(ellipse 68% 72% at 66% 38%, #000 25%, transparent 74%);
+  pointer-events: none;
+}
+
+/* Conteúdo acima da foto */
+.page-header-meta,
+.page-header-body,
+.page-header-trace {
+  position: relative;
+  z-index: 1;
+}
+
+.page-header-meta {
+  --logo-h: 26px;
   display: flex;
-  align-items: flex-end;
-  overflow: hidden;
-  background-color: #111111; /* cor de espera enquanto a foto carrega */
+  align-items: center;
+  gap: 0.85rem;
+  padding-bottom: 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--color-text-muted);
 }
 
-.page-header-bg {
-  position: absolute;
-  inset: 0;
-  background-image: url("/uploads/dac.jpg");
-  background-size: cover;
-  background-position: center;
-  opacity: 0.45;
-  filter: grayscale(0.3);
-}
-
-/* Dois gradientes numa camada só: escurece à esquerda (onde fica o texto)
-   e na base (onde o bloco de conteúdo se apoia).                          */
-.page-header-scrim {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(to top, rgba(8,8,8,0.9) 0%, transparent 58%),
-    linear-gradient(to right, rgba(8,8,8,0.94) 0%, rgba(8,8,8,0.72) 55%, rgba(8,8,8,0.38) 100%);
-}
-
-.page-header-inner {
-  position: relative;
-  z-index: 5;       /* acima da foto e dos gradientes */
-  width: 100%;
-  padding-top: 6rem;
-  padding-bottom: 3.25rem;
-}
-
-/* Máscara em vez de <img>: new_lafim.svg não declara fill e renderiza preto.
-   Largura fixa para preservar a razão nativa de 232,35 × 48,29 (4,81:1).   */
+/* A caixa do SVG tem folga acima das letras: o "LaFiM" vai de y 12,69 a
+   46,29 num viewBox de 48,29, com o meio em 61% da altura, e não em 50%. */
 .page-header-logo {
-  height: 48px;
-  width: 231px;
-  margin-bottom: 1.5rem;
-  background-color: #ffffff;
-  -webkit-mask-image: url("/logo/new_lafim.svg");
-          mask-image: url("/logo/new_lafim.svg");
-  -webkit-mask-repeat: no-repeat;
-          mask-repeat: no-repeat;
-  -webkit-mask-size: contain;
-          mask-size: contain;
+  height: var(--logo-h);
+  width: auto;
+}
+
+/* Texto e traço descem até o meio das letras do logo: 11% da altura dele
+   ((29,49 − 24,15) / 48,29), em vez do meio da caixa do SVG.            */
+.page-header-meta-text {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  transform: translateY(calc(var(--logo-h) * 0.11));
+}
+
+.page-header-meta-text::before {
+  content: "";
+  width: 1.5rem;
+  height: 1px;
+  background: var(--color-primary-muted);
+}
+
+/* A régua se desenha da esquerda para a direita. */
+.page-header-meta::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--color-text);
+  transform-origin: left center;
+  animation: page-header-draw 0.9s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+.page-header-body {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 3rem;
+  align-items: end;
+  padding-top: 3.25rem;
 }
 
 .page-header-title {
-  font-size: clamp(2.5rem, 5.6vw, 4.25rem);
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 5.2vw, 4.5rem);
   font-weight: 600;
-  line-height: 1;
-  letter-spacing: -0.035em;
-  color: #ffffff;
-  max-width: 14ch;
-  margin-bottom: 1.75rem;
-}
-
-/* A régua é o ::before; o metadado (quando existe) fica na ponta direita. */
-.page-header-rule {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  margin-bottom: 1.6rem;
-}
-
-/* Sem lead a régua é o último bloco: a margem inferior viraria espaço morto. */
-.page-header-rule:last-child {
-  margin-bottom: 0;
-}
-
-.page-header-rule::before {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.42);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--color-text);
 }
 
 .page-header-lead {
-  font-size: 1.0625rem;
+  max-width: 46ch;
+  padding-bottom: 0.3rem; /* casa a base do texto com a do título */
+  font-size: 1rem;
   line-height: 1.7;
   font-weight: 300;
-  color: rgba(255, 255, 255, 0.78);
-  max-width: 56ch;
+  color: var(--color-text-muted);
 }
 
-/* Cópia do lead no topo do corpo — só entra no mobile (ver a media query
-   abaixo e o comentário em PageHeader.tsx).                                */
-.page-lead-body {
-  display: none;
+/* O SVG estica na horizontal; non-scaling-stroke mantém o traço em 1px.
+   A revelação é por clip-path, e não por stroke-dashoffset: o dash não
+   acompanha o non-scaling-stroke de forma confiável entre navegadores.    */
+.page-header-trace {
+  display: block;
+  width: 100%;
+  height: 56px;
+  margin-top: 2.75rem;
+  color: var(--color-text);
+  animation: page-header-reveal 1.8s cubic-bezier(0.65, 0, 0.35, 1) 0.2s both;
+}
+
+.page-header-trace path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  opacity: 0.5;
+  vector-effect: non-scaling-stroke;
+}
+
+@keyframes page-header-draw {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+@keyframes page-header-reveal {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0 0 0); }
 }
 
 @media (max-width: 767px) {
-  /* 280px: é o piso que iguala TODAS as páginas. Os títulos de duas linhas
-     ("Linhas de Pesquisa", "Sobre o Laboratório") medem 277px; abaixo disso
-     eles furam o piso e a altura volta a variar entre as páginas.         */
-  .page-header { min-height: 280px; }
+  /* 4.75rem: a faixa de metadados fica abaixo do botão flutuante do menu. */
+  .page-header-container { padding-top: 4.75rem; }
 
-  /* No mobile o lead sai do cabeçalho: ele quebrava em 6 linhas e fazia a
-     altura variar até 136px entre as páginas. Vai para o corpo, com o
-     estilo de texto do corpo.                                             */
-  .page-header-lead { display: none; }
+  /* No mobile só o logo e "UFMA": o nome completo quebraria a faixa. */
+  .page-header-lab { display: none; }
 
-  /* O lead oculto continua no DOM, então a régua não vira :last-child e
-     mantinha a margem inferior — 26px a mais só nas páginas com lead.     */
-  .page-header-rule { margin-bottom: 0; }
-
-  .page-lead-body {
-    display: block;
-    padding-top: 2.5rem;
+  /* Coluna estreita: a foto ocupa a largura toda, mais apagada, para não
+     competir com o lead, que no mobile fica embaixo do título.            */
+  .page-header-figure {
+    width: 100%;
+    opacity: 0.09;
   }
 
-  .page-lead-body p {
-    font-size: 1rem;
-    line-height: 1.8;
-    font-weight: 300;
-    color: var(--color-text-muted);
-    max-width: 720px;
+  .page-header-body {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding-top: 2.25rem;
   }
-  .page-header-inner { padding-top: 4rem; padding-bottom: 2.5rem; }
-  .page-header-logo { height: 40px; width: 193px; }
-  .page-header-title { max-width: none; }
+
+  .page-header-trace {
+    height: 40px;
+    margin-top: 2rem;
+  }
 }
 
-/* ── Botão de fechar dos modais (equipamento e membro) ──────────────────────
+/* ── Botão de fechar dos modais (equipamento, membro e notícia) ─────────────
    O MorphingDialogClose é `absolute`, mas o MorphingDialogContent não é
    `relative`: sem isso o X se ancorava no container `fixed inset-0` e ia
    parar no canto da TELA, em cima do botão do menu. Quem resolve é o

@@ -58,8 +58,8 @@ export default function SideNav({ locale }: { locale: Locale }) {
 
   // Observa o bloco escuro da página com uma "linha" no centro vertical da
   // viewport (rootMargin -50%/-50%). Enquanto esse bloco cruza a linha, o menu
-  // está sobre fundo escuro. São dois: o Hero da home e o PageHeader das
-  // páginas internas — ambos marcados com data-dark-bg.
+  // está sobre fundo escuro. Hoje só o Hero da home é marcado com
+  // data-dark-bg; o PageHeader das páginas internas é claro.
   //
   // O mesmo bloco também ancora o menu: ele se centraliza na ALTURA DO BLOCO,
   // não na da viewport, para caber inteiro dentro do cabeçalho na posição

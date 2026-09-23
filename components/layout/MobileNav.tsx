@@ -56,8 +56,8 @@ export default function MobileNav({ locale }: { locale: Locale }) {
   const pathname = usePathname();
   const dict = getDictionary(locale);
 
-  // O botão está sobre o bloco escuro da página (Hero na home, PageHeader nas
-  // internas)? Diferente do SideNav, que fica no centro da tela e usa um
+  // O botão está sobre o bloco escuro da página (hoje só o Hero da home;
+  // o PageHeader das internas é claro)? Diferente do SideNav, que fica no centro da tela e usa um
   // IntersectionObserver, o botão fica a 20px do topo: basta checar se o bloco
   // cobre esse ponto. Vale a linha do hamburguer, não a do topo do bloco.
   const [overDark, setOverDark] = useState(true);
