@@ -37,6 +37,7 @@ export default async function Footer({ locale }: { locale: Locale }) {
 
   return (
     <footer
+      className="site-footer"
       style={{
         borderTop: "1px solid var(--color-border)", /* linha sutil de separação */
         backgroundColor: "var(--color-bg)",
@@ -44,7 +45,7 @@ export default async function Footer({ locale }: { locale: Locale }) {
       }}
     >
       <div
-        className="container-site"
+        className="container-site footer-content"
         style={{
           paddingTop: "1.44rem",
           paddingBottom: "1.44rem",
@@ -53,6 +54,8 @@ export default async function Footer({ locale }: { locale: Locale }) {
           gap: "0.96rem", /* espaço entre os três blocos internos */
         }}
       >
+        {/* Micrografia em traço atrás dos textos — decorativa (ver globals.css) */}
+        <div className="footer-figure" aria-hidden="true" />
 
         {/* ── Bloco 1: Identidade ───────────────────────────────────────────
             Logo do LaFiM e vínculo institucional                           */}
