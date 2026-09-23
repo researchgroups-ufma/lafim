@@ -21,6 +21,15 @@ import type { Locale } from "@/lib/i18n";
 
 const CONTENT_DIR = path.join(process.cwd(), "content");
 
+/**
+ * Lê um .md com quebras de linha normalizadas para LF. No Windows, com
+ * core.autocrlf=true, o checkout grava CRLF e os split("\n\n") que separam
+ * parágrafos deixam de casar — o texto sai num bloco só na build local.
+ */
+function readMarkdown(filePath: string): string {
+  return fs.readFileSync(filePath, "utf-8").replace(/\r\n/g, "\n");
+}
+
 export type ContentItem = {
   slug: string;
   [key: string]: unknown;
@@ -33,7 +42,7 @@ export async function getCollection(folder: string, locale: Locale = "pt"): Prom
     if (!fs.existsSync(dir)) return map;
 
     for (const filename of fs.readdirSync(dir).filter((f) => f.endsWith(".md"))) {
-      const raw = fs.readFileSync(path.join(dir, filename), "utf-8");
+      const raw = readMarkdown(path.join(dir, filename));
       const { data, content } = matter(raw);
       // body = corpo markdown do arquivo (campo "Descrição completa" no CMS).
       // Espelha getSingleFile; a homepage usa só `summary`, a página de
@@ -60,7 +69,7 @@ export async function getSingleFile(filePath: string): Promise<ContentItem> {
   const fullPath = path.join(CONTENT_DIR, filePath);
   if (!fs.existsSync(fullPath)) return { slug: filePath };
 
-  const raw = fs.readFileSync(fullPath, "utf-8");
+  const raw = readMarkdown(fullPath);
   const { data, content } = matter(raw);
   return { slug: filePath, body: content, ...data };
 }
