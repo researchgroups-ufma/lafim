@@ -10,6 +10,11 @@
  * carrossel percorre `images` — que o Server Component monta como
  * [cover_image, ...gallery]. Com uma só imagem, o carrossel não mostra controles.
  *
+ * Orientação: as dimensões reais só são conhecidas quando a imagem carrega
+ * (onLoad). Na miniatura, paisagem preenche a moldura 16:9 e retrato aparece
+ * inteiro. No carrossel, paisagem ocupa a largura toda na proporção original
+ * e retrato (ou quase quadrada) fica inteira numa moldura 4:3.
+ *
  * Props:
  *   item    — notícia serializável vinda do Server Component
  *   isFirst — true para o primeiro item (borda superior da lista)
@@ -51,7 +56,20 @@ type NewsCardProps = {
 
 const IMG_LABELS_PT = { prev: "Imagem anterior", next: "Próxima imagem", goTo: "Ir para imagem" };
 
+// Proporção (largura/altura) abaixo da qual o carrossel usa a moldura 4:3
+// em vez da proporção da própria imagem — evita que retratos e imagens
+// quase quadradas fiquem mais altos que o modal.
+const MIN_FRAME_RATIO = 4 / 3;
+
+/** Proporção largura/altura real de uma imagem já carregada. */
+function naturalRatio(img: HTMLImageElement): number {
+  return img.naturalWidth / img.naturalHeight;
+}
+
 export default function NewsCard({ item, isFirst, imgLabels = IMG_LABELS_PT }: NewsCardProps) {
+  // undefined até a imagem carregar — enquanto isso vale o visual de paisagem
+  const [coverIsPortrait, setCoverIsPortrait] = useState<boolean>();
+
   return (
     <MorphingDialog
       transition={{ type: "spring", bounce: 0.05, duration: 0.3 }}
@@ -142,11 +160,13 @@ export default function NewsCard({ item, isFirst, imgLabels = IMG_LABELS_PT }: N
             className="desktop-only"
             width={200}
             height={113}
+            onLoad={(e) => setCoverIsPortrait(naturalRatio(e.currentTarget) < 1)}
             style={{
               width: "100%",
               height: "auto",
               aspectRatio: "16/9",
-              objectFit: "cover",
+              objectFit: coverIsPortrait ? "contain" : "cover",
+              backgroundColor: "var(--color-bg-subtle)",
               border: "1px solid var(--color-border-strong)",
             }}
           />
@@ -261,7 +281,12 @@ function NewsCarousel({
   labels: { prev: string; next: string; goTo: string };
 }) {
   const [index, setIndex] = useState(0);
+  // Proporção real de cada imagem, por src, preenchida no onLoad
+  const [ratios, setRatios] = useState<Record<string, number>>({});
   const many = images.length > 1;
+
+  const ratio = ratios[images[index]];
+  const frameRatio = ratio === undefined ? 16 / 9 : Math.max(ratio, MIN_FRAME_RATIO);
 
   function go(next: number) {
     setIndex((next + images.length) % images.length);
@@ -273,7 +298,7 @@ function NewsCarousel({
         style={{
           position: "relative",
           width: "100%",
-          aspectRatio: "16/9",
+          aspectRatio: String(frameRatio),
           overflow: "hidden",
           borderRadius: "0.375rem",
           border: "1px solid var(--color-border-strong)",
@@ -285,7 +310,12 @@ function NewsCarousel({
           alt={`${alt} — imagem ${index + 1}`}
           fill
           sizes="(max-width: 720px) 92vw, 720px"
-          style={{ objectFit: "cover" }}
+          onLoad={(e) => {
+            const src = images[index];
+            const r = naturalRatio(e.currentTarget);
+            setRatios((prev) => ({ ...prev, [src]: r }));
+          }}
+          style={{ objectFit: "contain" }}
         />
 
         {many && (

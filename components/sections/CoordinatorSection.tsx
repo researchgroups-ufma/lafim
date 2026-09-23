@@ -18,6 +18,7 @@ import { getDictionary, type Locale } from "@/lib/i18n";
  *   photo    — caminho da foto (opcional)
  *   email    — e-mail institucional (opcional)
  *   linkedin — URL do LinkedIn (opcional)
+ *   instagram     — URL do Instagram (opcional)
  *   lattes   — URL do Lattes (opcional)
  *   orcid    — URL do ORCID (opcional)
  *   scholar  — URL do Google Scholar (opcional)
@@ -31,6 +32,7 @@ type CoordinatorSectionProps = {
   photo?: string;
   email?: string;
   linkedin?: string;
+  instagram?: string;
   lattes?: string;
   orcid?: string;
   scholar?: string;
@@ -39,7 +41,7 @@ type CoordinatorSectionProps = {
 };
 
 export default function CoordinatorSection({
-  name, bio, photo, email, linkedin, lattes, orcid, scholar, arxiv, locale,
+  name, bio, photo, email, linkedin, instagram, lattes, orcid, scholar, arxiv, locale,
 }: CoordinatorSectionProps) {
   const paragraphs = bio ? bio.split("\n\n") : [];
   const dict = getDictionary(locale).home.coordinator;
@@ -84,6 +86,7 @@ export default function CoordinatorSection({
                 className="hp-coord__links"
                 email={email}
                 linkedin={linkedin}
+                instagram={instagram}
                 lattes={lattes}
                 orcid={orcid}
                 scholar={scholar}

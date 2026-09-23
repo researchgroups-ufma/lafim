@@ -20,6 +20,7 @@
  *   photo         — caminho da foto em /uploads/ (opcional)
  *   email         — e-mail institucional (opcional)
  *   linkedin      — URL do LinkedIn (opcional)
+ *   instagram     — URL do Instagram (opcional)
  *   lattes        — URL do Lattes (opcional)
  *   orcid         — URL do ORCID (opcional)
  *   scholar       — URL do Google Scholar (opcional)
@@ -52,6 +53,7 @@ type MemberCardModalProps = {
   photo?: string;
   email?: string;
   linkedin?: string;
+  instagram?: string;
   lattes?: string;
   orcid?: string;
   scholar?: string;
@@ -62,7 +64,7 @@ type MemberCardModalProps = {
 
 export default function MemberCardModal({
   name, role, research_area, scholarship, year_start,
-  bio, photo, email, linkedin, lattes, orcid, scholar, arxiv, locale = "pt",
+  bio, photo, email, linkedin, instagram, lattes, orcid, scholar, arxiv, locale = "pt",
 }: MemberCardModalProps) {
   return (
     <MorphingDialog
@@ -228,6 +230,7 @@ export default function MemberCardModal({
               <MemberLinks
                 email={email}
                 linkedin={linkedin}
+                instagram={instagram}
                 lattes={lattes}
                 orcid={orcid}
                 scholar={scholar}

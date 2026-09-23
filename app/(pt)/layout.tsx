@@ -27,7 +27,7 @@ const schemaOrg = {
   alternateName: "LaFiM",
   url: "https://lafim.pages.dev",
   description:
-    "Pesquisa em física da matéria condensada, nanomateriais e supercondutividade na Universidade Federal do Maranhão.",
+    "Laboratório da UFMA dedicado à pesquisa experimental em Física de Materiais: síntese de materiais inorgânicos e estudo de suas propriedades sob condições extremas de pressão e temperatura.",
   inLanguage: "pt-BR",
   parentOrganization: {
     "@type": "CollegeOrUniversity",
@@ -37,10 +37,12 @@ const schemaOrg = {
   },
   knowsAbout: [
     "Física da Matéria Condensada",
-    "Nanomateriais",
-    "Supercondutividade",
-    "Espectroscopia Raman",
+    "Ciência dos Materiais",
+    "Síntese de Materiais Inorgânicos",
+    "Materiais sob Condições Extremas",
     "Transições de Fase",
+    "Espectroscopia Raman",
+    "Difração de Raios X",
   ],
   sameAs: [],
 };
@@ -60,7 +62,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'LaFiM — Universidade Federal do Maranhão',
-    description: 'Pesquisa em física da matéria condensada, nanomateriais e supercondutividade na UFMA.',
+    description: 'Laboratório da UFMA dedicado à pesquisa experimental em Física de Materiais: síntese de materiais inorgânicos e estudo de suas propriedades sob condições extremas de pressão e temperatura.',
     url: '/', // mesmo alvo do alternates.canonical, resolvido via metadataBase
     siteName: 'LaFiM',
     locale: 'pt_BR',
@@ -77,7 +79,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'LaFiM — Universidade Federal do Maranhão',
-    description: 'Pesquisa em física da matéria condensada, nanomateriais e supercondutividade na UFMA.',
+    description: 'Laboratório da UFMA dedicado à pesquisa experimental em Física de Materiais: síntese de materiais inorgânicos e estudo de suas propriedades sob condições extremas de pressão e temperatura.',
     images: ['/images/hero-poster.jpg'],
   },
 };

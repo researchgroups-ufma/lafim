@@ -14,7 +14,7 @@ export const metadata = pageMetadata(
   "en",
   "/",
   { absolute: "LaFiM — Laboratory of Materials Physics" },
-  "Research in condensed matter physics, nanomaterials and superconductivity at UFMA."
+  "A Federal University of Maranhão laboratory dedicated to experimental research in Materials Physics: synthesis of inorganic materials and the study of their properties under extreme conditions of pressure and temperature."
 );
 
 export default function Page() {

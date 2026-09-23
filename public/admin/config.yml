@@ -85,6 +85,7 @@ collections:
       - { label: "Foto",               name: "photo",         widget: "image",   required: false, i18n: duplicate }
       - { label: "E-mail",             name: "email",         widget: "string",  required: false, i18n: duplicate }
       - { label: "LinkedIn",           name: "linkedin",      widget: "string",  required: false, i18n: duplicate }
+      - { label: "Instagram",          name: "instagram",     widget: "string",  required: false, i18n: duplicate }
       - { label: "Lattes",             name: "lattes",        widget: "string",  required: false, i18n: duplicate }
       - { label: "ORCID",              name: "orcid",         widget: "string",  required: false, i18n: duplicate }
       - { label: "Google Scholar",     name: "scholar",       widget: "string",  required: false, i18n: duplicate }
@@ -215,3 +216,15 @@ collections:
           - { label: "Direita", value: "right" }
           - { label: "Esquerda", value: "left" }
       - { label: "Ordem de exibição",   name: "order",          widget: "number", default: 1, i18n: duplicate }
+
+  # ── Redes Sociais ───────────────────────────────────────────────────────────
+  # Perfis institucionais do laboratorio. Sem i18n: URL nao muda por idioma.
+  # Lido por ContactPage e Footer via getSingleFile("settings/social.md").
+  - name: "social"
+    label: "Redes Sociais"
+    files:
+      - name: "social"
+        label: "Perfis do Laboratorio"
+        file: "content/settings/social.md"
+        fields:
+          - { label: "Instagram do laboratorio (URL completa)", name: "instagram", widget: "string", required: false }

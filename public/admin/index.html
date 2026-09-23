@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
@@ -8,14 +8,121 @@
   <body>
     <!--
       Decap CMS carregado via CDN.
-      Este arquivo não precisa ser alterado.
 
       A configuração das coleções (quais campos aparecem no painel)
       fica em public/admin/config.yml.
 
-      TODO (Fase 3): configurar autenticação GitHub OAuth para Cloudflare Pages.
+      Autenticação: Cloudflare Worker como proxy OAuth (worker/index.js).
       Referência: https://decapcms.org/docs/cloudflare-pages/
     -->
+
+    <!--
+      Relatório de erros do painel.
+
+      Por que um wrapper de fetch e não window.onerror: o erro que motivou
+      isto (GITRPC::BadObjectState ao excluir uma entrada sem par en/) NÃO é
+      uma exceção. É um HTTP 422 que o Decap captura e exibe num toast — não
+      chega em window.onerror nem em unhandledrejection. O único ponto onde
+      ele é observável é a resposta da chamada à API do GitHub.
+
+      Regras que este script segue, nesta ordem de importância:
+        1. Nunca quebrar o painel. Tudo roda dentro de try/catch e a resposta
+           original é devolvida intacta.
+        2. Nunca vazar o token. Só o caminho da URL é enviado — jamais os
+           headers, onde vive o Authorization.
+        3. Não inundar o Telegram. Erros idênticos em menos de 60s são
+           descartados.
+    -->
+    <script>
+      (function () {
+        var ENDPOINT = "https://decap-proxy.and-near.workers.dev/report";
+        var JANELA_MS = 60000;
+        var vistos = Object.create(null);
+
+        function reporta(dados) {
+          try {
+            var chave = dados.tipo + "|" + dados.status + "|" + dados.mensagem;
+            var agora = Date.now();
+            if (vistos[chave] && agora - vistos[chave] < JANELA_MS) return;
+            vistos[chave] = agora;
+
+            dados.pagina = location.href;
+            dados.navegador = navigator.userAgent;
+
+            // keepalive: o relatório sobrevive se a aba for fechada em seguida.
+            fetch(ENDPOINT, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(dados),
+              keepalive: true,
+            }).catch(function () {});
+          } catch (e) {
+            /* relatar erro não pode gerar erro */
+          }
+        }
+
+        // ── Respostas de erro da API do GitHub ───────────────────────────────
+        var fetchOriginal = window.fetch;
+        window.fetch = function () {
+          var args = arguments;
+          var alvo = "";
+          try {
+            alvo = typeof args[0] === "string" ? args[0] : (args[0] && args[0].url) || "";
+          } catch (e) {}
+
+          return fetchOriginal.apply(this, args).then(function (resposta) {
+            try {
+              if (alvo.indexOf("api.github.com") !== -1 && !resposta.ok) {
+                // clone(): ler o corpo aqui não pode consumir o do Decap.
+                resposta
+                  .clone()
+                  .text()
+                  .then(function (corpo) {
+                    var mensagem = corpo;
+                    try {
+                      mensagem = JSON.parse(corpo).message || corpo;
+                    } catch (e) {}
+                    reporta({
+                      tipo: "api-github",
+                      status: resposta.status,
+                      mensagem: mensagem,
+                      // pathname apenas: a query pode carregar parâmetros sensíveis
+                      recurso: (function () {
+                        try {
+                          return new URL(alvo).pathname;
+                        } catch (e) {
+                          return "";
+                        }
+                      })(),
+                    });
+                  })
+                  .catch(function () {});
+              }
+            } catch (e) {}
+            return resposta;
+          });
+        };
+
+        // ── Exceções que escapam ─────────────────────────────────────────────
+        window.addEventListener("error", function (evento) {
+          reporta({
+            tipo: "excecao",
+            status: "",
+            mensagem: (evento && evento.message) || "erro sem mensagem",
+          });
+        });
+
+        window.addEventListener("unhandledrejection", function (evento) {
+          var motivo = evento && evento.reason;
+          reporta({
+            tipo: "promise-rejeitada",
+            status: "",
+            mensagem: (motivo && (motivo.message || String(motivo))) || "rejeição sem motivo",
+          });
+        });
+      })();
+    </script>
+
     <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   </body>
 </html>

@@ -25,7 +25,7 @@ const schemaOrg = {
   alternateName: "LaFiM",
   url: "https://lafim.pages.dev",
   description:
-    "Research in condensed matter physics, nanomaterials and superconductivity at the Federal University of Maranhão.",
+    "A Federal University of Maranhão laboratory dedicated to experimental research in Materials Physics: synthesis of inorganic materials and the study of their properties under extreme conditions of pressure and temperature.",
   inLanguage: "en",
   parentOrganization: {
     "@type": "CollegeOrUniversity",
@@ -35,10 +35,12 @@ const schemaOrg = {
   },
   knowsAbout: [
     "Condensed Matter Physics",
-    "Nanomaterials",
-    "Superconductivity",
-    "Raman Spectroscopy",
+    "Materials Science",
+    "Synthesis of Inorganic Materials",
+    "Materials under Extreme Conditions",
     "Phase Transitions",
+    "Raman Spectroscopy",
+    "X-ray Diffraction",
   ],
   sameAs: [],
 };
@@ -57,7 +59,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'LaFiM — Universidade Federal do Maranhão',
-    description: 'Pesquisa em física da matéria condensada, nanomateriais e supercondutividade na UFMA.',
+    description: 'A Federal University of Maranhão laboratory dedicated to experimental research in Materials Physics: synthesis of inorganic materials and the study of their properties under extreme conditions of pressure and temperature.',
     url: '/en', // mesmo alvo do alternates.canonical, resolvido via metadataBase
     siteName: 'LaFiM',
     locale: 'en_US',
@@ -74,7 +76,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'LaFiM — Universidade Federal do Maranhão',
-    description: 'Pesquisa em física da matéria condensada, nanomateriais e supercondutividade na UFMA.',
+    description: 'A Federal University of Maranhão laboratory dedicated to experimental research in Materials Physics: synthesis of inorganic materials and the study of their properties under extreme conditions of pressure and temperature.',
     images: ['/images/hero-poster.jpg'],
   },
 };

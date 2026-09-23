@@ -39,20 +39,29 @@ export default async function AboutPage({ locale }: { locale: Locale }) {
                 {dict.about.mission}
               </h2>
               <span className="title-accent" />
-              <p
+              <div
                 style={{
-                  fontSize: "1.05rem",
-                  lineHeight: 1.8,
-                  color: "var(--color-text-muted)",
-                  fontWeight: 300,
                   maxWidth: "720px",
                   borderLeft: "3px solid var(--color-primary)",
                   paddingLeft: "1.5rem",
-                  fontStyle: "italic",
                 }}
               >
-                {about.mission as string}
-              </p>
+                {(about.mission as string).split("\n\n").map((paragraph) => (
+                  <p
+                    key={paragraph}
+                    style={{
+                      fontSize: "1.05rem",
+                      lineHeight: 1.8,
+                      color: "var(--color-text-muted)",
+                      fontWeight: 300,
+                      fontStyle: "italic",
+                      marginBottom: "1.1rem",
+                    }}
+                  >
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
             </section>
           )}
 

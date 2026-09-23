@@ -116,10 +116,14 @@ export default function SideNav({ locale }: { locale: Locale }) {
   }, []);
 
   // 2. Hover com timeline coordenada
+  // killTweensOf antes de cada timeline: sem isso, numa passada rápida do
+  // mouse a entrada (0,25s) termina depois da saída (0,2s) e deixa o
+  // underline preso em scaleX 1, colado à linha separadora do item seguinte.
   const handleEnter = (i: number) => {
     const textEl = textsRef.current[i];
     const underlineEl = underlinesRef.current[i];
     if (!textEl || !underlineEl) return;
+    gsap.killTweensOf([textEl, underlineEl]);
     const tl = gsap.timeline();
     tl.to(textEl, { x: -4, duration: dur(0.2), ease: "power2.out" })
       .to(underlineEl, { scaleX: 1, duration: dur(0.25), ease: "power2.out" }, 0);
@@ -129,6 +133,7 @@ export default function SideNav({ locale }: { locale: Locale }) {
     const textEl = textsRef.current[i];
     const underlineEl = underlinesRef.current[i];
     if (!textEl || !underlineEl) return;
+    gsap.killTweensOf([textEl, underlineEl]);
     const tl = gsap.timeline();
     tl.to(textEl, { x: 0, duration: dur(0.2), ease: "power2.in" })
       .to(underlineEl, { scaleX: 0, duration: dur(0.2), ease: "power2.in" }, 0);

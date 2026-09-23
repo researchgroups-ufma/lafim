@@ -1,15 +1,13 @@
 ﻿/**
- * PublicationsFilter — Barra de filtros e lista de publicações
+ * PublicationsFilter — Filtro de ano e lista de publicações
  *
  * Client Component — precisa de "use client" para o useState dos filtros.
  *
  * Recebe todas as publicações como prop (lidas no Server Component page.tsx)
- * e filtra/exibe conforme o botão ativo.
+ * e filtra/exibe conforme o ano selecionado.
  *
  * Comportamento:
- *   - Botão "Todas" mostra todas as publicações
- *   - Demais botões filtram por tag (campo tags no frontmatter)
- *   - Select de ano filtra por ano de publicação (combina com o filtro de tag)
+ *   - Select de ano filtra por ano de publicação ("Todos os anos" mostra todas)
  *   - Paginação: no máximo 10 publicações por página
  *   - Publicações com featured: true recebem badge dourado
  *
@@ -42,7 +40,6 @@ type Publication = {
 };
 
 type PubFilterStrings = {
-  filters: { all: string; mat: string; supercond: string; nano: string; comp: string };
   allYears: string;
   clearYear: string;
   filterYear: string;
@@ -61,16 +58,6 @@ type PublicationsFilterProps = {
 const PER_PAGE = 10;
 
 export default function PublicationsFilter({ publications, strings, typeLabels }: PublicationsFilterProps) {
-  // Filtros disponíveis — label exibido (via strings) e valor que deve estar no campo tags
-  const FILTERS = [
-    { label: strings.filters.all, value: "all" },
-    { label: strings.filters.mat, value: "mat" },
-    { label: strings.filters.supercond, value: "supercond" },
-    { label: strings.filters.nano, value: "nano" },
-    { label: strings.filters.comp, value: "comp" },
-  ];
-  // Filtro de tag ativo — "all" por padrão
-  const [activeFilter, setActiveFilter] = useState("all");
   // Filtro de ano — "all" por padrão
   const [filterYear, setFilterYear] = useState("all");
   const [page, setPage] = useState(1);
@@ -81,18 +68,14 @@ export default function PublicationsFilter({ publications, strings, typeLabels }
     [publications],
   );
 
-  // Filtra por tag e por ano, depois ordena por ano (mais recente primeiro).
+  // Filtra por ano, depois ordena por ano (mais recente primeiro).
   // O sort estável preserva a ordem original dentro de cada ano.
   const filtered = useMemo(
     () =>
       publications
-        .filter((pub) => {
-          if (activeFilter !== "all" && !(pub.tags || []).includes(activeFilter)) return false;
-          if (filterYear !== "all" && pub.year !== Number(filterYear)) return false;
-          return true;
-        })
+        .filter((pub) => filterYear === "all" || pub.year === Number(filterYear))
         .sort((a, b) => b.year - a.year),
-    [publications, activeFilter, filterYear],
+    [publications, filterYear],
   );
 
   // Paginação
@@ -115,11 +98,7 @@ export default function PublicationsFilter({ publications, strings, typeLabels }
     .map(Number)
     .sort((a, b) => b - a);
 
-  // Trocar qualquer filtro reinicia para a primeira página
-  function changeFilter(value: string) {
-    setActiveFilter(value);
-    setPage(1);
-  }
+  // Trocar o ano reinicia para a primeira página
   function changeYear(value: string) {
     setFilterYear(value);
     setPage(1);
@@ -128,38 +107,8 @@ export default function PublicationsFilter({ publications, strings, typeLabels }
   return (
     <div>
 
-      {/* ── Barra de filtros ──────────────────────────────────────────────── */}
+      {/* ── Filtro de ano ─────────────────────────────────────────────────── */}
       <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", alignItems: "center", marginBottom: "2rem" }}>
-        {FILTERS.map((filter) => (
-          <button
-            key={filter.value}
-            type="button"
-            onClick={() => changeFilter(filter.value)}
-            aria-pressed={activeFilter === filter.value}
-            style={{
-              fontSize: "0.75rem",
-              fontWeight: 400,
-              padding: "0.3rem 0.9rem",
-              border: "1px solid",
-              borderColor: activeFilter === filter.value
-                ? "var(--color-primary)"
-                : "var(--color-border-strong)",
-              backgroundColor: activeFilter === filter.value
-                ? "var(--color-primary)"    /* ativo — fundo âmbar            */
-                : "var(--color-bg-elevated)", /* inativo — fundo elevado      */
-              color: activeFilter === filter.value
-                ? "var(--color-bg-elevated)" /* texto claro sobre charcoal    */
-                : "var(--color-text-muted)",
-              cursor: "pointer",
-              fontFamily: "var(--font-body)",
-              transition: "border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease",
-            }}
-          >
-            {filter.label}
-          </button>
-        ))}
-
-        {/* Filtro de ano */}
         <select
           value={filterYear}
           onChange={(e) => changeYear(e.target.value)}

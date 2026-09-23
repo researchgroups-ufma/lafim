@@ -25,8 +25,8 @@ export const dictionaries = {
       research: {
         eyebrow: "Pesquisa",
         heading: "Da estrutura atômica à função do material.",
-        lead: "O LaFiM estuda a relação entre estrutura, composição e propriedades físicas dos materiais, combinando caracterização experimental e modelagem teórica. Partimos da escala atômica — onde simetria e defeitos governam o sólido — e chegamos às aplicações em energia, sensores e dispositivos funcionais.",
-        body: "O grupo mantém colaborações nacionais e internacionais, com infraestrutura própria de síntese e caracterização, formando pesquisadores em iniciação científica, mestrado e doutorado.",
+        lead: "O LaFiM investiga a relação entre composição, estrutura cristalina e propriedades físicas de materiais inorgânicos, da síntese de micro e nanoestruturas ao comportamento do sólido sob condições extremas de pressão e temperatura.",
+        body: "O grupo mantém colaborações nacionais e internacionais e infraestrutura própria de síntese e preparação de materiais, formando pesquisadores em iniciação científica, mestrado, doutorado e pós-doutorado.",
       },
       news: {
         eyebrow: "Notícias",
@@ -48,7 +48,7 @@ export const dictionaries = {
     },
     research: {
       title: "Linhas de Pesquisa",
-      intro: "Desenvolvemos pesquisa de fronteira em física da matéria condensada, nanomateriais e supercondutividade. Nosso trabalho combina abordagens teóricas, experimentais e computacionais.",
+      intro: "O LaFiM é um laboratório experimental de Física da Matéria Condensada e Ciência dos Materiais. Nossas linhas se organizam da síntese de materiais inorgânicos ao estudo de suas propriedades físicas e de seu comportamento sob condições extremas de pressão e temperatura.",
       empty: "Nenhuma linha de pesquisa cadastrada ainda.",
     },
     infrastructure: {
@@ -82,7 +82,8 @@ export const dictionaries = {
       info: "Informações",
       local: "Local",
       email: "Email",
-      lattes: "Lattes",
+      instagram: "Instagram",
+      coordinator: "Coordenador",
       opportunities: "Oportunidades",
       opportunitiesText: "Interessado em ingressar no grupo como aluno de IC, mestrando ou doutorando? Trabalhamos com bolsas CAPES, CNPq e FAPEMA. Entre em contato pelo e-mail institucional.",
       sendEmail: "Enviar e-mail →",
@@ -108,13 +109,6 @@ export const dictionaries = {
       introArxiv: "arXiv",
       theses: "Teses e dissertações orientadas",
       pdf: "PDF ↗",
-      filters: {
-        all: "Todas",
-        mat: "Mat. Condensada",
-        supercond: "Supercondutividade",
-        nano: "Nanomateriais",
-        comp: "Computacional",
-      },
       allYears: "Todos os anos",
       clearYear: "Limpar filtro de ano",
       filterYear: "Filtrar por ano",
@@ -134,6 +128,7 @@ export const dictionaries = {
       links: {
         email: "Enviar e-mail",
         linkedin: "Ver perfil no LinkedIn",
+        instagram: "Ver perfil no Instagram",
         lattes: "Ver currículo Lattes",
         orcid: "Ver perfil no ORCID",
         scholar: "Ver perfil no Google Scholar",
@@ -192,8 +187,8 @@ export const dictionaries = {
       research: {
         eyebrow: "Research",
         heading: "From atomic structure to material function.",
-        lead: "LaFiM studies the relationship between structure, composition and physical properties of materials, combining experimental characterization and theoretical modeling. We start at the atomic scale — where symmetry and defects govern the solid — and reach applications in energy, sensors and functional devices.",
-        body: "The group maintains national and international collaborations, with its own synthesis and characterization infrastructure, training researchers at the undergraduate, master's and doctoral levels.",
+        lead: "LaFiM investigates the relationship between composition, crystal structure and the physical properties of inorganic materials, from the synthesis of micro- and nanostructures to the behaviour of the solid under extreme conditions of pressure and temperature.",
+        body: "The group maintains national and international collaborations and its own infrastructure for materials synthesis and preparation, training researchers at the undergraduate research, master's, doctoral and postdoctoral levels.",
       },
       news: {
         eyebrow: "News",
@@ -215,7 +210,7 @@ export const dictionaries = {
     },
     research: {
       title: "Research Lines",
-      intro: "We develop frontier research in condensed matter physics, nanomaterials and superconductivity. Our work combines theoretical, experimental and computational approaches.",
+      intro: "LaFiM is an experimental laboratory in Condensed Matter Physics and Materials Science. Our research lines range from the synthesis of inorganic materials to the study of their physical properties and their behaviour under extreme conditions of pressure and temperature.",
       empty: "No research lines registered yet.",
     },
     infrastructure: {
@@ -249,7 +244,8 @@ export const dictionaries = {
       info: "Information",
       local: "Location",
       email: "Email",
-      lattes: "Lattes",
+      instagram: "Instagram",
+      coordinator: "Coordinator",
       opportunities: "Opportunities",
       opportunitiesText: "Interested in joining the group as an undergraduate research, master's or doctoral student? We work with CAPES, CNPq and FAPEMA scholarships. Get in touch via our institutional email.",
       sendEmail: "Send email →",
@@ -275,13 +271,6 @@ export const dictionaries = {
       introArxiv: "arXiv",
       theses: "Supervised theses and dissertations",
       pdf: "PDF ↗",
-      filters: {
-        all: "All",
-        mat: "Condensed Matter",
-        supercond: "Superconductivity",
-        nano: "Nanomaterials",
-        comp: "Computational",
-      },
       allYears: "All years",
       clearYear: "Clear year filter",
       filterYear: "Filter by year",
@@ -301,6 +290,7 @@ export const dictionaries = {
       links: {
         email: "Send email",
         linkedin: "View LinkedIn profile",
+        instagram: "View Instagram profile",
         lattes: "View Lattes CV",
         orcid: "View ORCID profile",
         scholar: "View Google Scholar profile",

@@ -15,17 +15,23 @@
  *   - footerLinks           — links exibidos na navegação do rodapé
  *
  * Para alterar qualquer dado exibido aqui:
- *   Edite apenas lib/config.ts — não mexa neste arquivo.
+ *   Edite lib/config.ts — exceto o Instagram do laboratório, que vem de
+ *   content/settings/social.md (coleção "Redes Sociais" do painel).
  *
  * Usado em: app/(site)/layout.tsx (layout das páginas públicas)
  */
 
 import Link from "next/link";
 import { siteConfig, footerLinks } from "@/lib/config";
+import { getSingleFile } from "@/lib/mdx";
+import { InstagramIcon, instagramHandle } from "@/components/ui/MemberLinks";
 import { getDictionary, localizeHref, type Locale } from "@/lib/i18n";
 
-export default function Footer({ locale }: { locale: Locale }) {
+export default async function Footer({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
+  // Perfis institucionais — colecao "Redes Sociais" do painel.
+  const social = await getSingleFile("settings/social.md");
+  const labInstagram = social.instagram as string | undefined;
   // Ano atual gerado em tempo de build — atualiza automaticamente a cada deploy
   const currentYear = new Date().getFullYear();
 
@@ -67,6 +73,26 @@ export default function Footer({ locale }: { locale: Locale }) {
           >
             {siteConfig.department} · {siteConfig.university}
           </p>
+
+          {/* Redes do laboratório — some quando o campo está vazio.
+              O handle visível é o nome acessível do link, então não há
+              aria-label: ele sobrescreveria o texto que está na tela. */}
+          {labInstagram && (
+            <a
+              className="member-link"
+              href={labInstagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                gap: "0.4rem",
+                marginTop: "0.75rem",
+                fontSize: "0.85rem",
+              }}
+            >
+              <InstagramIcon className="w-5 h-5" />
+              {instagramHandle(labInstagram)}
+            </a>
+          )}
         </div>
 
         {/* ── Bloco 2: Links de navegação ───────────────────────────────────

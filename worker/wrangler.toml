@@ -1,0 +1,19 @@
+# wrangler.toml — configuração de deploy do Worker decap-proxy
+#
+# Os valores abaixo espelham EXATAMENTE o que já está em produção (lidos da
+# API em 2026-09-11), para que um deploy pelo CLI não mude comportamento:
+#   compatibility_date  2024-01-01
+#   workers_dev         habilitado (decap-proxy.and-near.workers.dev)
+#
+# Deploy:
+#   cd worker && npx wrangler deploy
+#
+# Os secrets NÃO ficam aqui e não são tocados pelo deploy — o wrangler só
+# remove secret com `wrangler secret delete`. Os quatro em uso são:
+#   GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET  (já configurados)
+#   TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID    (necessários para a rota /report)
+
+name = "decap-proxy"
+main = "index.js"
+compatibility_date = "2024-01-01"
+workers_dev = true
