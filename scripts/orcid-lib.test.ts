@@ -8,10 +8,12 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import fs from "fs";
+import path from "path";
 import matter from "gray-matter";
 import {
   abntFromFullName, addFrontmatterField, cleanTitle, crossrefDate, formatAuthor, formatAuthors, mapType, nameKey,
-  normalizeDoi, slugify, toFrontmatter,
+  normalizeDoi, slugify, spellingMap, toFrontmatter,
 } from "./orcid-lib";
 
 test("normalizeDoi aceita as formas usadas no conteúdo e nas APIs", () => {
@@ -138,4 +140,38 @@ test("addFrontmatterField insere a linha depois de year sem tocar no resto", () 
   // year no corpo não conta
   const body = "---\ntitle: Algo\n---\nyear: 1999\n";
   assert.equal(addFrontmatterField(body, "date", "2025-06-01"), '---\ntitle: Algo\ndate: "2025-06-01"\n---\nyear: 1999\n');
+});
+
+test("inicial \"E.\" não é confundida com a partícula \"e\"", () => {
+  // 10.1016/j.ceramint.2025.08.443: a Crossref manda given "E."
+  assert.equal(formatAuthor({ given: "E.", family: "Moreira" }), "MOREIRA, E.");
+  assert.equal(formatAuthor({ given: "Maria e Silva", family: "Souza" }), "SOUZA, M.S.");
+});
+
+test("grafias fixas resolvem as divisões de nome que cada editora faz", () => {
+  const names = spellingMap({
+    "SANTOS, C.C.": ["Clenilton Costa dos Santos", "Clenilton C. dos Santos"],
+    "LUZ-LIMA, C.": ["Cleânio da Luz Lima", "Cleânio L. Lima"],
+    "LIMA, C.D.A.": ["Caíque Diego de Abreu Lima"],
+  });
+  // casos reais da Crossref nas publicações do site
+  const crossref = [
+    { given: "Clenilton", family: "Costa dos Santos" },
+    { given: "Cleânio L.", family: "Lima" },
+    { given: "Caique", family: "Diego de Abreu Lima" },
+    { given: "Caíque Diego", family: "de Abreu Lima" },
+    { given: "Paulo de Tarso Cavalcante", family: "Freire" },
+  ];
+  assert.equal(formatAuthors(crossref, names), "SANTOS, C.C. ; LUZ-LIMA, C. ; LIMA, C.D.A. ; LIMA, C.D.A. ; FREIRE, P.T.C.");
+  // o mesmo nome em duas grafias é erro de cadastro
+  assert.throws(() => spellingMap({ "SANTOS, C.C.": ["Clenilton Santos"], "SANTOS, C.": ["CLENILTON SANTOS"] }), /clenilton/i);
+});
+
+test("data/grafias-autores.json é válido", () => {
+  const list = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "data", "grafias-autores.json"), "utf8"));
+  for (const [abnt, names] of Object.entries(list)) {
+    assert.match(abnt, /^[A-ZÀ-Ý' -]+, ([A-ZÀ-Ý]\.)+$/, `grafia fora do padrão SOBRENOME, I.I.: ${abnt}`);
+    assert.ok(Array.isArray(names) && names.length > 0, `sem nomes: ${abnt}`);
+  }
+  spellingMap(list); // sem nome repetido em duas grafias
 });

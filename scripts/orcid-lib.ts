@@ -41,9 +41,13 @@ const PARTICLES = new Set(["de", "da", "do", "das", "dos", "e", "del", "della", 
 export function formatAuthor(a: CrossrefAuthor): string {
   if (!a.family) return (a.name ?? "").trim(); // autoria institucional/consórcio
   const family = a.family.trim().toLocaleUpperCase("pt-BR");
+  // A partícula é testada na palavra inteira, antes de separar as iniciais:
+  // assim "E." (inicial) não some como se fosse a conjunção "e".
   const initials = (a.given ?? "")
-    .split(/[\s.\-]+/)
-    .filter((p) => p && !PARTICLES.has(p.toLowerCase()))
+    .split(/\s+/)
+    .filter((w) => w && !PARTICLES.has(w.toLowerCase()))
+    .flatMap((w) => w.split(/[.\-]+/))
+    .filter(Boolean)
     .map((p) => p[0].toLocaleUpperCase("pt-BR") + ".")
     .join("");
   return initials ? `${family}, ${initials}` : family;
@@ -67,16 +71,38 @@ export function abntFromFullName(full: string): string {
 /**
  * Lista de autores no padrão do site: separados por " ; ".
  *
- * `members` mapeia nameKey(nome completo) → forma ABNT dos membros do
- * laboratório. As editoras dividem nome/sobrenome de jeitos diferentes (a ACS
- * manda family "Barbosa Moura"), então para quem é do LaFiM vale o nome
- * cadastrado no painel, que dá sempre a mesma grafia.
+ * `names` mapeia nameKey(nome completo) → grafia ABNT fixa: a dos membros do
+ * laboratório (nome cadastrado no painel) e a dos colaboradores (lista em
+ * data/grafias-autores.json, ver spellingMap). As editoras dividem
+ * nome/sobrenome de jeitos diferentes (a ACS manda family "Barbosa Moura",
+ * outra manda "Costa dos Santos"), e sem a grafia fixa a mesma pessoa sairia
+ * escrita de formas diferentes em cada publicação.
  */
-export function formatAuthors(list: CrossrefAuthor[], members: Map<string, string> = new Map()): string {
+export function formatAuthors(list: CrossrefAuthor[], names: Map<string, string> = new Map()): string {
   return list
-    .map((a) => members.get(nameKey(`${a.given ?? ""} ${a.family ?? ""}`)) ?? formatAuthor(a))
+    .map((a) => names.get(nameKey(`${a.given ?? ""} ${a.family ?? ""}`)) ?? formatAuthor(a))
     .filter(Boolean)
     .join(" ; ");
+}
+
+/**
+ * Lista de grafias fixas (grafia ABNT → nomes completos como chegam da
+ * Crossref) → mapa nameKey(nome) → grafia, no formato que formatAuthors usa.
+ * Só a junção "nome + sobrenome" importa, não onde a editora divide os dois;
+ * variantes com iniciais ("Cleânio L. Lima") precisam constar na lista.
+ * Erro se o mesmo nome aparece em duas grafias.
+ */
+export function spellingMap(list: Record<string, string[]>): Map<string, string> {
+  const map = new Map<string, string>();
+  for (const [abnt, names] of Object.entries(list)) {
+    for (const name of names) {
+      const key = nameKey(name);
+      const prev = map.get(key);
+      if (prev && prev !== abnt) throw new Error(`"${name}" aparece em "${prev}" e em "${abnt}"`);
+      map.set(key, abnt);
+    }
+  }
+  return map;
 }
 
 // ── Front matter ─────────────────────────────────────────────────────────────
