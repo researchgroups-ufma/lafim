@@ -10,7 +10,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import matter from "gray-matter";
 import {
-  abntFromFullName, cleanTitle, formatAuthor, formatAuthors, mapType, nameKey, normalizeDoi, slugify, toFrontmatter,
+  abntFromFullName, addFrontmatterField, cleanTitle, crossrefDate, formatAuthor, formatAuthors, mapType, nameKey,
+  normalizeDoi, slugify, toFrontmatter,
 } from "./orcid-lib";
 
 test("normalizeDoi aceita as formas usadas no conteúdo e nas APIs", () => {
@@ -108,4 +109,33 @@ test("toFrontmatter segue o estilo do Decap e é lido de volta sem perda", () =>
   // valores que o YAML leria como outro tipo ganham aspas
   assert.deepEqual(matter(toFrontmatter({ a: "2026", b: "true", c: "- x", d: 'diz "oi"' })).data,
     { a: "2026", b: "true", c: "- x", d: 'diz "oi"' });
+});
+
+test("crossrefDate usa o issued e só aceita data com mês", () => {
+  assert.equal(crossrefDate({ issued: { "date-parts": [[2026, 3, 15]] } }), "2026-03-15");
+  assert.equal(crossrefDate({ issued: { "date-parts": [[2025, 11]] } }), "2025-11-01");
+  // só o ano não diz nada além do campo year
+  assert.equal(crossrefDate({ issued: { "date-parts": [[2026]] } }), null);
+  assert.equal(crossrefDate({ issued: { "date-parts": [[null]] } }), null);
+  assert.equal(crossrefDate({}), null);
+});
+
+test("data no front matter fica string, não vira Date do YAML", () => {
+  const out = toFrontmatter({ year: 2026, date: "2026-03-15" });
+  assert.ok(out.includes('date: "2026-03-15"\n'));
+  assert.deepEqual(matter(out).data, { year: 2026, date: "2026-03-15" });
+});
+
+test("addFrontmatterField insere a linha depois de year sem tocar no resto", () => {
+  // authors em várias linhas, como o painel grava listas longas
+  const raw = "---\ntitle: Algo\nauthors: A ; B ; C\n  ; D\nyear: 2025\njournal: X\n---\n";
+  const out = addFrontmatterField(raw, "date", "2025-06-01");
+  assert.equal(out, '---\ntitle: Algo\nauthors: A ; B ; C\n  ; D\nyear: 2025\ndate: "2025-06-01"\njournal: X\n---\n');
+  assert.equal(matter(out).data.date, "2025-06-01");
+  // CRLF e sem year: entra antes do fechamento, com o mesmo fim de linha
+  const crlf = "---\r\ntitle: Algo\r\n---\r\n";
+  assert.equal(addFrontmatterField(crlf, "date", "2025-06-01"), '---\r\ntitle: Algo\r\ndate: "2025-06-01"\r\n---\r\n');
+  // year no corpo não conta
+  const body = "---\ntitle: Algo\n---\nyear: 1999\n";
+  assert.equal(addFrontmatterField(body, "date", "2025-06-01"), '---\ntitle: Algo\ndate: "2025-06-01"\n---\nyear: 1999\n');
 });

@@ -1,9 +1,9 @@
 ---
 title: "High-temperature and laser-induced phase transitions in α-Ag3VO4
   nanoparticles: A Raman and DFT study"
-authors: A.W. Miranda; F.S. Morais; E. Moreira; J.V.B. Moura; F.F. Sousa; D.L.
-  Azevedo; M.V. Santana; A.A. Hidalgo; C. Luz-Lima; G.S. Pinheiro
+authors: MIRANDA, A.W. ; MORAIS, F.S. ; MOREIRA, E. ; MOURA, J.V.B. ; SOUSA, F.F. ; AZEVEDO, D.L. ; SANTANA, M.V. ; HIDALGO, A.A. ; LUZ-LIMA, C. ; PINHEIRO, G.S.
 year: 2026
+date: "2026-03-01"
 journal: "Spectrochimica Acta Part A: Molecular and Biomolecular Spectroscopy"
 doi: https://doi.org/10.1016/j.saa.2025.127376
 type: Artigo

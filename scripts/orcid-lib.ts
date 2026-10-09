@@ -7,7 +7,8 @@
  * Fontes:
  *   ORCID   (pub.orcid.org/v3.0, API pública sem credenciais) — quais
  *           trabalhos existem, com DOI, título, ano, periódico e tipo.
- *   Crossref (api.crossref.org) — autores, que o resumo do ORCID não traz.
+ *   Crossref (api.crossref.org) — autores e data de publicação, que o resumo
+ *           do ORCID não traz.
  */
 
 // ── DOI ───────────────────────────────────────────────────────────────────────
@@ -81,13 +82,22 @@ export function formatAuthors(list: CrossrefAuthor[], members: Map<string, strin
 // ── Front matter ─────────────────────────────────────────────────────────────
 
 // Precisa de aspas quando o YAML leria outra coisa: ": " ou " #" no meio,
-// indicador no início, espaço nas pontas, ou cara de número/booleano/null.
+// indicador no início, espaço nas pontas, ou cara de número/booleano/null/data
+// (sem aspas, "2026-03-15" chega ao site como Date, e não como string).
 function needsQuotes(s: string): boolean {
   return (
     s === "" ||
     /: | #|^[\s\-?:,\[\]{}#&*!|>'"%@`]|\s$/.test(s) ||
-    /^(true|false|yes|no|on|off|null|~|[-+]?(\d[\d_]*)?\.?\d+([eE][-+]?\d+)?)$/i.test(s)
+    /^(true|false|yes|no|on|off|null|~|[-+]?(\d[\d_]*)?\.?\d+([eE][-+]?\d+)?)$/i.test(s) ||
+    /^\d{4}-\d{1,2}-\d{1,2}/.test(s)
   );
+}
+
+type FrontmatterValue = string | number | boolean | null;
+
+function yamlLine(k: string, v: FrontmatterValue): string {
+  if (typeof v !== "string") return `${k}: ${v}`;
+  return `${k}: ${needsQuotes(v) ? JSON.stringify(v) : v}`;
 }
 
 /**
@@ -95,12 +105,24 @@ function needsQuotes(s: string): boolean {
  * possível e aspas duplas só quando necessárias (ex.: títulos com ": ").
  * JSON.stringify gera uma string entre aspas duplas que também é YAML válido.
  */
-export function toFrontmatter(data: Record<string, string | number | boolean | null>): string {
-  const lines = Object.entries(data).map(([k, v]) => {
-    if (typeof v !== "string") return `${k}: ${v}`;
-    return `${k}: ${needsQuotes(v) ? JSON.stringify(v) : v}`;
-  });
+export function toFrontmatter(data: Record<string, FrontmatterValue>): string {
+  const lines = Object.entries(data).map(([k, v]) => yamlLine(k, v));
   return `---\n${lines.join("\n")}\n---\n`;
+}
+
+/**
+ * Acrescenta um campo ao front matter de um arquivo existente sem reescrever
+ * o resto: o painel grava listas longas de autores em várias linhas, e um
+ * parse + serialize mudaria a formatação. Entra logo depois de `year:`, ou
+ * antes do `---` de fechamento se não houver year.
+ */
+export function addFrontmatterField(raw: string, key: string, value: FrontmatterValue): string {
+  const eol = raw.includes("\r\n") ? "\r\n" : "\n";
+  const close = raw.indexOf(`${eol}---`, 3);
+  if (!raw.startsWith("---") || close < 0) throw new Error("arquivo sem front matter");
+  const yearAt = raw.slice(0, close).search(/^year:/m);
+  const insertAt = yearAt >= 0 ? raw.indexOf(eol, yearAt) : close;
+  return raw.slice(0, insertAt) + eol + yamlLine(key, value) + raw.slice(insertAt);
 }
 
 // ── Título ───────────────────────────────────────────────────────────────────
@@ -199,7 +221,22 @@ export type CrossrefWork = {
   authors: CrossrefAuthor[];
   journal: string | null;
   year: number | null;
+  date: string | null;
 };
+
+type CrossrefDateParts = { "date-parts"?: (number | null)[][] };
+
+/**
+ * Data de publicação "AAAA-MM-DD" a partir do `issued` da Crossref, que é a
+ * primeira entre a versão online e a impressa. Sem dia, usa o dia 1; sem mês,
+ * devolve null, porque só o ano não acrescenta nada ao campo year.
+ */
+export function crossrefDate(m: { issued?: CrossrefDateParts }): string | null {
+  const [y, mo, d] = m.issued?.["date-parts"]?.[0] ?? [];
+  if (!y || !mo) return null;
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${y}-${pad(mo)}-${pad(d || 1)}`;
+}
 
 /**
  * Metadados de um DOI na Crossref, ou null se não houver registro ou a
@@ -216,13 +253,14 @@ export async function fetchCrossref(doi: string, mailto: string): Promise<Crossr
       title?: string[];
       author?: CrossrefAuthor[];
       "container-title"?: string[];
-      issued?: { "date-parts"?: number[][] };
+      issued?: CrossrefDateParts;
     };
     return {
       title: m.title?.[0] ? cleanTitle(m.title[0]) : null,
       authors: m.author ?? [],
       journal: m["container-title"]?.[0] ? cleanTitle(m["container-title"][0]) : null,
       year: m.issued?.["date-parts"]?.[0]?.[0] ?? null,
+      date: crossrefDate(m),
     };
   } catch {
     return null;

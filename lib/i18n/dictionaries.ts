@@ -34,6 +34,13 @@ export const dictionaries = {
         heading: "Acompanhe as novidades do laboratório.",
         ctaAll: "Ver todas as notícias →",
       },
+      publications: {
+        eyebrow: "Publicações",
+        heading: "Publicações recentes",
+        latest: "Mais recente",
+        readArticle: "Ler artigo",
+        ctaAll: "Ver todas as publicações →",
+      },
       cards: {
         membersTitle: "Membros",
         membersDesc: "Conheça os pesquisadores, estudantes de pós-graduação e alunos de iniciação científica que formam o grupo.",
@@ -201,6 +208,13 @@ export const dictionaries = {
         eyebrow: "News",
         heading: "Follow the lab's latest updates.",
         ctaAll: "See all news →",
+      },
+      publications: {
+        eyebrow: "Publications",
+        heading: "Recent publications",
+        latest: "Latest",
+        readArticle: "Read article",
+        ctaAll: "See all publications →",
       },
       cards: {
         membersTitle: "Members",

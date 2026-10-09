@@ -8,8 +8,9 @@
  *   1. Hero         — fullscreen com carrossel de imagens e logo SVG
  *   2. Pesquisa     — linhas de pesquisa + destaques (se houver)
  *   3. Page Cards   — atalhos para Membros e Publicações
- *   4. Notícias     — 3 notícias mais recentes (link para /news)
- *   5. Coordenador  — bio e foto do coordenador do laboratório
+ *   4. Publicações  — 3 publicações mais recentes, a primeira em destaque
+ *   5. Notícias     — 3 notícias mais recentes (link para /news)
+ *   6. Coordenador  — bio e foto do coordenador do laboratório
  */
 
 import Hero from "@/components/layout/Hero";
@@ -18,6 +19,7 @@ import HighlightsSection from "@/components/sections/HighlightsSection";
 import PageCards from "@/components/sections/PageCards";
 import NewsSection from "@/components/sections/NewsSection";
 import CoordinatorSection from "@/components/sections/CoordinatorSection";
+import RecentPublicationsSection, { type RecentPublication } from "@/components/sections/RecentPublicationsSection";
 import { getSingleFile, getCollection, formatDate } from "@/lib/mdx";
 import { getDictionary, type Locale } from "@/lib/i18n";
 
@@ -78,6 +80,18 @@ export default async function HomePage({ locale }: { locale: Locale }) {
       dateFormatted: formatDate(n.date as string, locale),
     }));
 
+  // ── Publicações — 3 mais recentes ─────────────────────────────────────────
+  // Ordena por `date` ("AAAA-MM-DD", preenchida pelo sync da Crossref). Sem
+  // date, a publicação conta como início do seu `year`: fica atrás das datadas
+  // do mesmo ano até o sync semanal preencher.
+  const sortKey = (p: Record<string, unknown>) =>
+    typeof p.date === "string" ? p.date : `${Number(p.year) || 0}-00-00`;
+  const allPublications = await getCollection("publications", locale);
+  const recentPublications = allPublications
+    .filter((p) => p.slug !== "placeholder" && p.type !== "Tese" && p.type !== "Dissertação")
+    .sort((a, b) => sortKey(b).localeCompare(sortKey(a)))
+    .slice(0, 3) as RecentPublication[];
+
   // ── Coordenador ────────────────────────────────────────────────────────────
   const allMembers = await getCollection("members", locale);
   const coordinator = allMembers.find((m) => m.role === "Coordenador");
@@ -105,10 +119,13 @@ export default async function HomePage({ locale }: { locale: Locale }) {
       {/* ── 4. Cards de navegação ──────────────────────────────────────────── */}
       <PageCards locale={locale} />
 
-      {/* ── 5. Notícias — 3 mais recentes ──────────────────────────────────── */}
+      {/* ── 5. Publicações — 3 mais recentes ───────────────────────────────── */}
+      <RecentPublicationsSection publications={recentPublications} locale={locale} />
+
+      {/* ── 6. Notícias — 3 mais recentes ──────────────────────────────────── */}
       <NewsSection news={recentNews} locale={locale} />
 
-      {/* ── 6. Sobre o Coordenador ─────────────────────────────────────────── */}
+      {/* ── 7. Sobre o Coordenador ─────────────────────────────────────────── */}
       {coordinator && (
         <CoordinatorSection
           name={coordinator.title as string}

@@ -125,6 +125,9 @@ collections:
       - { label: "Título",             name: "title",         widget: "string",  i18n: duplicate }
       - { label: "Autores",            name: "authors",       widget: "string",  i18n: duplicate }
       - { label: "Ano",                name: "year",          widget: "number",  i18n: duplicate }
+      # Preenchida toda semana pela Crossref (scripts/sync-orcid.ts) quando há DOI;
+      # é por ela que a home escolhe as publicações mais recentes.
+      - { label: "Data de publicação", name: "date",          widget: "datetime", required: false, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false, i18n: duplicate }
       - { label: "Periódico",          name: "journal",       widget: "string",  required: false, i18n: duplicate }
       - { label: "DOI",                name: "doi",           widget: "string",  required: false, i18n: duplicate }
       - { label: "arXiv ID",           name: "arxiv",         widget: "string",  required: false, i18n: duplicate }

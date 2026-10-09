@@ -4,6 +4,7 @@ title: "Irreversible phase transitions in α-AgVO3 Microrods: In situ
 authors: MIRANDA, A.W. ; MOREIRA, E. ; SANTOS, C.C. ; LUZ-LIMA, C. ; AZEVEDO,
   D.L. ; DE MENEZES, A.S. ; MOURA, J.V.B.
 year: 2025
+date: "2025-11-01"
 journal: Ceramics International
 doi: http://dx.doi.org/10.1016/j.ceramint.2025.08.443
 ---
