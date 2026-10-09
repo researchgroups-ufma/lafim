@@ -1,12 +1,9 @@
 ---
 title: Preparation and Application of Sodium–Lanthanum Molybdate for the
   Photocatalytic Degradation of Coomassie Brilliant Blue G‑250 Dye
-authors: LIMA, CAIQUE D. A. ; BORGES, JOYCE A. ; SANTOS, ITALO A. L. ; HIDALGO,
-  ANGEL A. ; OSAJIMA, JOSY A. ; ALMEIDA, ADRIEL DA SILVA ; OLIVEIRA, THIAGO M.
-  B. F. ; ARAUJO, JEFFERSON F. D. F. ; DE BARROS, SUELLEN D. T. ; MAIA DA COSTA,
-  MARCELO E. H. ; BARBOSA, DIEGO A. B. ; MOURA, JOÃO V. B. ; PINHEIRO, GARDÊNIA
-  S. ; LIMA, CLEÂNIO L.
+authors: LIMA, C.D.A. ; BORGES, J.A. ; SANTOS, I.A.L. ; HIDALGO, A.A. ; OSAJIMA, J.A. ; ALMEIDA, A.S. ; OLIVEIRA, T.M.B.F. ; ARAUJO, J.F.D.F. ; DE BARROS, S.D.T. ; MAIA DA COSTA, M.E.H. ; BARBOSA, D.A.B. ; MOURA, J.V.B. ; PINHEIRO, G.S. ; LUZ-LIMA, C.
 year: 2025
+date: "2025-04-17"
 journal: ACS Omega
 doi: http://dx.doi.org/10.1021/acsomega.4c08777
 type: Artigo
