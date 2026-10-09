@@ -1,0 +1,66 @@
+name: orcid
+
+# Cadastra no site as publicações novas do ORCID do coordenador, uma vez por
+# semana. O trabalho todo está em scripts/sync-orcid.ts; aqui só agenda,
+# valida e publica.
+#
+# Commits feitos com o GITHUB_TOKEN não disparam outros workflows (o GitHub
+# evita recursão), então o build.yml não roda depois deste push. Por isso a
+# checagem de tipos e o build acontecem aqui, ANTES do push: se falharem,
+# nada é publicado e o GitHub manda e-mail de falha.
+#
+# A Cloudflare publica sozinha a partir do push na main, como em qualquer
+# edição pelo painel.
+
+on:
+  schedule:
+    - cron: "0 11 * * 1" # segunda-feira, 08:00 em São Luís (UTC-3)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: orcid
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instala dependencias
+        run: npm ci
+
+      - name: Testes do script
+        run: npm test
+
+      - name: Busca publicacoes novas
+        id: sync
+        run: npm run sync-orcid
+        env:
+          CROSSREF_MAILTO: jvb.moura@ufma.br
+          ORCID_COMMIT_MSG: ${{ runner.temp }}/orcid-commit.txt
+
+      - name: Verifica tipos e build antes de publicar
+        if: steps.sync.outputs.novos != '0'
+        run: |
+          npx tsc --noEmit
+          npm run build
+
+      # Assina como o André (noreply do GitHub) para o histórico ter só o
+      # perfil dele, como nos commits feitos pelo painel.
+      - name: Commit e push
+        if: steps.sync.outputs.novos != '0'
+        run: |
+          git config user.name "André Ferreira"
+          git config user.email "160500693+abbadrava@users.noreply.github.com"
+          git add content/publications data/orcid-vistos.json
+          git commit -F "$RUNNER_TEMP/orcid-commit.txt"
+          git push

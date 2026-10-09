@@ -7,7 +7,9 @@
     "generate-sitemap": "tsx scripts/generate-sitemap.ts",
     "build": "npm run generate-sitemap && next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "sync-orcid": "tsx scripts/sync-orcid.ts",
+    "test": "tsx --test scripts/*.test.ts"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
