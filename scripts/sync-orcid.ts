@@ -23,6 +23,11 @@
  * O ORCID iD é lido do membro com role "Coordenador" — trocar no painel
  * muda a fonte sem mexer aqui.
  *
+ * Grafia dos autores: membros saem com o nome cadastrado no painel;
+ * colaboradores, com a grafia de data/grafias-autores.json. Quando um
+ * commit do sync trouxer alguém escrito diferente do resto do site,
+ * acrescente o nome como veio da Crossref à grafia certa nesse arquivo.
+ *
  * Variáveis de ambiente:
  *   CROSSREF_MAILTO — contato enviado à Crossref (obrigatória)
  *   ORCID_COMMIT_MSG — se definida, caminho onde gravar a mensagem de commit
@@ -34,13 +39,14 @@ import path from "path";
 import matter from "gray-matter";
 import {
   abntFromFullName, addFrontmatterField, fetchCrossref, fetchOrcidWorks, formatAuthors, mapType, nameKey, normalizeDoi,
-  slugify, toFrontmatter,
+  slugify, spellingMap, toFrontmatter,
 } from "./orcid-lib";
 
 const ROOT = process.cwd();
 const PUBS = path.join(ROOT, "content", "publications");
 const MEMBERS = path.join(ROOT, "content", "members", "pt");
 const SEEN_FILE = path.join(ROOT, "data", "orcid-vistos.json");
+const SPELLINGS_FILE = path.join(ROOT, "data", "grafias-autores.json");
 
 function readFrontmatter(file: string): Record<string, unknown> {
   return matter(fs.readFileSync(file, "utf8")).data;
@@ -56,10 +62,11 @@ function coordinatorOrcid(): string {
   throw new Error('Nenhum membro com role "Coordenador" tem ORCID preenchido');
 }
 
-// nameKey(nome completo) → ABNT, para os membros saírem com a mesma grafia
-// em todas as publicações (ver formatAuthors em orcid-lib.ts).
-function memberNames(): Map<string, string> {
-  const names = new Map<string, string>();
+// nameKey(nome completo) → ABNT, para membros e colaboradores saírem com a
+// mesma grafia em todas as publicações (ver formatAuthors em orcid-lib.ts).
+// Membro cadastrado no painel prevalece sobre a lista de colaboradores.
+function authorNames(): Map<string, string> {
+  const names = spellingMap(JSON.parse(fs.readFileSync(SPELLINGS_FILE, "utf8")));
   for (const f of fs.readdirSync(MEMBERS)) {
     const title = String(readFrontmatter(path.join(MEMBERS, f)).title ?? "").trim();
     if (title) names.set(nameKey(title), abntFromFullName(title));
@@ -138,7 +145,7 @@ async function main(): Promise<void> {
 
   const seen = new Set<string>(JSON.parse(fs.readFileSync(SEEN_FILE, "utf8")));
   const onSite = siteDois();
-  const members = memberNames();
+  const names = authorNames();
   const year = new Date().getFullYear(); // {{year}} do slug do Decap = ano de criação
   const added: string[] = [];
 
@@ -183,7 +190,7 @@ async function main(): Promise<void> {
     // "featured" não têm i18n no config.yml, por isso só existem em pt/.
     const shared = {
       title,
-      authors: formatAuthors(cr.authors, members),
+      authors: formatAuthors(cr.authors, names),
       year: w.year ?? cr.year,
       ...(cr.date ? { date: cr.date } : {}),
       journal: cr.journal ?? w.journal,
