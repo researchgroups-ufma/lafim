@@ -14,7 +14,7 @@ bio: Doutorado em andamento no Programa de Pós-Graduação em Física da UFMA, 
   em Propriedades Nanomecânicas de Matéria Mole através da Microscopia de Força
   Atômica. Tem interesse nas áreas de Física Estatística, Biofísica, Geofísica,
   Oceanografia e Física Aplicada.
-photo: https://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4838163H2
+photo: /uploads/charles-duarte-almeida.webp
 lattes: http://lattes.cnpq.br/8632167348147688
 year_start: "2022"
 ---

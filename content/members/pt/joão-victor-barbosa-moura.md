@@ -11,7 +11,7 @@ bio: "Possui Graduação (2013) e Mestrado (2015) em Física pela Universidade
   micro/nanoestruturas inorgânicas, estudo de transições de fase induzidas por
   condições extremas de pressão e/ou temperatura, espectroscopia Raman e no
   infravermelho, difração de raios X e microscopia eletrônica de varredura."
-photo: https://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4402600P6
+photo: /uploads/joao-victor-barbosa-moura.webp
 linkedin: https://www.linkedin.com/in/jo%C3%A3o-victor-barbosa-moura-2a9882b0/
 instagram: https://www.instagram.com/joaovictorprof
 lattes: http://lattes.cnpq.br/0208481199560436

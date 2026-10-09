@@ -1,6 +1,6 @@
 ---
 title: Zeyna dos Santos Viegas
 affiliation: UFMA
-photo: https://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K1169999T9
+photo: /uploads/zeyna-dos-santos-viegas.webp
 lattes: http://lattes.cnpq.br/4409907380333979
 ---

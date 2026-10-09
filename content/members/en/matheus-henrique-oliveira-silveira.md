@@ -1,6 +1,6 @@
 ---
 title: Matheus Henrique Oliveira Silveira
 affiliation: UFCA
-photo: https://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K1163636E6
+photo: /uploads/matheus-henrique-oliveira-silveira.webp
 lattes: http://lattes.cnpq.br/2689787599843755
 ---

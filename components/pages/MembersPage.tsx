@@ -93,6 +93,7 @@ export default async function MembersPage({ locale }: { locale: Locale }) {
                       alt={`Foto de ${coordinator.title as string}`}
                       width={160}
                       height={188}
+                      priority
                       style={{
                         aspectRatio: "0.85",
                         objectFit: "cover",

@@ -10,7 +10,7 @@ bio: "Holds a B.Sc. (2013) and an M.Sc. (2015) in Physics from the Federal
   inorganic micro/nanostructures, study of phase transitions induced by extreme
   pressure and/or temperature conditions, Raman and infrared spectroscopy, X-ray
   diffraction and scanning electron microscopy."
-photo: https://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4402600P6
+photo: /uploads/joao-victor-barbosa-moura.webp
 email: null
 linkedin: https://www.linkedin.com/in/jo%C3%A3o-victor-barbosa-moura-2a9882b0/
 instagram: https://www.instagram.com/joaovictorprof

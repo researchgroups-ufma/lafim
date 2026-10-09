@@ -7,7 +7,7 @@ bio: "Graduação em Física pela Universidade Estadual do Maranhão (2017-2022)
   principalmente nos seguintes temas: Materiais bidimensionai e propriedades
   físico-químicas. Atualmente é pós graduando (doutorando) pela Universidade
   Federal do Maranhão - UFMA. "
-photo: https://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K2796794T3
+photo: /uploads/madson-emanuel-vieira-mendonca.webp
 lattes: http://lattes.cnpq.br/4152462693186384
 orcid: https://orcid.org/0000-0003-0614-5131
 year_start: "2025"
