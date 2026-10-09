@@ -7,6 +7,7 @@ authors: LIMA, CAIQUE D. A. ; BORGES, JOYCE A. ; SANTOS, ITALO A. L. ; HIDALGO,
   MARCELO E. H. ; BARBOSA, DIEGO A. B. ; MOURA, JOÃO V. B. ; PINHEIRO, GARDÊNIA
   S. ; LIMA, CLEÂNIO L.
 year: 2025
+journal: ACS Omega
 doi: http://dx.doi.org/10.1021/acsomega.4c08777
 type: Artigo
 featured: false

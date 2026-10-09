@@ -7,6 +7,7 @@ authors: MIRANDA, ANTONIO WERBESON ; DIEGO DE ABREU LIMA, CAIQUE ; Moura, João
   JÚNIOR, JOSÉ ; FREIRE, PAULO DE TARSO CAVALCANTE ; DE SOUSA PINHEIRO, GARDÊNIA
   ; DA LUZ LIMA, CLEÂNIO
 year: 2025
+journal: Solid State Communications
 doi: http://dx.doi.org/10.1016/j.ssc.2025.116010
 type: Artigo
 featured: false

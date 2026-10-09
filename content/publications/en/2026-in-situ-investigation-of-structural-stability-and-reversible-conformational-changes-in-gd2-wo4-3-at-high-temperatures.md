@@ -6,5 +6,6 @@ authors: SILVA, JAILSON DOS SANTOS ; MIRANDA, ANTONIO WERBESON ; SANTOS, ITALO
   MENEZES, ALAN SILVA ; FREIRE, PAULO DE TARSO CAVALCANTE ; PINHEIRO, GARDÊNIA
   DE SOUSA ; Lima, Cleânio da Luz
 year: 2026
+journal: Journal of Molecular Structure
 doi: http://dx.doi.org/10.1016/j.molstruc.2026.145948
 ---

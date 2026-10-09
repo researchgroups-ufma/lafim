@@ -5,6 +5,7 @@ authors: Moura, João Victor Barbosa; GOMES-DA-SILVA, NATÁLIA CRISTINA ; REBÊL
   ALENCAR, LUCIANA MAGALHÃES ; FERREIRA, WELLINGTON CASTRO ; DA LUZ LIMA,
   CLEÂNIO ; SANTOS-OLIVEIRA, RALPH
 year: 2025
+journal: Pharmaceutics
 doi: http://dx.doi.org/10.3390/pharmaceutics17030298
 type: Artigo
 featured: false
