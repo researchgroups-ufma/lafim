@@ -16,6 +16,7 @@
  * Props:
  *   news    — array de notícias serializáveis vindas do Server Component
  *   strings — strings de UI (filtros, paginação, meses) vindas do dicionário
+ *   closeLabel — aria-label do botão de fechar o modal da notícia
  */
 
 "use client";
@@ -36,16 +37,20 @@ type NewsListStrings = {
   imgPrev: string;
   imgNext: string;
   imgGoTo: string;
+  imgAlt: string;
+  readMore: string;
 };
 
 type NewsListProps = {
   news: NewsItem[];
   strings: NewsListStrings;
+  /** aria-label do botão de fechar o modal (dict.a11y.close) */
+  closeLabel: string;
 };
 
 const PER_PAGE = 10;
 
-export default function NewsList({ news, strings }: NewsListProps) {
+export default function NewsList({ news, strings, closeLabel }: NewsListProps) {
   const [filterYear, setFilterYear] = useState("all");
   const [filterMonth, setFilterMonth] = useState("all");
   const [page, setPage] = useState(1);
@@ -159,7 +164,10 @@ export default function NewsList({ news, strings }: NewsListProps) {
               key={item.slug}
               item={item}
               isFirst={index === 0}
-              imgLabels={{ prev: strings.imgPrev, next: strings.imgNext, goTo: strings.imgGoTo }}
+              imgLabels={{
+                prev: strings.imgPrev, next: strings.imgNext, goTo: strings.imgGoTo,
+                image: strings.imgAlt, readMore: strings.readMore, close: closeLabel,
+              }}
             />
           ))}
         </div>

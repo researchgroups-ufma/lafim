@@ -47,8 +47,8 @@ export default function SideNav({ locale }: { locale: Locale }) {
 
   // Indica se o menu (centralizado na vertical) está sobreposto ao Hero escuro.
   // Quando true → texto branco; quando false (seções creme) → texto charcoal.
-  // Inicializa como true na home para evitar flash escuro antes do observer.
-  const [overDark, setOverDark] = useState(pathname === "/");
+  // Inicializa como true na home (PT e EN) para evitar flash escuro antes do observer.
+  const [overDark, setOverDark] = useState(pathname === "/" || pathname === "/en");
 
   // Distância do topo até onde o menu se ancora. Null = sem bloco escuro na
   // página, e o menu cai no centro da viewport (ver `top` no <nav>).
@@ -337,7 +337,7 @@ export default function SideNav({ locale }: { locale: Locale }) {
                 style={{
                   width: "100%",
                   height: "1px",
-                  backgroundColor: "rgba(245, 245, 240, 0.2)",
+                  backgroundColor: sepColor,
                 }}
               />
             )}

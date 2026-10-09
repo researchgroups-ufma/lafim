@@ -50,11 +50,18 @@ export type NewsItem = {
 type NewsCardProps = {
   item: NewsItem;
   isFirst: boolean;
-  /** aria-labels da galeria de imagens (default PT; EN vem do dicionário via NewsList) */
-  imgLabels?: { prev: string; next: string; goTo: string };
+  /** textos e aria-labels do card e da galeria (default PT; EN vem do dicionário via NewsList) */
+  imgLabels?: NewsCardLabels;
 };
 
-const IMG_LABELS_PT = { prev: "Imagem anterior", next: "Próxima imagem", goTo: "Ir para imagem" };
+type NewsCardLabels = {
+  prev: string; next: string; goTo: string; image: string; readMore: string; close: string;
+};
+
+const IMG_LABELS_PT: NewsCardLabels = {
+  prev: "Imagem anterior", next: "Próxima imagem", goTo: "Ir para imagem",
+  image: "imagem", readMore: "Ler matéria completa →", close: "Fechar",
+};
 
 // Proporção (largura/altura) abaixo da qual o carrossel usa a moldura 4:3
 // em vez da proporção da própria imagem — evita que retratos e imagens
@@ -147,7 +154,7 @@ export default function NewsCard({ item, isFirst, imgLabels = IMG_LABELS_PT }: N
               color: "var(--color-primary)",
             }}
           >
-            Ler matéria completa →
+            {imgLabels.readMore}
           </span>
         </div>
 
@@ -268,7 +275,7 @@ export default function NewsCard({ item, isFirst, imgLabels = IMG_LABELS_PT }: N
           </div>
 
           {/* Botão fechar — canto superior direito do modal */}
-          <MorphingDialogClose className="modal-close" />
+          <MorphingDialogClose className="modal-close" label={imgLabels.close} />
         </MorphingDialogContent>
       </MorphingDialogContainer>
     </MorphingDialog>
@@ -285,7 +292,7 @@ function NewsCarousel({
 }: {
   images: string[];
   alt: string;
-  labels: { prev: string; next: string; goTo: string };
+  labels: NewsCardLabels;
 }) {
   const [index, setIndex] = useState(0);
   // Proporção real de cada imagem, por src, preenchida no onLoad
@@ -314,7 +321,7 @@ function NewsCarousel({
       >
         <Image
           src={images[index]}
-          alt={`${alt} — imagem ${index + 1}`}
+          alt={`${alt} — ${labels.image} ${index + 1}`}
           fill
           sizes="(max-width: 720px) 92vw, 720px"
           onLoad={(e) => {

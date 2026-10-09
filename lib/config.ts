@@ -58,7 +58,7 @@ export const designTokens = {
     borderStrong: "#e0ddd3",
   },
   fonts: {
-    display: "'Camera Plain Variable', 'Inter', ui-sans-serif, system-ui, sans-serif",
-    body:    "'Camera Plain Variable', 'Inter', ui-sans-serif, system-ui, sans-serif",
+    display: "'Camera Plain Variable', var(--font-inter), ui-sans-serif, system-ui, sans-serif",
+    body:    "'Camera Plain Variable', var(--font-inter), ui-sans-serif, system-ui, sans-serif",
   },
 };

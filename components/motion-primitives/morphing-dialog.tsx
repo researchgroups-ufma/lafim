@@ -124,7 +124,9 @@ function MorphingDialogTrigger({
       aria-haspopup='dialog'
       aria-expanded={isOpen}
       aria-controls={`motion-ui-morphing-dialog-content-${uniqueId}`}
-      aria-label={`Open dialog ${uniqueId}`}
+      // Sem aria-label: o nome acessível vem do conteúdo visível do card
+      // (WCAG 2.5.3). O rótulo genérico da biblioteca, "Open dialog <id>",
+      // escondia o nome do membro/notícia e ficava em inglês nos dois idiomas.
     >
       {children}
     </motion.button>
@@ -379,6 +381,8 @@ function MorphingDialogImage({
 export type MorphingDialogCloseProps = {
   children?: React.ReactNode;
   className?: string;
+  /** aria-label do botão — traduzir pelo dicionário do idioma da página */
+  label?: string;
   variants?: {
     initial: Variant;
     animate: Variant;
@@ -390,6 +394,7 @@ function MorphingDialogClose({
   children,
   className,
   variants,
+  label = 'Close dialog',
 }: MorphingDialogCloseProps) {
   const { setIsOpen, uniqueId } = useMorphingDialog();
 
@@ -401,7 +406,7 @@ function MorphingDialogClose({
     <motion.button
       onClick={handleClose}
       type='button'
-      aria-label='Close dialog'
+      aria-label={label}
       key={`dialog-close-${uniqueId}`}
       className={cn('absolute top-6 right-6', className)}
       initial='initial'

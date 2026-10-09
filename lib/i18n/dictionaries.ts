@@ -71,6 +71,8 @@ export const dictionaries = {
       imgPrev: "Imagem anterior",
       imgNext: "Próxima imagem",
       imgGoTo: "Ir para imagem",
+      imgAlt: "imagem",
+      readMore: "Ler matéria completa →",
     },
     about: {
       title: "Sobre o Laboratório",
@@ -120,6 +122,9 @@ export const dictionaries = {
     },
     // Rótulos de acessibilidade (aria-label) — invisíveis na tela.
     a11y: {
+      skipToContent: "Pular para o conteúdo",
+      close: "Fechar",
+      photoOf: "Foto de",
       mainNav: "Navegação principal",
       mobileNav: "Navegação mobile",
       openMenu: "Abrir menu",
@@ -234,6 +239,8 @@ export const dictionaries = {
       imgPrev: "Previous image",
       imgNext: "Next image",
       imgGoTo: "Go to image",
+      imgAlt: "image",
+      readMore: "Read full story →",
     },
     about: {
       title: "About the Lab",
@@ -283,6 +290,9 @@ export const dictionaries = {
     },
     // Rótulos de acessibilidade (aria-label) — invisíveis na tela.
     a11y: {
+      skipToContent: "Skip to content",
+      close: "Close",
+      photoOf: "Photo of",
       mainNav: "Main navigation",
       mobileNav: "Mobile navigation",
       openMenu: "Open menu",

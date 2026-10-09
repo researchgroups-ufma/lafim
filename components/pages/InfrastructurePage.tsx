@@ -44,7 +44,7 @@ export default async function InfrastructurePage({ locale }: { locale: Locale })
         lead={pageInfo.intro as string | undefined}
       />
 
-      <main>
+      <div>
         <div className="container-site">
           <section style={{ padding: "4rem 0" }}>
 
@@ -77,7 +77,7 @@ export default async function InfrastructurePage({ locale }: { locale: Locale })
 
           </section>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

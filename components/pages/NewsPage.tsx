@@ -56,7 +56,7 @@ export default async function NewsPage({ locale }: { locale: Locale }) {
         title={dict.news.title}
       />
 
-      <main>
+      <div>
         <div className="container-site">
           <section style={{ padding: "4rem 0" }}>
             {news.length === 0 ? (
@@ -64,11 +64,11 @@ export default async function NewsPage({ locale }: { locale: Locale }) {
                 {dict.news.empty}
               </p>
             ) : (
-              <NewsList news={news} strings={dict.news} />
+              <NewsList news={news} strings={dict.news} closeLabel={dict.a11y.close} />
             )}
           </section>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

@@ -59,7 +59,7 @@ export default async function MembersPage({ locale }: { locale: Locale }) {
         title={dict.members.title}
       />
 
-      <main>
+      <div>
         <div className="container-site">
 
           {/* ── Coordenador ─────────────────────────────────────────────────
@@ -90,7 +90,7 @@ export default async function MembersPage({ locale }: { locale: Locale }) {
                   {(coordinator.photo as string | undefined) ? (
                     <Image
                       src={coordinator.photo as string}
-                      alt={`Foto de ${coordinator.title as string}`}
+                      alt={`${dict.a11y.photoOf} ${coordinator.title as string}`}
                       width={160}
                       height={188}
                       priority
@@ -298,7 +298,7 @@ export default async function MembersPage({ locale }: { locale: Locale }) {
           )}
 
         </div>
-      </main>
+      </div>
     </div>
   );
 }

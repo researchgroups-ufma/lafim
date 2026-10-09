@@ -9,6 +9,7 @@
  */
 
 import Link from "next/link";
+import { inter } from "@/lib/fonts";
 import "./globals.css";
 
 export const metadata = {
@@ -17,7 +18,7 @@ export const metadata = {
 
 export default function GlobalNotFound() {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" className={inter.variable}>
       <body>
         <main
           style={{

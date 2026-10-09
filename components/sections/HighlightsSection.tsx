@@ -46,6 +46,7 @@ export default function HighlightsSection({ highlights }: HighlightsSectionProps
 
           return (
             <InView
+              once
               key={item.slug}
               variants={{
                 hidden: { opacity: 0, y: 24, filter: "blur(4px)" },

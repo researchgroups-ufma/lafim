@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { InView } from "@/components/motion-primitives/in-view";
-import { getDictionary, type Locale } from "@/lib/i18n";
+import { getDictionary, localizeHref, type Locale } from "@/lib/i18n";
 
 /**
  * NewsSection — Seção "Notícias" da homepage (estilo lafim_2.html)
@@ -46,6 +46,7 @@ export default function NewsSection({ news, locale }: NewsSectionProps) {
 
         {/* ── Cabeçalho ──────────────────────────────────────────────────── */}
         <InView
+          once
           variants={{
             hidden: { opacity: 0, y: 26 },
             visible: { opacity: 1, y: 0 },
@@ -65,6 +66,7 @@ export default function NewsSection({ news, locale }: NewsSectionProps) {
         <div className="hp-topics">
           {news.map((item, index) => (
             <InView
+              once
               key={item.slug}
               variants={{
                 hidden: { opacity: 0, y: 24, filter: "blur(4px)" },
@@ -73,7 +75,7 @@ export default function NewsSection({ news, locale }: NewsSectionProps) {
               viewOptions={{ margin: "0px 0px -60px 0px" }}
               transition={{ duration: 0.4, ease: "easeOut", delay: index * 0.1 }}
             >
-              <Link className="hp-topic" href="/news">
+              <Link className="hp-topic" href={localizeHref("/news", locale)}>
                 <span className="hp-tnum">{item.dateFormatted}</span>
                 <div>
                   <h3>{item.title}</h3>
@@ -86,7 +88,7 @@ export default function NewsSection({ news, locale }: NewsSectionProps) {
 
         {/* ── CTA — todas as notícias ──────────────────────────────────────── */}
         <div style={{ marginTop: "32px" }}>
-          <Link className="hp-btn hp-btn--ghost" href="/news">
+          <Link className="hp-btn hp-btn--ghost" href={localizeHref("/news", locale)}>
             {dict.ctaAll}
           </Link>
         </div>

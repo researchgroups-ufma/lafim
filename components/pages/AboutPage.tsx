@@ -24,7 +24,7 @@ export default async function AboutPage({ locale }: { locale: Locale }) {
     <div>
       <PageHeader title={dict.about.title} />
 
-      <main>
+      <div>
         <div className="container-site">
 
           {/* ── Missão ─────────────────────────────────────────────────────── */}
@@ -114,7 +114,7 @@ export default async function AboutPage({ locale }: { locale: Locale }) {
           </section>
 
         </div>
-      </main>
+      </div>
     </div>
   );
 }

@@ -146,15 +146,17 @@ export default function HeroLogo() {
       <div
         className="dac-logo"
         style={{ width: "100%", cursor: "pointer" }}
-        aria-label="LaFiM — Laboratório de Física dos Materiais"
       >
-                {/* SVG embutido (paths de new_lafim.svg) */}
+                {/* SVG embutido (paths de new_lafim.svg). Sem atributo height:
+                    a altura sai do viewBox ("auto" não é valor válido em SVG
+                    e gerava erro no console). O rótulo fica no próprio svg
+                    role="img" — aria-label numa <div> sem role é ignorado. */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="-2 -22 236 92"
           width="100%"
-          height="auto"
           role="img"
+          aria-label="LaFiM — Laboratório de Física dos Materiais"
           style={{ overflow: "visible" }}
         >
           {/* Filtro de glow branco para o texto. O GSAP anima stdDeviation

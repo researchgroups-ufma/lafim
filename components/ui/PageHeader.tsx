@@ -39,7 +39,7 @@ export default function PageHeader({ title, lead }: PageHeaderProps) {
 
         <div className="page-header-body">
           <h1 className="page-header-title">
-            <TextEffect per="char" preset="fade">
+            <TextEffect as="span" per="char" preset="fade">
               {title}
             </TextEffect>
           </h1>

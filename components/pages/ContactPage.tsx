@@ -23,7 +23,7 @@ export default async function ContactPage({ locale }: { locale: Locale }) {
     <div>
       <PageHeader title={dict.contact.title} />
 
-      <main>
+      <div>
         <div className="container-site">
           <section style={{ padding: "4rem 0" }}>
 
@@ -157,7 +157,7 @@ export default async function ContactPage({ locale }: { locale: Locale }) {
             </div>
           </section>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

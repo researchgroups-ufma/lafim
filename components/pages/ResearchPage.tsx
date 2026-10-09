@@ -26,7 +26,7 @@ export default async function ResearchPage({ locale }: { locale: Locale }) {
         lead={dict.research.intro}
       />
 
-      <main>
+      <div>
         <div className="container-site">
 
           <section style={{ padding: "4rem 0", borderBottom: "1px solid var(--color-border)" }}>
@@ -119,7 +119,7 @@ export default async function ResearchPage({ locale }: { locale: Locale }) {
           </section>
 
         </div>
-      </main>
+      </div>
     </div>
   );
 }

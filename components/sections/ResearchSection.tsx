@@ -39,6 +39,7 @@ export default function ResearchSection({ researchLines, locale }: ResearchSecti
 
         {/* ── Cabeçalho ──────────────────────────────────────────────────── */}
         <InView
+          once
           variants={{
             hidden: { opacity: 0, y: 26 },
             visible: { opacity: 1, y: 0 },
@@ -64,6 +65,7 @@ export default function ResearchSection({ researchLines, locale }: ResearchSecti
           <div className="hp-topics">
             {researchLines.map((line, index) => (
               <InView
+                once
                 key={line.slug}
                 variants={{
                   hidden: { opacity: 0, y: 24, filter: "blur(4px)" },

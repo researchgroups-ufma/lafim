@@ -16,14 +16,12 @@
 
 
 /* =============================================================================
-   1. GOOGLE FONTS
-   Deve vir antes do @import "tailwindcss" — regra do CSS.
+   1. FONTES
    - Inter: família única (títulos + corpo), stand-in prático para a
      "Camera Plain Variable" do DESIGN.md. Pesos 400 (corpo/UI) e 600 (títulos).
+   - Auto-hospedada via next/font (lib/fonts.ts), exposta em --font-inter.
+     Não usar @import do Google Fonts aqui: ele bloqueia a renderização.
 ============================================================================= */
-
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
-
 
 /* =============================================================================
    2. TAILWIND v4
@@ -61,8 +59,8 @@
   --color-border-strong: #e0ddd3;  /* bordas de cards e containers            */
 
   /* Tipografia — família única (DESIGN.md: Camera Plain Variable → Inter) */
-  --font-display: "Camera Plain Variable", "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-body:    "Camera Plain Variable", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Camera Plain Variable", var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-body:    "Camera Plain Variable", var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
   /* Largura máxima do container central — fonte única usada pelo
      .container-site e pela faixa central de fundo no body              */
@@ -664,3 +662,31 @@ body:has([role="dialog"]) .mobile-only {
     scroll-behavior: auto !important;
   }
 }
+
+
+/* =============================================================================
+   8. ACESSIBILIDADE DE TECLADO
+============================================================================= */
+
+/* Foco visível (WCAG 2.4.7). currentColor faz o anel seguir a cor do texto,
+   então ele aparece tanto no creme quanto sobre o hero e o menu escuros.
+   :where() mantém especificidade zero para não brigar com estilos locais. */
+:where(a, button, select, input, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+/* "Pular para o conteúdo" (WCAG 2.4.1): fora da tela até receber foco,
+   que é o primeiro Tab da página. */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 1rem;
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  background: var(--color-text);
+  color: var(--color-bg);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.skip-link:focus { top: 1rem; }

@@ -12,10 +12,12 @@
 
 import type { Metadata } from "next";
 import { siteConfig } from "@/lib/config";
+import { getDictionary } from "@/lib/i18n";
 import ThemeProvider from "@/components/layout/ThemeProvider";
 import MobileNav from "@/components/layout/MobileNav";
 import SideNav from "@/components/layout/SideNav";
 import Footer from "@/components/layout/Footer";
+import { inter } from "@/lib/fonts";
 import "../globals.css";
 
 const schemaOrg = {
@@ -83,7 +85,7 @@ export const metadata: Metadata = {
 
 export default function EnLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={inter.variable}>
       <body>
         {/* ThemeProvider injeta as CSS variables do config.ts como style inline */}
         <ThemeProvider>
@@ -96,6 +98,11 @@ export default function EnLayout({ children }: { children: React.ReactNode }) {
             }}
           />
 
+          {/* Primeiro alvo do Tab: pula a navegação e vai direto ao conteúdo */}
+          <a href="#conteudo" className="skip-link">
+            {getDictionary("en").a11y.skipToContent}
+          </a>
+
           {/* Navegação mobile (navbar + overlay) — visível abaixo de 768px */}
           <MobileNav locale="en" />
 
@@ -104,7 +111,7 @@ export default function EnLayout({ children }: { children: React.ReactNode }) {
 
           {/* Sem padding no topo: o MobileNav agora é só um botão flutuante,
               não ocupa espaço, e o cabeçalho começa no topo da tela.        */}
-          <main>
+          <main id="conteudo">
             {children}
           </main>
 

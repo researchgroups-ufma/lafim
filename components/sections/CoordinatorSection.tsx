@@ -45,6 +45,7 @@ export default function CoordinatorSection({
 }: CoordinatorSectionProps) {
   const paragraphs = bio ? bio.split("\n\n") : [];
   const dict = getDictionary(locale).home.coordinator;
+  const photoOf = getDictionary(locale).a11y.photoOf;
 
   return (
     <section
@@ -57,6 +58,7 @@ export default function CoordinatorSection({
         <p className="hp-eyebrow">{dict.eyebrow}</p>
 
         <InView
+          once
           variants={{
             hidden: { opacity: 0, y: 32 },
             visible: { opacity: 1, y: 0 },
@@ -98,7 +100,7 @@ export default function CoordinatorSection({
             {/* ── Foto ───────────────────────────────────────────────────── */}
             <div className="hp-coord__photo">
               {photo ? (
-                <Image src={photo} alt={`Foto de ${name}`} fill sizes="(max-width: 860px) 380px, 40vw" style={{ objectFit: "cover" }} />
+                <Image src={photo} alt={`${photoOf} ${name}`} fill sizes="(max-width: 860px) 380px, 40vw" style={{ objectFit: "cover" }} />
               ) : (
                 <span className="hp-ph">Foto do<br />coordenador<br />4 : 5</span>
               )}

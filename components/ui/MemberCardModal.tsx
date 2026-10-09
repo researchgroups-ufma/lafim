@@ -31,7 +31,7 @@
 
 import Image from "next/image";
 import MemberLinks from "@/components/ui/MemberLinks";
-import type { Locale } from "@/lib/i18n";
+import { getDictionary, type Locale } from "@/lib/i18n";
 import {
   MorphingDialog,
   MorphingDialogTrigger,
@@ -66,6 +66,8 @@ export default function MemberCardModal({
   name, role, research_area, scholarship, year_start,
   bio, photo, email, linkedin, instagram, lattes, orcid, scholar, arxiv, locale = "pt",
 }: MemberCardModalProps) {
+  const a11y = getDictionary(locale).a11y;
+
   return (
     <MorphingDialog
       transition={{
@@ -177,7 +179,7 @@ export default function MemberCardModal({
               {photo ? (
                 <Image
                   src={photo}
-                  alt={`Foto de ${name}`}
+                  alt={`${a11y.photoOf} ${name}`}
                   fill
                   sizes="140px"
                   style={{ objectFit: "cover" }}
@@ -272,7 +274,7 @@ export default function MemberCardModal({
           </div>
 
           {/* Botão fechar — canto superior direito do modal */}
-          <MorphingDialogClose className="modal-close" />
+          <MorphingDialogClose className="modal-close" label={a11y.close} />
 
         </MorphingDialogContent>
       </MorphingDialogContainer>

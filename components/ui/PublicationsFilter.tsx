@@ -152,7 +152,7 @@ export default function PublicationsFilter({ publications, strings, typeLabels }
           <div key={year} style={{ marginBottom: "1rem" }}>
 
             {/* Cabeçalho do ano */}
-            <h3
+            <h2
               style={{
                 fontFamily: "var(--font-display)",
                 fontSize: "1.2rem",
@@ -164,7 +164,7 @@ export default function PublicationsFilter({ publications, strings, typeLabels }
               }}
             >
               {year}
-            </h3>
+            </h2>
 
             {/* Publicações do ano */}
             {byYear[year].map((pub) => (

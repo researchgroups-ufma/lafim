@@ -55,7 +55,7 @@ export default async function PublicationsPage({ locale }: { locale: Locale }) {
         title={dict.publications.title}
       />
 
-      <main>
+      <div>
         <div className="container-site">
           <section style={{ padding: "4rem 0", borderBottom: "1px solid var(--color-border)" }}>
 
@@ -143,7 +143,7 @@ export default async function PublicationsPage({ locale }: { locale: Locale }) {
           )}
 
         </div>
-      </main>
+      </div>
     </div>
   );
 }
