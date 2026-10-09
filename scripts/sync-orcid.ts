@@ -3,13 +3,17 @@
  *
  * Roda toda semana pelo workflow .github/workflows/orcid.yml (e à mão com
  * `npm run sync-orcid`). Para cada trabalho do ORCID que ainda não foi visto:
- *   1. completa autores e periódico pela Crossref (o ORCID não traz autores);
+ *   1. completa autores, periódico e data pela Crossref (o ORCID não traz autores);
  *   2. grava content/publications/pt/<ano>-<slug>.md e a versão en/, nos
  *      mesmos campos e nome de arquivo que o Decap CMS usa;
  *   3. registra o DOI em data/orcid-vistos.json.
+ * Depois, preenche `date` nas publicações do site que têm DOI e ainda não
+ * têm data (as antigas e as cadastradas no painel) — é por ela que a home
+ * escolhe as mais recentes, já que `year` empata dentro do ano.
  *
  * Regras:
- *   - Só adiciona. Nunca altera nem apaga publicações existentes.
+ *   - Só adiciona. Nunca apaga publicações nem muda campos existentes; a única
+ *     alteração em arquivo existente é acrescentar `date` quando falta.
  *   - "Visto" é permanente: uma publicação apagada no painel não volta.
  *   - Sem data/orcid-vistos.json, apenas registra tudo o que existe hoje
  *     como visto e não importa nada — evita despejar o histórico inteiro.
@@ -22,14 +26,14 @@
  * Variáveis de ambiente:
  *   CROSSREF_MAILTO — contato enviado à Crossref (obrigatória)
  *   ORCID_COMMIT_MSG — se definida, caminho onde gravar a mensagem de commit
- *   GITHUB_OUTPUT    — definida pelo Actions; recebe `novos=<n>`
+ *   GITHUB_OUTPUT    — definida pelo Actions; recebe `novos=<n>` e `datas=<n>`
  */
 
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import {
-  abntFromFullName, fetchCrossref, fetchOrcidWorks, formatAuthors, mapType, nameKey, normalizeDoi,
+  abntFromFullName, addFrontmatterField, fetchCrossref, fetchOrcidWorks, formatAuthors, mapType, nameKey, normalizeDoi,
   slugify, toFrontmatter,
 } from "./orcid-lib";
 
@@ -83,6 +87,34 @@ function writeSeen(dois: Set<string>): void {
 // Mesmo formato de arquivo do Decap: só front matter, corpo vazio.
 function writeEntry(file: string, data: Record<string, string | number | boolean | null>): void {
   fs.writeFileSync(file, toFrontmatter(data));
+}
+
+/**
+ * Acrescenta `date` (Crossref) às publicações com DOI que ainda não têm, em
+ * pt/ e en/. Sem data com mês na Crossref, o arquivo fica como está e é
+ * consultado de novo na próxima execução. Devolve os arquivos alterados.
+ */
+async function fillDates(mailto: string): Promise<string[]> {
+  const filled: string[] = [];
+  for (const file of fs.readdirSync(path.join(PUBS, "pt")).filter((f) => f.endsWith(".md"))) {
+    const data = readFrontmatter(path.join(PUBS, "pt", file));
+    const doi = normalizeDoi(String(data.doi ?? ""));
+    if (!doi || data.date) continue;
+
+    const date = (await fetchCrossref(doi, mailto))?.date;
+    if (!date) {
+      console.warn(`  sem data com mês na Crossref para ${doi}`);
+      continue;
+    }
+    for (const locale of ["pt", "en"]) {
+      const full = path.join(PUBS, locale, file);
+      if (!fs.existsSync(full) || readFrontmatter(full).date) continue;
+      fs.writeFileSync(full, addFrontmatterField(fs.readFileSync(full, "utf8"), "date", date));
+    }
+    filled.push(file);
+    console.log(`  date ${date}: ${file}`);
+  }
+  return filled;
 }
 
 function setOutput(key: string, value: string | number): void {
@@ -153,6 +185,7 @@ async function main(): Promise<void> {
       title,
       authors: formatAuthors(cr.authors, members),
       year: w.year ?? cr.year,
+      ...(cr.date ? { date: cr.date } : {}),
       journal: cr.journal ?? w.journal,
       doi: `https://doi.org/${w.doi}`,
     };
@@ -168,8 +201,17 @@ async function main(): Promise<void> {
   setOutput("novos", added.length);
   console.log(`${added.length} publicação(ões) nova(s).`);
 
-  if (added.length && process.env.ORCID_COMMIT_MSG) {
-    const msg = `docs: publicações novas do ORCID\n\n${added.map((t) => `- ${t}`).join("\n")}\n`;
+  const dated = await fillDates(mailto);
+  setOutput("datas", dated.length);
+  console.log(`${dated.length} data(s) de publicação preenchida(s).`);
+
+  if ((added.length || dated.length) && process.env.ORCID_COMMIT_MSG) {
+    const subject = added.length ? "docs: publicações novas do ORCID" : "docs: datas de publicação pela Crossref";
+    const body = [
+      ...added.map((t) => `- ${t}`),
+      ...(dated.length ? ["", "Data de publicação preenchida:", ...dated.map((f) => `- ${f}`)] : []),
+    ];
+    const msg = `${subject}\n\n${body.join("\n").trim()}\n`;
     fs.writeFileSync(process.env.ORCID_COMMIT_MSG, msg);
   }
 }

@@ -1,7 +1,8 @@
 name: orcid
 
 # Cadastra no site as publicações novas do ORCID do coordenador, uma vez por
-# semana. O trabalho todo está em scripts/sync-orcid.ts; aqui só agenda,
+# semana, e preenche a data de publicação (Crossref) nas que ainda não têm.
+# O trabalho todo está em scripts/sync-orcid.ts; aqui só agenda,
 # valida e publica.
 #
 # Commits feitos com o GITHUB_TOKEN não disparam outros workflows (o GitHub
@@ -49,7 +50,7 @@ jobs:
           ORCID_COMMIT_MSG: ${{ runner.temp }}/orcid-commit.txt
 
       - name: Verifica tipos e build antes de publicar
-        if: steps.sync.outputs.novos != '0'
+        if: steps.sync.outputs.novos != '0' || steps.sync.outputs.datas != '0'
         run: |
           npx tsc --noEmit
           npm run build
@@ -57,7 +58,7 @@ jobs:
       # Assina como o André (noreply do GitHub) para o histórico ter só o
       # perfil dele, como nos commits feitos pelo painel.
       - name: Commit e push
-        if: steps.sync.outputs.novos != '0'
+        if: steps.sync.outputs.novos != '0' || steps.sync.outputs.datas != '0'
         run: |
           git config user.name "André Ferreira"
           git config user.email "160500693+abbadrava@users.noreply.github.com"
