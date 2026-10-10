@@ -4,9 +4,10 @@
  * Usa o MorphingDialog do Motion Primitives para criar uma transição
  * fluida entre o card fechado e o modal expandido.
  *
- * Estado fechado: nome, área de pesquisa, bolsa e ano de início.
- * Ao clicar: expande com animação morphing mostrando foto, bio
- * completa e links acadêmicos.
+ * Estado fechado: foto, nome, bolsa e ano de início. No hover, uma faixa
+ * "Ver perfil" sobe de dentro da foto (CSS em .member-card, globals.css).
+ * Ao clicar: expande com animação morphing — a foto voa do card para o
+ * modal (MorphingDialogImage, mesmo layoutId) — com bio e links acadêmicos.
  *
  * Fase futura: ajustar variantes e transição conforme feedback visual.
  *
@@ -29,7 +30,6 @@
 
 "use client";
 
-import Image from "next/image";
 import MemberLinks from "@/components/ui/MemberLinks";
 import { getDictionary, type Locale } from "@/lib/i18n";
 import {
@@ -41,6 +41,7 @@ import {
   MorphingDialogClose,
   MorphingDialogDescription,
   MorphingDialogContainer,
+  MorphingDialogImage,
 } from "@/components/motion-primitives/morphing-dialog";
 
 type MemberCardModalProps = {
@@ -78,56 +79,28 @@ export default function MemberCardModal({
     >
 
       {/* ── Card fechado (trigger) ─────────────────────────────────────────── */}
-      <MorphingDialogTrigger
-        style={{
-          backgroundColor: "var(--color-bg-elevated)",
-          padding: "1.5rem",
-          transition: "background-color 0.15s ease",
-          width: "100%",
-          textAlign: "left",
-          cursor: "pointer",
-        }}
-        className="member-card-hover"
-      >
-        {/* Nome */}
-        <MorphingDialogTitle
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "1.05rem",
-            fontWeight: 500,
-            color: "var(--color-text)",
-            marginBottom: "0.15rem",
-          }}
-        >
-          {name}
-        </MorphingDialogTitle>
-
-        {/* Área de pesquisa e bolsa */}
-        <MorphingDialogSubtitle
-          style={{
-            fontSize: "0.8rem",
-            color: "var(--color-text-muted)",
-            fontWeight: 300,
-            lineHeight: 1.5,
-            marginBottom: "1rem",
-          }}
-        >
-          {research_area}
-          {scholarship && (
-            <>
-              <br />
-              <em style={{ fontSize: "0.75rem", color: "var(--color-text-subtle)" }}>
-                Bolsa {scholarship}
-                {year_start && ` · desde ${year_start}`}
-              </em>
-            </>
+      {/* Sem transform no hover: o trigger e a foto são animados por layoutId,
+          e um transform CSS brigaria com a animação de abertura. */}
+      <MorphingDialogTrigger className="member-card">
+        <span className="member-card__photo">
+          {photo ? (
+            <MorphingDialogImage src={photo} alt={`${a11y.photoOf} ${name}`} />
+          ) : (
+            <span className="member-card__initial">{name.charAt(0)}</span>
           )}
-        </MorphingDialogSubtitle>
+          <span className="member-card__more" aria-hidden="true">Ver perfil</span>
+        </span>
 
-        {/* Indicador de que há mais informações */}
-        <p style={{ fontSize: "0.7rem", color: "var(--color-text-subtle)" }}>
-          Ver perfil →
-        </p>
+        <MorphingDialogTitle className="member-card__name">{name}</MorphingDialogTitle>
+
+        {(scholarship || year_start || research_area) && (
+          <MorphingDialogSubtitle className="member-card__meta">
+            {research_area && <>{research_area}<br /></>}
+            {scholarship && `Bolsa ${scholarship}`}
+            {scholarship && year_start && " · "}
+            {year_start && `desde ${year_start}`}
+          </MorphingDialogSubtitle>
+        )}
       </MorphingDialogTrigger>
 
       {/* ── Modal expandido ───────────────────────────────────────────────── */}
@@ -177,12 +150,10 @@ export default function MemberCardModal({
               }}
             >
               {photo ? (
-                <Image
+                <MorphingDialogImage
                   src={photo}
                   alt={`${a11y.photoOf} ${name}`}
-                  fill
-                  sizes="140px"
-                  style={{ objectFit: "cover" }}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
               ) : (
                 <span

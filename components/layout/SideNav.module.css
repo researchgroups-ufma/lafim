@@ -1,0 +1,59 @@
+/* SideNav — índice fixo à direita: grande sobre o Hero, compacto no resto. */
+
+.nav {
+  --fs: clamp(1.6rem, 2.5vw, 2.6rem);
+  position: fixed;
+  top: 50%;
+  right: 2.75rem;
+  z-index: 100;
+  transform: translateY(-50%);
+  text-align: right;
+  /* Branco em "difference": fica branco sobre o escuro e quase preto sobre o
+     creme, pixel a pixel, inclusive quando a lista está metade em cada fundo */
+  color: #ffffff;
+  mix-blend-mode: difference;
+}
+.nav[data-compacto="true"] { --fs: clamp(1.05rem, 1.3vw, 1.35rem); }
+
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.lista a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  font-size: var(--fs);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  transition: font-size 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+}
+.nav[data-compacto="true"] .lista a { line-height: 1.6; }
+
+/* Ao passar o mouse na lista, os demais itens recuam */
+.lista:hover a { opacity: 0.35; }
+.lista:hover a:hover { opacity: 1; }
+
+/* Página ativa: ponto proporcional à fonte, inclusive durante a transição */
+.lista a[aria-current="page"]::before {
+  content: "";
+  width: 0.26em;
+  height: 0.26em;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.lista a:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+
+.idioma {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lista a { transition: none; }
+}

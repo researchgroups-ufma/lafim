@@ -8,6 +8,7 @@
  *   - Logo SVG do LaFiM posicionada no canto inferior esquerdo
  *   - Linha horizontal separando logo do subtítulo
  *   - Subtítulo abaixo da linha
+ *   - "Bump" do conteúdo enquanto a página está parada no topo (ScrollHint)
  *
  * Props:
  *   images   — mantido por compatibilidade com page.tsx (não utilizado)
@@ -23,6 +24,7 @@
 import { motion } from "framer-motion";
 import { TextEffect } from "@/components/motion-primitives/text-effect";
 import HeroLogo from "@/components/HeroLogo";
+import ScrollHint from "./ScrollHint";
 
 type HeroProps = {
   images: string[];
@@ -138,6 +140,8 @@ export default function Hero({ subtitle }: HeroProps) {
         )}
 
       </div>
+
+      <ScrollHint />
 
       {/* ── Indicador de scroll ─────────────────────────────────────────────
           Seta branca (arrow.svg) que faz fade in, desliza para baixo e some,

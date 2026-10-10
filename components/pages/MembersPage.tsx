@@ -11,8 +11,8 @@
  *   3. Egressos           — lista com ano e instituição atual
  *   4. Colaboradores      — Colaborador Externo
  *
- * Os cards usam MorphingDialog (Motion Primitives) com bio completa
- * e links acadêmicos ao clicar.
+ * Os cards da equipe mostram foto, nome e ano de entrada; ao clicar, o
+ * MorphingDialog (Motion Primitives) abre a bio completa e os links.
  *
  * Os valores de dados (role, comparações de grupo) permanecem em PT —
  * os dados de content/members/ não migram nesta fase (ver plano 010).
@@ -80,33 +80,37 @@ export default async function MembersPage({ locale }: { locale: Locale }) {
                 className="stack-mobile"
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "160px 1fr",
+                  // Coluna da foto = largura de um card da equipe: 1/4 da linha
+                  // menos os 3 gaps de 1.25rem do .member-grid (globals.css)
+                  gridTemplateColumns: "calc((100% - 3.75rem) / 4) 1fr",
                   gap: "2.5rem",
                   alignItems: "start",
                 }}
               >
                 {/* Foto ou placeholder com inicial */}
-                <figure style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <figure className="coordinator-photo" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                   {(coordinator.photo as string | undefined) ? (
                     <Image
                       src={coordinator.photo as string}
                       alt={`${dict.a11y.photoOf} ${coordinator.title as string}`}
-                      width={160}
-                      height={188}
+                      width={480}
+                      height={600}
                       priority
                       style={{
-                        aspectRatio: "0.85",
+                        width: "100%",
+                        height: "auto",
+                        aspectRatio: "4 / 5",
                         objectFit: "cover",
-                        border: "1px solid var(--color-border-strong)",
+                        borderRadius: "0.375rem",
                       }}
                     />
                   ) : (
                     <div
                       style={{
-                        width: "160px",
-                        aspectRatio: "0.85",
-                        backgroundColor: "var(--color-bg-elevated)",
-                        border: "1px solid var(--color-border-strong)",
+                        width: "100%",
+                        aspectRatio: "4 / 5",
+                        borderRadius: "0.375rem",
+                        backgroundColor: "var(--color-bg-subtle)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -175,17 +179,8 @@ export default async function MembersPage({ locale }: { locale: Locale }) {
                     {/* Label do grupo — ex: "Doutorandos" */}
                     <p className="group-label">{(dict.members.rolePlural as Record<string, string>)[role] ?? `${roleLabel(role)}s`}</p>
 
-                    {/* Grid de cards clicáveis */}
-                    <div
-                      className="stack-mobile"
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: "repeat(auto-fill, minmax(240px, 240px))",
-                        gap: "1px",
-                        backgroundColor: "var(--color-border)",
-                        border: "1px solid var(--color-border)",
-                      }}
-                    >
+                    {/* Grid de cards com foto (colunas em .member-grid, globals.css) */}
+                    <div className="member-grid">
                       {group.map((member) => (
                         <MemberCardModal
                           key={member.slug}
