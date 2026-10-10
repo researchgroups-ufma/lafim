@@ -49,7 +49,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   // Todos os componentes filhos herdam essas variáveis via CSS cascade.
   //
   // Os dois MotionConfig são intencionais: o projeto usa "framer-motion"
-  // (templates, Hero, MobileNav, SideNav, EquipmentCard) e "motion/react"
+  // (templates, Hero, MobileNav, EquipmentCard) e "motion/react"
   // (motion-primitives). São pacotes instalados separadamente, com contextos
   // React distintos — um provider sozinho não alcançaria a outra metade.
   //

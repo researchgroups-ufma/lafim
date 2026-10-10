@@ -11,8 +11,8 @@
  * O overlay entra com fade + slide e fecha ao clicar em um link ou no X.
  *
  * Sem a barra por trás, o botão fica direto sobre o conteúdo e precisa
- * trocar de cor conforme o que está atrás dele — igual ao SideNav, que faz
- * o mesmo com os links. Ver o comentário em `overDark` abaixo.
+ * trocar de cor conforme o que está atrás dele. Ver o comentário em
+ * `overDark` abaixo.
  */
 
 "use client";
@@ -57,9 +57,8 @@ export default function MobileNav({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
 
   // O botão está sobre o bloco escuro da página (hoje só o Hero da home;
-  // o PageHeader das internas é claro)? Diferente do SideNav, que fica no centro da tela e usa um
-  // IntersectionObserver, o botão fica a 20px do topo: basta checar se o bloco
-  // cobre esse ponto. Vale a linha do hamburguer, não a do topo do bloco.
+  // o PageHeader das internas é claro)? O botão fica a 20px do topo: basta
+  // checar se o bloco cobre esse ponto. Vale a linha do hamburguer, não a do topo do bloco.
   const [overDark, setOverDark] = useState(true);
 
   useEffect(() => {

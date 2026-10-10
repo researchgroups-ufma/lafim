@@ -1,353 +1,64 @@
 /**
- * SideNav — Menu de navegação lateral fixo no lado direito
+ * SideNav — Índice de navegação fixo no lado direito (desktop)
  *
- * Animações implementadas com GSAP:
- *   1. Stagger na entrada dos links (cascata de cima para baixo)
- *   2. Hover com timeline coordenada — texto desliza + underline âmbar cresce
- *   3. Indicador de link ativo — ponto âmbar com entrada animada (back.out)
- *   4. Reveal do dropdown — AnimatePresence + GSAP (height/opacity)
+ * Na home, sobre o Hero, os links formam um índice grande à direita do logo.
+ * Ao rolar, o mesmo índice encolhe até o tamanho compacto e continua fixo no
+ * mesmo lugar. Nas páginas internas ele já começa compacto. Nunca some.
  *
- * Para adicionar subitens a outro link:
- *   Adicione uma nova entrada no objeto SUB_ITEMS.
+ * A página ativa é marcada com um ponto. A cor vem de mix-blend-mode
+ * (ver SideNav.module.css), então não há detecção de fundo em JS.
+ *
+ * Oculto abaixo de 768px pela classe global .side-nav; lá o MobileNav assume.
  */
 
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { gsap } from "gsap";
 import { navLinks } from "@/lib/config";
 import { getDictionary, localizeHref, type Locale } from "@/lib/i18n";
 import LanguageSwitch from "./LanguageSwitch";
+import s from "./SideNav.module.css";
 
-/**
- * Duração de animação que respeita "reduzir movimento" do sistema (WCAG 2.3.3).
- *
- * O CSS em globals.css não alcança o GSAP, que anima via JS escrevendo estilo
- * inline. Retornar 0 faz o GSAP aplicar o estado FINAL imediatamente — de
- * propósito, em vez de pular a chamada: um `fromTo` pulado deixaria o submenu
- * preso em height:0, ou seja, invisível.
- */
-const dur = (seconds: number) =>
-  typeof window !== "undefined" &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ? 0
-    : seconds;
-
-// Subitens de cada link principal, indexados pelo href canônico (PT) do pai.
-// Infraestrutura saiu do menu enquanto é reformulada; a rota continua no ar.
-// Para voltar: "/research": [{ key: "infrastructure", href: "/research/infrastructure" }]
-const SUB_ITEMS: Record<string, { key: "infrastructure"; href: string }[]> = {};
+// Quanto rolar na home até o índice grande encolher
+const LIMIAR_COMPACTO = 120;
 
 export default function SideNav({ locale }: { locale: Locale }) {
   const pathname = usePathname();
   const dict = getDictionary(locale);
 
-  // Indica se o menu (centralizado na vertical) está sobreposto ao Hero escuro.
-  // Quando true → texto branco; quando false (seções creme) → texto charcoal.
-  // Inicializa como true na home (PT e EN) para evitar flash escuro antes do observer.
-  const [overDark, setOverDark] = useState(pathname === "/" || pathname === "/en");
+  // Só a home (PT e EN) tem o Hero escuro em tela cheia. Decidir pela rota,
+  // e não pelo DOM, faz o HTML estático já sair no estado certo.
+  const isHome = pathname === "/" || pathname === "/en";
 
-  // Distância do topo até onde o menu se ancora. Null = sem bloco escuro na
-  // página, e o menu cai no centro da viewport (ver `top` no <nav>).
-  const [anchorTop, setAnchorTop] = useState<number | null>(null);
-
-  // Observa o bloco escuro da página com uma "linha" no centro vertical da
-  // viewport (rootMargin -50%/-50%). Enquanto esse bloco cruza a linha, o menu
-  // está sobre fundo escuro. Hoje só o Hero da home é marcado com
-  // data-dark-bg; o PageHeader das páginas internas é claro.
-  //
-  // O mesmo bloco também ancora o menu: ele se centraliza na ALTURA DO BLOCO,
-  // não na da viewport, para caber inteiro dentro do cabeçalho na posição
-  // inicial. Na home o bloco é o Hero (100svh), então isso dá exatamente o
-  // centro da tela — o comportamento de sempre.
+  const [rolou, setRolou] = useState(false);
   useEffect(() => {
-    const darkBlock = document.querySelector("[data-dark-bg]");
-    if (!darkBlock) {
-      setOverDark(false); // páginas sem bloco escuro (fundo creme) → texto escuro
-      setAnchorTop(null);
-      return;
-    }
-
-    // O Hero usa 100svh: a altura muda quando a janela é redimensionada.
-    const measure = () =>
-      setAnchorTop(darkBlock.getBoundingClientRect().height / 2);
-    measure();
-    window.addEventListener("resize", measure);
-
-    const io = new IntersectionObserver(
-      ([entry]) => setOverDark(entry.isIntersecting),
-      { rootMargin: "-50% 0px -50% 0px", threshold: 0 }
-    );
-    io.observe(darkBlock);
-
-    return () => {
-      io.disconnect();
-      window.removeEventListener("resize", measure);
-    };
-  }, [pathname]);
-
-  // Cores derivadas do contexto (escuro sobre o Hero / claro sobre o creme)
-  const fg = overDark ? "#ffffff" : "var(--color-text)";
-  const accent = overDark ? "#ffffff" : "var(--color-primary)";
-  const sepColor = overDark ? "rgba(245, 245, 240, 0.2)" : "rgba(28, 28, 28, 0.15)";
-  // Subitem inativo — um degrau abaixo de fg, para manter a hierarquia visual
-  const subFg = overDark ? "rgba(255, 255, 255, 0.65)" : "var(--color-text-muted)";
-
-  // Refs para as animações GSAP
-  const linksRef = useRef<(HTMLDivElement | null)[]>([]);
-  const textsRef = useRef<(HTMLSpanElement | null)[]>([]);
-  const underlinesRef = useRef<(HTMLSpanElement | null)[]>([]);
-  const subItemsRef = useRef<Record<string, HTMLDivElement | null>>({});
-
-  // 1. Stagger na entrada dos links ao montar
-  useEffect(() => {
-    gsap.from(linksRef.current, {
-      opacity: 0,
-      x: 20,
-      duration: dur(0.4),
-      stagger: dur(0.08),
-      ease: "power2.out",
-    });
+    const onScroll = () => setRolou(window.scrollY > LIMIAR_COMPACTO);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // 2. Hover com timeline coordenada
-  // killTweensOf antes de cada timeline: sem isso, numa passada rápida do
-  // mouse a entrada (0,25s) termina depois da saída (0,2s) e deixa o
-  // underline preso em scaleX 1, colado à linha separadora do item seguinte.
-  const handleEnter = (i: number) => {
-    const textEl = textsRef.current[i];
-    const underlineEl = underlinesRef.current[i];
-    if (!textEl || !underlineEl) return;
-    gsap.killTweensOf([textEl, underlineEl]);
-    const tl = gsap.timeline();
-    tl.to(textEl, { x: -4, duration: dur(0.2), ease: "power2.out" })
-      .to(underlineEl, { scaleX: 1, duration: dur(0.25), ease: "power2.out" }, 0);
-  };
-
-  const handleLeave = (i: number) => {
-    const textEl = textsRef.current[i];
-    const underlineEl = underlinesRef.current[i];
-    if (!textEl || !underlineEl) return;
-    gsap.killTweensOf([textEl, underlineEl]);
-    const tl = gsap.timeline();
-    tl.to(textEl, { x: 0, duration: dur(0.2), ease: "power2.in" })
-      .to(underlineEl, { scaleX: 0, duration: dur(0.2), ease: "power2.in" }, 0);
-  };
+  const compacto = !isHome || rolou;
 
   return (
-    <nav
-      aria-label={dict.a11y.mainNav}
-      className="side-nav"
-      style={{
-        position: "fixed",
-        top: anchorTop === null ? "50%" : `${anchorTop}px`,
-        right: "2.5rem",
-        transform: "translateY(-50%)",
-        zIndex: 100,
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      {navLinks.map((link, index) => {
-        const href = localizeHref(link.href, locale);
-        const label = dict.nav[link.key];
-        const isActive =
-          pathname === href ||
-          (link.href !== "/" && pathname.startsWith(href + "/"));
-        const subItems = SUB_ITEMS[link.href];
-        const showSubItems =
-          subItems && (pathname === href || pathname.startsWith(href + "/"));
-
-        return (
-          <div key={link.href}>
-
-            {/* Linha separadora acima de cada item */}
-            <div
-              style={{
-                width: "100%",
-                height: "1px",
-                backgroundColor: sepColor,
-                transition: "background-color 0.15s ease",
-              }}
-            />
-
-            {/* Link principal com hover GSAP e indicador âmbar animado */}
-            <div
-              ref={(el) => { linksRef.current[index] = el; }}
-              style={{ transformOrigin: "right center" }}
-            >
-              <Link
-                href={href}
-                aria-current={isActive ? "page" : undefined}
-                onMouseEnter={() => handleEnter(index)}
-                onMouseLeave={() => handleLeave(index)}
-                style={{
-                  position: "relative",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-end",
-                  gap: "0.5rem",
-                  padding: "0.6rem 0",
-                  fontSize: "0.875rem",
-                  fontWeight: isActive ? 500 : 400,
-                  letterSpacing: "0.04em",
-                  color: fg,
-                  transition: "color 0.15s ease",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {/* Indicador âmbar — entrada animada com GSAP */}
-                {isActive && (
-                  <span
-                    ref={(el) => {
-                      if (el) {
-                        gsap.from(el, {
-                          scale: 0,
-                          opacity: 0,
-                          duration: dur(0.3),
-                          ease: "back.out(1.7)",
-                        });
-                      }
-                    }}
-                    style={{
-                      display: "block",
-                      width: "6px",
-                      height: "6px",
-                      borderRadius: "50%",
-                      backgroundColor: accent,
-                      flexShrink: 0,
-                    }}
-                  />
-                )}
-                <span ref={(el) => { textsRef.current[index] = el; }}>
-                  {label}
-                </span>
-                {/* Underline âmbar — cresce no hover */}
-                <span
-                  ref={(el) => { underlinesRef.current[index] = el; }}
-                  style={{
-                    position: "absolute",
-                    bottom: 0,
-                    right: 0,
-                    width: "100%",
-                    height: "1px",
-                    backgroundColor: accent,
-                    transformOrigin: "right center",
-                    transform: "scaleX(0)",
-                  }}
-                />
+    <nav aria-label={dict.a11y.mainNav} className={`side-nav ${s.nav}`} data-compacto={compacto}>
+      <ul className={s.lista}>
+        {navLinks.map((link) => {
+          const href = localizeHref(link.href, locale);
+          const isActive =
+            pathname === href || (link.href !== "/" && pathname.startsWith(href + "/"));
+          return (
+            <li key={link.href}>
+              <Link href={href} aria-current={isActive ? "page" : undefined}>
+                {dict.nav[link.key]}
               </Link>
-            </div>
-
-            {/* Subitens — dropdown com AnimatePresence + reveal GSAP */}
-            <AnimatePresence>
-              {showSubItems && subItems.map((sub) => {
-                const subHref = localizeHref(sub.href, locale);
-                const subLabel = dict.nav[sub.key];
-                const subActive = pathname === subHref;
-                return (
-                  <motion.div
-                    key={sub.href}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.2, ease: "easeInOut" }}
-                    style={{ overflow: "hidden" }}
-                    onAnimationStart={(definition) => {
-                      // Reveal GSAP apenas na entrada (animate), não na saída
-                      if (
-                        typeof definition === "object" &&
-                        definition !== null &&
-                        "opacity" in definition &&
-                        (definition as { opacity?: number }).opacity === 1
-                      ) {
-                        const subItemEl = subItemsRef.current[sub.href];
-                        if (subItemEl) {
-                          // duration 0 aterrissa direto em height:auto/opacity:1
-                          gsap.fromTo(
-                            subItemEl,
-                            { height: 0, opacity: 0 },
-                            {
-                              height: "auto",
-                              opacity: 1,
-                              duration: dur(0.25),
-                              ease: "power2.out",
-                              overwrite: "auto",
-                            }
-                          );
-                        }
-                      }
-                    }}
-                  >
-                    <div
-                      ref={(el) => { subItemsRef.current[sub.href] = el; }}
-                    >
-                      <Link
-                        href={subHref}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "flex-end",
-                          gap: "0.4rem",
-                          padding: "0.35rem 0",
-                          fontSize: "0.775rem",
-                          letterSpacing: "0.04em",
-                          color: subActive ? accent : subFg,
-                          transition: "color 0.15s ease",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {/* Indicador do subitem ativo — entrada GSAP */}
-                        {subActive && (
-                          <span
-                            ref={(el) => {
-                              if (el) {
-                                gsap.from(el, {
-                                  scale: 0,
-                                  opacity: 0,
-                                  duration: dur(0.3),
-                                  ease: "back.out(1.7)",
-                                });
-                              }
-                            }}
-                            style={{
-                              display: "block",
-                              width: "4px",
-                              height: "4px",
-                              borderRadius: "50%",
-                              backgroundColor: accent,
-                              flexShrink: 0,
-                            }}
-                          />
-                        )}
-                        {subLabel}
-                      </Link>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
-
-            {/* Linha separadora abaixo do último item */}
-            {index === navLinks.length - 1 && (
-              <div
-                style={{
-                  width: "100%",
-                  height: "1px",
-                  backgroundColor: sepColor,
-                }}
-              />
-            )}
-
-          </div>
-        );
-      })}
-
-      {/* Switch de idioma PT | EN */}
-      <div style={{ marginTop: "0.75rem", color: fg, display: "flex", justifyContent: "flex-end" }}>
+            </li>
+          );
+        })}
+      </ul>
+      <div className={s.idioma}>
         <LanguageSwitch locale={locale} />
       </div>
     </nav>

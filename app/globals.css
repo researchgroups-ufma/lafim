@@ -620,7 +620,7 @@ img { max-width: 100%; display: block; }
 .mobile-nav-link.is-active { color: #ffffff; font-weight: 600; } /* destaque sutil */
 
 @media (max-width: 767px) {
-  /* Oculta a SideNav (desktop) — o !important vence o display:flex inline */
+  /* Oculta a SideNav (desktop) — o !important vence o CSS do próprio componente */
   .side-nav { display: none !important; }
 
   /* Colapsa grids com colunas definidas via style inline para coluna única.
