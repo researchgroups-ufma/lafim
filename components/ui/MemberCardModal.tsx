@@ -67,7 +67,7 @@ export default function MemberCardModal({
   name, role, research_area, scholarship, year_start,
   bio, photo, email, linkedin, instagram, lattes, orcid, scholar, arxiv, locale = "pt",
 }: MemberCardModalProps) {
-  const a11y = getDictionary(locale).a11y;
+  const { a11y, members: t } = getDictionary(locale);
 
   return (
     <MorphingDialog
@@ -88,7 +88,7 @@ export default function MemberCardModal({
           ) : (
             <span className="member-card__initial">{name.charAt(0)}</span>
           )}
-          <span className="member-card__more" aria-hidden="true">Ver perfil</span>
+          <span className="member-card__more" aria-hidden="true">{t.viewProfile}</span>
         </span>
 
         <MorphingDialogTitle className="member-card__name">{name}</MorphingDialogTitle>
@@ -96,9 +96,9 @@ export default function MemberCardModal({
         {(scholarship || year_start || research_area) && (
           <MorphingDialogSubtitle className="member-card__meta">
             {research_area && <>{research_area}<br /></>}
-            {scholarship && `Bolsa ${scholarship}`}
+            {scholarship && t.scholarship.replace("{bolsa}", scholarship)}
             {scholarship && year_start && " · "}
-            {year_start && `desde ${year_start}`}
+            {year_start && `${t.since} ${year_start}`}
           </MorphingDialogSubtitle>
         )}
       </MorphingDialogTrigger>

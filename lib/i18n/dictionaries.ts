@@ -105,6 +105,10 @@ export const dictionaries = {
       team: "Equipe",
       alumni: "Egressos",
       collaborators: "Colaboradores externos",
+      // textos do card da equipe (MemberCardModal); {bolsa} = CAPES, CNPq…
+      viewProfile: "Ver perfil",
+      since: "desde",
+      scholarship: "Bolsa {bolsa}",
       // plurais irregulares dos grupos (os demais recebem "s")
       rolePlural: {
         "Pesquisador Sênior": "Pesquisadores Sênior",
@@ -280,6 +284,10 @@ export const dictionaries = {
       team: "Team",
       alumni: "Alumni",
       collaborators: "External collaborators",
+      // textos do card da equipe (MemberCardModal); {bolsa} = CAPES, CNPq…
+      viewProfile: "View profile",
+      since: "since",
+      scholarship: "{bolsa} scholarship",
       // plurais irregulares dos grupos (os demais recebem "s") — chaves em PT (frontmatter), valores traduzidos
       rolePlural: {
         "Pesquisador Sênior": "Senior Researchers",
