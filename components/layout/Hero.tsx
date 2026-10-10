@@ -64,7 +64,10 @@ export default function Hero({ subtitle }: HeroProps) {
           objectFit: "cover", /* cobre sem distorcer */
         }}
       >
-        <source src="/videos/video-hero.mp4" type="video/mp4" />
+        {/* O navegador escolhe a fonte só no carregamento; girar ou
+            redimensionar a tela depois não troca o vídeo. */}
+        <source src="/videos/hero-mobile.mp4" type="video/mp4" media="(max-width: 767px)" />
+        <source src="/videos/new_hero.mp4" type="video/mp4" />
       </video>
 
       {/* ── Overlay escuro ──────────────────────────────────────────────────
