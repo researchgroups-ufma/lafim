@@ -22,7 +22,7 @@ import { getCollection } from "@/lib/mdx";
 import { siteConfig } from "@/lib/config";
 import PageHeader from "@/components/ui/PageHeader";
 import MemberCardModal from "@/components/ui/MemberCardModal";
-import MemberLinks from "@/components/ui/MemberLinks";
+import MemberLinks, { LattesIcon } from "@/components/ui/MemberLinks";
 import Image from "next/image";
 import { getDictionary, type Locale } from "@/lib/i18n";
 
@@ -213,7 +213,7 @@ export default async function MembersPage({ locale }: { locale: Locale }) {
           )}
 
           {/* ── Egressos ────────────────────────────────────────────────────
-              Lista com nome, nível, tema e ano de conclusão               */}
+              Lista com nome, nível, tema, Lattes e ano de conclusão       */}
           {alumni.length > 0 && (
             <section style={{ padding: "4rem 0", borderBottom: "1px solid var(--color-border)" }}>
               <h2 className="section-title" style={{ fontSize: "1.5rem" }}>{dict.members.alumni}</h2>
@@ -236,6 +236,19 @@ export default async function MembersPage({ locale }: { locale: Locale }) {
                     <div>
                       <p style={{ fontFamily: "var(--font-display)", fontSize: "1rem", color: "var(--color-text)" }}>
                         {member.title as string}
+                        {(member.lattes as string | undefined) && (
+                          // 1em: o ícone acompanha o corpo do nome
+                          <a
+                            className="member-link"
+                            href={member.lattes as string}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={dict.a11y.links.lattes}
+                            style={{ marginLeft: "0.45em", verticalAlign: "-0.125em" }}
+                          >
+                            <LattesIcon className="w-[1em] h-[1em]" />
+                          </a>
+                        )}
                       </p>
                       <p style={{ fontSize: "0.8rem", color: "var(--color-text-muted)", fontWeight: 300 }}>
                         {roleLabel(member.role as string)}

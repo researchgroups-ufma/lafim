@@ -81,7 +81,7 @@ collections:
         widget: "select"
         options: ["Coordenador", "Pesquisador Sênior", "Pós-Doutorando", "Doutorando", "Mestrando", "Iniciação Científica", "Egresso", "Colaborador Externo"]
       - { label: "Afiliação",          name: "affiliation",   widget: "string",  i18n: duplicate }
-      - { label: "Bio",                name: "bio",           widget: "text",    i18n: true }
+      - { label: "Bio",                name: "bio",           widget: "text",    required: false, i18n: true }
       - { label: "Foto",               name: "photo",         widget: "image",   required: false, i18n: duplicate }
       - { label: "E-mail",             name: "email",         widget: "string",  required: false, i18n: duplicate }
       - { label: "LinkedIn",           name: "linkedin",      widget: "string",  required: false, i18n: duplicate }
