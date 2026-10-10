@@ -8,7 +8,6 @@ year: 2026
 date: 2026-05-01
 journal: Journal of Molecular Structure
 doi: https://doi.org/10.1016/j.molstruc.2026.145579
-type: Artigo
+arxiv: null
 tags: null
-featured: true
 ---
