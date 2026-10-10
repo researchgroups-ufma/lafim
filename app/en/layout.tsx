@@ -68,7 +68,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/images/hero-poster.jpg',
+        url: '/images/og-lafim.png',
         width: 1200,
         height: 630,
         alt: 'LaFiM — Laboratório de Física dos Materiais',
@@ -79,7 +79,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'LaFiM — Universidade Federal do Maranhão',
     description: 'A Federal University of Maranhão laboratory dedicated to experimental research in Materials Physics: synthesis of inorganic materials and the study of their properties under extreme conditions of pressure and temperature.',
-    images: ['/images/hero-poster.jpg'],
+    images: ['/images/og-lafim.png'],
   },
 };
 
