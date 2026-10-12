@@ -32,6 +32,10 @@ i18n:
 
 collections:
 
+  # Textos longos usam widget "text", não "markdown": o site imprime o texto
+  # puro, sem parser, e o editor rico ofereceria negrito, listas e links que
+  # chegariam ao visitante como **asteriscos**.
+
   # ── Apresentação ────────────────────────────────────────────────────────────
   # about fica fora do i18n nativo do Decap (file collection tem suporte
   # limitado) — a tradução é um segundo file entry apontando para index.en.md.
@@ -46,14 +50,14 @@ collections:
         fields:
           - { label: "Subtítulo",      name: "subtitle",    widget: "string",   required: false }
           - { label: "Missão",         name: "mission",     widget: "text" }
-          - { label: "Histórico",      name: "body",        widget: "markdown" }
+          - { label: "Histórico",      name: "body",        widget: "text",     hint: "Texto simples, sem formatação. Separe os parágrafos com uma linha em branco." }
       - name: "about-en"
         label: "Texto Institucional (EN)"
         file: "content/about/index.en.md"
         fields:
           - { label: "Subtítulo",      name: "subtitle",    widget: "string",   required: false }
           - { label: "Missão",         name: "mission",     widget: "text" }
-          - { label: "Histórico",      name: "body",        widget: "markdown" }
+          - { label: "Histórico",      name: "body",        widget: "text",     hint: "Texto simples, sem formatação. Separe os parágrafos com uma linha em branco." }
 
   # ── Membros ─────────────────────────────────────────────────────────────────
   # title (nome próprio) e demais campos de dados/links usam "duplicate";
@@ -66,29 +70,32 @@ collections:
     i18n: true
     fields:
       - { label: "Nome completo",      name: "title",         widget: "string",  i18n: duplicate }
+      # Os parênteses dizem em quais funções o campo aparece no site
+      # (components/pages/MembersPage.tsx); fora delas, o valor é ignorado.
       - label: "Função"
         name: "role"
         widget: "select"
+        hint: "Equipe = Pesquisador Sênior, Pós-Doutorando, Doutorando, Mestrando e Iniciação Científica. O texto entre parênteses em cada campo diz para quais funções ele aparece no site."
         options: ["Coordenador", "Pesquisador Sênior", "Pós-Doutorando", "Doutorando", "Mestrando", "Iniciação Científica", "Egresso", "Colaborador Externo"]
-      - { label: "Afiliação (só exibida para Colaborador Externo)", name: "affiliation", widget: "string", i18n: duplicate }
-      - { label: "Bio",                name: "bio",           widget: "text",    required: false, i18n: true }
-      - { label: "Foto",               name: "photo",         widget: "image",   required: false, i18n: duplicate }
-      - { label: "E-mail",             name: "email",         widget: "string",  required: false, i18n: duplicate }
-      - { label: "LinkedIn",           name: "linkedin",      widget: "string",  required: false, i18n: duplicate }
-      - { label: "Instagram",          name: "instagram",     widget: "string",  required: false, i18n: duplicate }
-      - { label: "Lattes",             name: "lattes",        widget: "string",  required: false, i18n: duplicate }
-      - { label: "ORCID",              name: "orcid",         widget: "string",  required: false, i18n: duplicate }
-      - { label: "Google Scholar",     name: "scholar",       widget: "string",  required: false, i18n: duplicate }
-      - { label: "arXiv",              name: "arxiv",         widget: "string",  required: false, i18n: duplicate }
-      - { label: "Linha de pesquisa",  name: "research_area", widget: "string",  required: false }
-      - label: "Bolsa"
+      - { label: "Afiliação (colaborador externo)",         name: "affiliation",   widget: "string",  required: false, i18n: duplicate }
+      - { label: "Bio (coordenador e equipe)",              name: "bio",           widget: "text",    required: false, i18n: true }
+      - { label: "Foto (coordenador e equipe)",             name: "photo",         widget: "image",   required: false, i18n: duplicate }
+      - { label: "E-mail (coordenador e equipe)",           name: "email",         widget: "string",  required: false, i18n: duplicate }
+      - { label: "LinkedIn (coordenador e equipe)",         name: "linkedin",      widget: "string",  required: false, i18n: duplicate }
+      - { label: "Instagram (coordenador e equipe)",        name: "instagram",     widget: "string",  required: false, i18n: duplicate }
+      - { label: "Lattes (coordenador, equipe e egressos)", name: "lattes",        widget: "string",  required: false, i18n: duplicate }
+      - { label: "ORCID (coordenador e equipe)",            name: "orcid",         widget: "string",  required: false, i18n: duplicate }
+      - { label: "Google Scholar (coordenador e equipe)",   name: "scholar",       widget: "string",  required: false, i18n: duplicate }
+      - { label: "arXiv (coordenador e equipe)",            name: "arxiv",         widget: "string",  required: false, i18n: duplicate }
+      - { label: "Linha de pesquisa (equipe e egressos)",   name: "research_area", widget: "string",  required: false }
+      - label: "Bolsa (equipe)"
         name: "scholarship"
         widget: "select"
         required: false
         options: ["CAPES", "CNPq", "FAPEMA", "Sem bolsa"]
-      - { label: "Ano de início",               name: "year_start", widget: "string", required: false }
-      - { label: "Ano de conclusão (egressos)", name: "year_end",   widget: "string", required: false }
-      - { label: "Instituição atual (egressos)", name: "current_institution", widget: "string", required: false }
+      - { label: "Ano de início (equipe)",                  name: "year_start", widget: "string", required: false }
+      - { label: "Ano de conclusão (egressos)",             name: "year_end",   widget: "string", required: false }
+      - { label: "Instituição atual (egressos)",            name: "current_institution", widget: "string", required: false }
 
   # ── Linhas de Pesquisa ──────────────────────────────────────────────────────
   - name: "research"
@@ -100,7 +107,7 @@ collections:
     fields:
       - { label: "Nome",               name: "title",   widget: "string", i18n: true }
       - { label: "Resumo curto",       name: "summary", widget: "text",   i18n: true }
-      - { label: "Descrição completa", name: "body",    widget: "markdown", i18n: true }
+      - { label: "Descrição completa", name: "body",    widget: "text",     i18n: true, hint: "Texto simples, sem formatação, em um único parágrafo: o site não separa parágrafos aqui." }
       - { label: "Imagem",             name: "image",   widget: "image",    required: false, i18n: duplicate }
 
   # ── Publicações ─────────────────────────────────────────────────────────────
@@ -142,7 +149,7 @@ collections:
         widget: "select"
         options: ["Publicação", "Defesa", "Premiação", "Visita", "Mídia", "Outros"]
       - { label: "Resumo",         name: "excerpt",     widget: "text", i18n: true }
-      - { label: "Conteúdo",       name: "body",        widget: "markdown", i18n: true }
+      - { label: "Conteúdo",       name: "body",        widget: "text",     i18n: true, hint: "Texto simples, sem formatação. Separe os parágrafos com uma linha em branco." }
       - { label: "Imagem de capa", name: "cover_image", widget: "image",   required: false, i18n: duplicate }
       - label: "Galeria (carrossel)"
         name: "gallery"
