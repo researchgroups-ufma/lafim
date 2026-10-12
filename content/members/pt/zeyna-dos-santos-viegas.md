@@ -19,5 +19,5 @@ bio: Sou pesquisador(a) em Física da Matéria Condensada, com experiência em
   vibracional e propriedades físico-químicas.
 photo: /uploads/zeyna.png
 lattes: http://lattes.cnpq.br/4409907380333979
-year_start: ""
+year_start: "2026"
 ---
