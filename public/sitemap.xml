@@ -99,18 +99,4 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://lafim.pages.dev/en/research"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://lafim.pages.dev/research"/>
   </url>
-  <url>
-    <loc>https://lafim.pages.dev/research/infrastructure</loc>
-    <lastmod>2026-09-11</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://lafim.pages.dev/research/infrastructure"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://lafim.pages.dev/en/research/infrastructure"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://lafim.pages.dev/research/infrastructure"/>
-  </url>
-  <url>
-    <loc>https://lafim.pages.dev/en/research/infrastructure</loc>
-    <lastmod>2026-09-11</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://lafim.pages.dev/research/infrastructure"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://lafim.pages.dev/en/research/infrastructure"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://lafim.pages.dev/research/infrastructure"/>
-  </url>
 </urlset>

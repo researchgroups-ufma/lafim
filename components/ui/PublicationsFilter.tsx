@@ -34,8 +34,6 @@ type Publication = {
   doi?: string;
   arxiv?: string;
   type: string;
-  research_area?: string;
-  tags?: string[];
   featured?: boolean;
 };
 
@@ -208,7 +206,7 @@ export default function PublicationsFilter({ publications, strings, typeLabels }
                     </p>
                   )}
 
-                  {/* Tags e badge de destaque */}
+                  {/* Badges de destaque e tipo */}
                   <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", marginTop: "0.5rem" }}>
                     {pub.featured && (
                       <span className="badge badge-primary">{strings.badgeFeatured}</span>
@@ -216,9 +214,6 @@ export default function PublicationsFilter({ publications, strings, typeLabels }
                     {pub.type && (
                       <span className="badge badge-muted">{typeLabels[pub.type] ?? pub.type}</span>
                     )}
-                    {(pub.tags || []).map((tag) => (
-                      <span key={tag} className="badge badge-muted">{tag}</span>
-                    ))}
                   </div>
                 </div>
 

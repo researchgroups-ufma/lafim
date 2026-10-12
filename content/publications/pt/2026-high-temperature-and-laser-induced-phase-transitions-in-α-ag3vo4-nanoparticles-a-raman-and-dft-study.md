@@ -7,7 +7,5 @@ date: "2026-03-01"
 journal: "Spectrochimica Acta Part A: Molecular and Biomolecular Spectroscopy"
 doi: https://doi.org/10.1016/j.saa.2025.127376
 type: Artigo
-tags:
-  - mat
 featured: true
 ---

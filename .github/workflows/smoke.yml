@@ -61,7 +61,6 @@ jobs:
 
           pagina /
           pagina /research                "Nenhuma linha de pesquisa cadastrada ainda."
-          pagina /research/infrastructure "Nenhum equipamento cadastrado ainda."
           pagina /members
           pagina /publications
           pagina /about

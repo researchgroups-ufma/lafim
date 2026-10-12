@@ -26,7 +26,6 @@ const ROUTES = [
   "/news",
   "/publications",
   "/research",
-  "/research/infrastructure",
 ];
 
 // en("/") = "/en"; en(rota) = "/en" + rota.

@@ -14,7 +14,6 @@ export const dictionaries = {
     nav: {
       home: "Início",
       research: "Pesquisa",
-      infrastructure: "Infraestrutura",
       members: "Membros",
       publications: "Publicações",
       news: "Notícias",
@@ -58,10 +57,6 @@ export const dictionaries = {
       title: "Linhas de Pesquisa",
       intro: "O LaFiM é um laboratório experimental de Física da Matéria Condensada e Ciência dos Materiais. Nossas linhas se organizam da síntese de materiais inorgânicos ao estudo de suas propriedades físicas e de seu comportamento sob condições extremas de pressão e temperatura.",
       empty: "Nenhuma linha de pesquisa cadastrada ainda.",
-    },
-    infrastructure: {
-      title: "Infraestrutura",
-      empty: "Nenhum equipamento cadastrado ainda.",
     },
     news: {
       title: "Notícias",
@@ -193,7 +188,6 @@ export const dictionaries = {
     nav: {
       home: "Home",
       research: "Research",
-      infrastructure: "Infrastructure",
       members: "Members",
       publications: "Publications",
       news: "News",
@@ -237,10 +231,6 @@ export const dictionaries = {
       title: "Research Lines",
       intro: "LaFiM is an experimental laboratory in Condensed Matter Physics and Materials Science. Our research lines range from the synthesis of inorganic materials to the study of their physical properties and their behaviour under extreme conditions of pressure and temperature.",
       empty: "No research lines registered yet.",
-    },
-    infrastructure: {
-      title: "Infrastructure",
-      empty: "No equipment registered yet.",
     },
     news: {
       title: "News",

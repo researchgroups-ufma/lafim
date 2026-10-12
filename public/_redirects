@@ -1,0 +1,5 @@
+# Redirecionamentos do Cloudflare Pages.
+# A página de Infraestrutura saiu do site em 2026-10-12; o endereço estava
+# no sitemap e pode estar indexado, então manda para Pesquisa em vez de 404.
+/research/infrastructure     /research     301
+/en/research/infrastructure  /en/research  301

@@ -37,8 +37,6 @@ export default async function PublicationsPage({ locale }: { locale: Locale }) {
     doi?: string;
     arxiv?: string;
     type: string;
-    research_area?: string;
-    tags?: string[];
     featured?: boolean;
   }[];
 

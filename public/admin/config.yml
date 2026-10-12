@@ -35,6 +35,8 @@ collections:
   # ── Apresentação ────────────────────────────────────────────────────────────
   # about fica fora do i18n nativo do Decap (file collection tem suporte
   # limitado) — a tradução é um segundo file entry apontando para index.en.md.
+  # Sem campo de imagens do hero (o hero é um vídeo fixo, components/layout/Hero.tsx)
+  # nem de título (o da página Sobre vem de lib/i18n/dictionaries.ts).
   - name: "about"
     label: "Apresentação"
     files:
@@ -42,28 +44,16 @@ collections:
         label: "Texto Institucional"
         file: "content/about/index.md"
         fields:
-          - { label: "Título",         name: "title",       widget: "string" }
           - { label: "Subtítulo",      name: "subtitle",    widget: "string",   required: false }
           - { label: "Missão",         name: "mission",     widget: "text" }
           - { label: "Histórico",      name: "body",        widget: "markdown" }
-          - label: "Imagens do Hero (carrossel)"
-            name: "hero_images"
-            widget: "list"
-            required: false
-            field: { label: "Imagem", name: "image", widget: "image" }
       - name: "about-en"
         label: "Texto Institucional (EN)"
         file: "content/about/index.en.md"
         fields:
-          - { label: "Título",         name: "title",       widget: "string" }
           - { label: "Subtítulo",      name: "subtitle",    widget: "string",   required: false }
           - { label: "Missão",         name: "mission",     widget: "text" }
           - { label: "Histórico",      name: "body",        widget: "markdown" }
-          - label: "Imagens do Hero (carrossel)"
-            name: "hero_images"
-            widget: "list"
-            required: false
-            field: { label: "Imagem", name: "image", widget: "image" }
 
   # ── Membros ─────────────────────────────────────────────────────────────────
   # title (nome próprio) e demais campos de dados/links usam "duplicate";
@@ -80,7 +70,7 @@ collections:
         name: "role"
         widget: "select"
         options: ["Coordenador", "Pesquisador Sênior", "Pós-Doutorando", "Doutorando", "Mestrando", "Iniciação Científica", "Egresso", "Colaborador Externo"]
-      - { label: "Afiliação",          name: "affiliation",   widget: "string",  i18n: duplicate }
+      - { label: "Afiliação (só exibida para Colaborador Externo)", name: "affiliation", widget: "string", i18n: duplicate }
       - { label: "Bio",                name: "bio",           widget: "text",    required: false, i18n: true }
       - { label: "Foto",               name: "photo",         widget: "image",   required: false, i18n: duplicate }
       - { label: "E-mail",             name: "email",         widget: "string",  required: false, i18n: duplicate }
@@ -135,18 +125,6 @@ collections:
         name: "type"
         widget: "select"
         options: ["Artigo", "Preprint", "Tese", "Dissertação", "Livro", "Capítulo"]
-      - { label: "Linha de pesquisa",  name: "research_area", widget: "string",  required: false }
-      - label: "Tags para filtro"
-        name: "tags"
-        widget: "select"
-        required: false
-        multiple: true
-        i18n: duplicate
-        options:
-          - { label: "Mat. Condensada",    value: "mat" }
-          - { label: "Supercondutividade", value: "supercond" }
-          - { label: "Nanomateriais",      value: "nano" }
-          - { label: "Computacional",      value: "comp" }
       - { label: "Em destaque",        name: "featured",      widget: "boolean", default: false }
 
   # ── Notícias ────────────────────────────────────────────────────────────────
@@ -173,30 +151,6 @@ collections:
         # sem i18n: o schema do Decap só aceita boolean em widget de lista, e a
         # galeria é compartilhada — o EN cai no PT pelo merge de lib/mdx.ts.
         field: { label: "Imagem", name: "image", widget: "image" }
-
-  # ── Infraestrutura ──────────────────────────────────────────────────────────
-  - name: "equipment-info"
-    label: "Infraestrutura — Informações da Página"
-    files:
-      - name: "equipment-info"
-        label: "Texto Introdutório"
-        file: "content/equipment/index.md"
-        fields:
-          - { label: "Introdução da página", name: "intro", widget: "text" }
-
-  - name: "equipment"
-    label: "Infraestrutura — Equipamentos"
-    folder: "content/equipment"
-    create: true
-    slug: "{{slug}}"
-    i18n: true
-    fields:
-      - { label: "Nome do equipamento",    name: "title",        widget: "string", i18n: true }
-      - { label: "Descrição breve",        name: "summary",      widget: "text",   i18n: true }
-      - { label: "Descrição completa",     name: "description",  widget: "markdown", required: false, i18n: true }
-      - { label: "Foto",                   name: "photo",        widget: "image",    required: false, i18n: duplicate }
-      - { label: "Fabricante",             name: "manufacturer", widget: "string",   required: false, i18n: duplicate }
-      - { label: "Modelo",                 name: "model",        widget: "string",   required: false, i18n: duplicate }
 
   # ── Destaques da Homepage ────────────────────────────────────────────────────
   - name: "highlights"
